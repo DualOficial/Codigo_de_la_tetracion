@@ -18,4 +18,10 @@ T tet( const T & base , const T & final_exp , T height , const T & v );
 template< typename T >
 T tet( const T & base , const T & final_exp , T height );
 
+template< typename T >
+T tet_gen( const T & base , const T & final_exp , T result , const T & v );
+
+template< typename T >
+T tet_gen( const T & base , const T & final_exp , T result );
+
 #include"tetration.inl"
