@@ -64,7 +64,7 @@ T tet( const T & base , const T & final_exp , T height , const T & v ){
 	T log_base = ( base == exp( T( 1 ) ) ? 1 : log( base ) );
 	T c = v * log_base;
 	T d = pow( c , height );
-	T x = ( log_base * ( d * d - d ) / ( c - T( 1 ) ) - d * d + d ) / ( d * T( 2 ) );
+	T x = ( log_base * ( d - T( 1 ) ) / ( c - T( 1 ) ) - d + T( 1 ) ) / T( 2 );
 
 	return tetration_integer( base , pow( b , d * pow( b , x ) ) + a , tetration_complexity );
 }
@@ -74,4 +74,23 @@ T tet( const T & base , const T & final_exp , T height ){
 	
 	return tet( base , final_exp , height , alpha_tet( base ) );
 	
+}
+
+template< typename T >
+T tet_gen( const T & base , const T & final_exp , T result , const T & v ){
+	
+	if( base == exp( exp( -T( 1 ) ) ) ) return natural_gen( final_exp , result );
+
+	T log_base = ( base == exp( T( 1 ) ) ? 1 : log( base ) );
+	T a = tetration_integer( base , result , -tetration_complexity ) - v;
+	T b = tetration_integer( base , final_exp , -tetration_complexity ) - v;
+
+	return log( v * log_base , a / b );
+}
+
+template< typename T >
+T tet_gen( const T & base , const T & final_exp , T result ){
+	
+	return tet_gen( base , final_exp , result , alpha_tet( base ) );
+
 }
