@@ -10,6 +10,9 @@ Pronto sacare un video sobre el tema.
 Mientras tanto, disfrute!
 
 Si quieres saber mas de mi, aqui tienes mis redes:
+
 Youtube: https://www.youtube.com/@DualMath
+
 Facebook: https://www.facebook.com/DualMath
+
 Tiktok: https://www.tiktok.com/@dualmath
