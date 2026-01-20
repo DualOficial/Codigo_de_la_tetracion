@@ -26,21 +26,21 @@ ortogonalper< Real , Complex >::ortogonalper() : data() , perspective(){
 }
 
 template< typename Real , typename Complex >
-ortogonalper< Real , Complex >::ortogonalper( ortogonal u , int n ) : data( e_tetrationInteger< Real , Complex >( u , -n ) ) , perspective( n ){
+ortogonalper< Real , Complex >::ortogonalper( ortogonal u , int n ) : data( e_tetration_integer< Real , Complex >( u , -n ) ) , perspective( n ){
 	
 	//nothing
 
 }
 
 template< typename Real , typename Complex >
-ortogonalper< Real , Complex >::ortogonalper( const Complex & u , int n ) : data( e_tetrationInteger< Real , Complex >( u , -n ) ) , perspective( n ){
+ortogonalper< Real , Complex >::ortogonalper( const Complex & u , int n ) : data( e_tetration_integer< Real , Complex >( u , -n ) ) , perspective( n ){
 	
 	//nothing
 
 }
 
 template< typename Real , typename Complex >
-ortogonalper< Real , Complex >::ortogonalper( Real r , int n ) : data( e_tetrationInteger< Real , Complex >( r , -n ) ) , perspective( n ){
+ortogonalper< Real , Complex >::ortogonalper( Real r , int n ) : data( e_tetration_integer< Real , Complex >( r , -n ) ) , perspective( n ){
 	
 	//nothing
 
@@ -62,7 +62,7 @@ const ortogonalper< Real , Complex > ortogonalper< Real , Complex >::NaN = Compl
 template< typename Real , typename Complex >
 void ortogonalper< Real , Complex >::set_perspective( int n ){
 	
-	data = e_tetrationInteger< Real , Complex >( data , perspective - n );
+	data = e_tetration_integer< Real , Complex >( data , perspective - n );
 	perspective = n;
 
 }
@@ -77,7 +77,7 @@ int ortogonalper< Real , Complex >::get_perspective() const{
 template< typename Real , typename Complex >
 const ortogonal< Real , Complex > & ortogonalper< Real , Complex >::w() const{
 	
-	return e_tetrationInteger< Real , Complex >( data , perspective );
+	return e_tetration_integer< Real , Complex >( data , perspective );
 
 }
 
@@ -91,7 +91,7 @@ const ortogonal< Real , Complex > & ortogonalper< Real , Complex >::w_relative()
 template< typename Real , typename Complex >
 Complex ortogonalper< Real , Complex >::z() const{
 	
-	return e_tetrationInteger< Real , Complex >( data , perspective ).z();
+	return e_tetration_integer< Real , Complex >( data , perspective ).z();
 
 }
 
