@@ -14,24 +14,24 @@
 #include"permutation.hpp"
 #include"other_permutations.hpp"
 #include"Language.hpp"
-#include"Tetration.hpp"
+#include"tetration.hpp"
 #include<fstream>
 
 using namespace std;
 using namespace std::literals;
 using namespace boost::math;
 
-//Tetración: Formula descubierta el 13 de enero en la mañana( como entre las 3am y 4am ), por que dormi tarde.
+//TetraciÃ³n: Formula descubierta el 13 de enero en la maÃ±ana( como entre las 3am y 4am ), por que dormi tarde.
 
 int main(){
 	
-	//Codigo de ejemplo para graficar la tetración
+	////////////Codigo de Ejemplo para hacer una grafica real de la tetraciÃ³n
 
 	adjust_precision< float50 >();
 
-	tetration_complexity = 72; //Aqui se especifica las iteraciones que usara la tetración
-	tetration_recursive = false; //Aqui se quita la recursión por defecto, para mejorar la grafica
-	//Advertencia: la tetración no soporta iteraciones muy grandes. Si quiere mas iteraciones, aumente decimales.
+	tetration_complexity = 72; //Aqui se especifica las iteraciones que usara la tetraciÃ³n
+	tetration_recursive = false; //Aqui se quita la recursiÃ³n por defecto, para mejorar la grafica
+	//Advertencia: la tetraciÃ³n no soporta iteraciones muy grandes. Si quiere mas iteraciones, aumente decimales.
 
 	ApplicationPlot app;
 
@@ -39,14 +39,14 @@ int main(){
 	app.add_bi_func( []( long double x ){ return ( long double ) tet< lcomplex >( 3.l , 1.5l , x ).real(); } , Color::Red );
 
 	app.run();
-
+	
 	return 0;
 }
 
 /*
 //////////////////////  TUTORIAL DE FUNCIONES Y CLASES DEL PROYECTO //////////////////////
 
-////////////Para mayor precisión
+////////////Para mayor precisiÃ³n
 
 Use float50 y float100 para numeros reales.
 Y complex50 junto a complex100 para numeros complejos.
@@ -54,16 +54,16 @@ Esto es gracias a boost math y su libreria multiprecision entre otras
 
 Para mejorar los decimales mostrados por el c-out, use adjust_precision seguido con su plantilla,
 por ejemplo:
-adjust_precision< float50 >(); para usar numeros reales con 50 decimales de precisión
-adjust_precision< float100 >(); para usar numeros reales con 100 decimales de precisión
+adjust_precision< float50 >(); para usar numeros reales con 50 decimales de precisiÃ³n
+adjust_precision< float100 >(); para usar numeros reales con 100 decimales de precisiÃ³n
 
-////////////Codigo de Ejemplo para hacer una grafica real de la tetración
+////////////Codigo de Ejemplo para hacer una grafica real de la tetraciÃ³n
 
 adjust_precision< float50 >();
 
-tetration_complexity = 72; //Aqui se especifica las iteraciones que usara la tetración
-tetration_recursive = false; //Aqui se quita la recursión por defecto, para mejorar la grafica
-//Advertencia: la tetración no soporta iteraciones muy grandes. Si quiere mas iteraciones, aumente decimales.
+tetration_complexity = 72; //Aqui se especifica las iteraciones que usara la tetraciÃ³n
+tetration_recursive = false; //Aqui se quita la recursiÃ³n por defecto, para mejorar la grafica
+//Advertencia: la tetraciÃ³n no soporta iteraciones muy grandes. Si quiere mas iteraciones, aumente decimales.
 
 ApplicationPlot app;
 
@@ -72,7 +72,7 @@ app.add_bi_func( []( long double x ){ return ( long double ) tet< lcomplex >( 3.
 
 app.run();
 
-////////////Codigo de Ejemplo para hacer una grafica real de la permutación
+////////////Codigo de Ejemplo para hacer una grafica real de la permutaciÃ³n
 
 adjust_precision< float50 >();
 
@@ -103,40 +103,40 @@ app.loadShaderFromFile( "tetration_shader.frag" );
 app.run();
 
 Aqui hay una serie de shaders que podria compilar:
-1.shader.frag //contiene la permutación
+1.shader.frag //contiene la permutaciÃ³n
 2.other_permutations_shader.frag //contiene las funciones de other_permutation.hpp
-3.tetration_shader.frag //contiene la tetración natural y la de euler
+3.tetration_shader.frag //contiene la tetraciÃ³n natural y la de euler
 
 ////////////Por ultimo
-1. TestFunc te sirve para ver como una función progresa
+1. TestFunc te sirve para ver como una funciÃ³n progresa
 2. ortogonals contiene obviante los numeros ortogonales
 3. ortogonalper contiene los ortogonales bajo una perspectiva
 basicamente, si no quieres trabajar con z sino con log( z ) use la perspectiva 1,
 y si quiere trabajar con log( log( z ) ) use la perspectiva 2, por al contrario-
 si usa la perspectiva -1 trabajara con exp( z ) y si usa la perspectiva -2
-trabajara con exp( exp( z ) ), y así indefinidamente.
+trabajara con exp( exp( z ) ), y asÃ­ indefinidamente.
 
 4.dual, esta es una clase que permite usar los numeros duales( xddd como DualMath ).
 Sirve para derivadas.
 
 5.other_permutations
-contiene varias funciones, parecidas a la permutación, en su forma de creación.
-Todas ellas tienen un punto fijo con derivada 1, por lo que se puede usar un teorema de acoplación.
+contiene varias funciones, parecidas a la permutaciÃ³n, en su forma de creaciÃ³n.
+Todas ellas tienen un punto fijo con derivada 1, por lo que se puede usar un teorema de acoplaciÃ³n.
 Entre estas estan:
 a) minus tetration, basada en e^x-1 repetio
 b) plus tetration, basada en e^(x-1) repetido
 c) hyper square, basada en 1/2 * x^2 + 1/2 repetido
 d) neutral tetration, basada en (e^1/e)^x repetido
 
-6.Language: aunque nada que ver, permite crear un mini lenguaje, por cierto, esta en versión beta
+6.Language: aunque nada que ver, permite crear un mini lenguaje, por cierto, esta en versiÃ³n beta
 por lo que no es tan util.
 
-7.permutation: contiene la permutación( esperabas mas? )
-8.tetration: contiene la tetración;
-Por otro lado, también contiene unas clases y funciones.
-Estas permiten calcular las derivadas de la tetración en alpha.
+7.permutation: contiene la permutaciÃ³n( esperabas mas? )
+8.tetration: contiene la tetraciÃ³n;
+Por otro lado, tambiÃ©n contiene unas clases y funciones.
+Estas permiten calcular las derivadas de la tetraciÃ³n en alpha.
 (alpha seria el numero que cumple: e^alpha=alpha,
-por cierto, hay varios alphas posibles que cumplen esta ecuación )
+por cierto, hay varios alphas posibles que cumplen esta ecuaciÃ³n )
 
 Aqui un ejemplo de su uso:
 
@@ -147,16 +147,14 @@ lcomplex alpha = alpha_tet< long double >( exp( 1.l ) );
 cout<<alpha<<" : "<<0<<endl;
 
 Sum sum;
-vector< Formula > formulas;
-unsigned int n = 2;
-
-cout<<Compute( Resolve( sum , formulas , alpha ) , 0.5l , alpha )<<" : "<<1<<endl;
+vector< lFormula > formulas;
+unsigned int n = 1;
 
 while( true ){
 	
-	formulas.push_back( Simplify( Resolve( sum , formulas , alpha ) ) );
+	formulas.push_back( Resolve( sum , formulas , alpha ) );
 
-	cout<<Compute( formulas.back() , 0.5l , alpha )<<" : "<<n<<endl;
+	cout<<Compute< lcomplex >( formulas.back() , 0.5l , alpha )<<" : "<<n<<endl;
 
 	sum = Derivate( sum );
 	n++;
@@ -165,7 +163,7 @@ while( true ){
 
 // fin del ejemplo
 
-En este ejemplo, se calcularon las derivadas de la tetración de accelo( exponente de tetración ) 0.5
+En este ejemplo, se calcularon las derivadas de la tetraciÃ³n de accelo( exponente de tetraciÃ³n ) 0.5
 centradas en un alpha.
 
 Gracias te da Dual por ver el tutorial hasta aqui :)
