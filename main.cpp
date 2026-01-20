@@ -30,7 +30,6 @@ int main(){
 	adjust_precision< float50 >();
 
 	tetration_complexity = 72; //Aqui se especifica las iteraciones que usara la tetración
-	tetration_recursive = false; //Aqui se quita la recursión por defecto, para mejorar la grafica
 	//Advertencia: la tetración no soporta iteraciones muy grandes. Si quiere mas iteraciones, aumente decimales.
 
 	ApplicationPlot app;
@@ -62,7 +61,6 @@ adjust_precision< float100 >(); para usar numeros reales con 100 decimales de pr
 adjust_precision< float50 >();
 
 tetration_complexity = 72; //Aqui se especifica las iteraciones que usara la tetración
-tetration_recursive = false; //Aqui se quita la recursión por defecto, para mejorar la grafica
 //Advertencia: la tetración no soporta iteraciones muy grandes. Si quiere mas iteraciones, aumente decimales.
 
 ApplicationPlot app;
