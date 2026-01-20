@@ -30,20 +30,6 @@ struct Product{
 };
 
 template< typename T >
-struct Monomial{
-	
-	Monomial();
-	Monomial( const T & c , unsigned int a );
-
-	unsigned int n;
-	T constant;
-
-};
-
-template< typename T >
-Monomial< T > constant( const T & c );
-
-template< typename T >
 struct Formula{
 	
 	Formula();
@@ -52,7 +38,7 @@ struct Formula{
 
 	void insert( unsigned int n , const T & constant );
 
-	vector< Monomial< T > > monomials;
+	map< unsigned int , T > monomials;
 
 };
 
@@ -75,7 +61,16 @@ template< typename T >
 Formula< T > Simplify( const Formula< T > & formula );
 
 template< typename T >
+T Compute( const Formula< T > & formula , const T & accelo , const T & base , const T & alpha_value );
+
+template< typename T >
 T Compute( const Formula< T > & formula , const T & accelo , const T & alpha_value );
+
+template< typename T >
+Formula< T > Extension( Formula< T > formula , const T & base , const T & alpha_value );
+
+template< typename T >
+Formula< T > Resolve( const Sum & sum , const vector< Formula< T > > & prev_formulas , const T & base , const T & alpha_value );
 
 template< typename T >
 Formula< T > Extension( Formula< T > formula , const T & alpha_value );
@@ -84,13 +79,6 @@ template< typename T >
 Formula< T > Resolve( const Sum & sum , const vector< Formula< T > > & prev_formulas , const T & alpha_value );
 
 void Print( const Sum & sum );
-
-typedef Monomial< fcomplex> fMonomial;
-typedef Monomial< dcomplex > dMonomial;
-typedef Monomial< lcomplex > lMonomial;
-typedef Monomial< complex_single > Monomial_single;
-typedef Monomial< complex50 > Monomial50;
-typedef Monomial< complex100 > Monomial100;
 
 typedef Formula< fcomplex > fFormula;
 typedef Formula< dcomplex > dFormula;
