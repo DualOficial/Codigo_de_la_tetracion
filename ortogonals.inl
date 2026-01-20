@@ -119,7 +119,7 @@ T e_tetration_positive( T z , unsigned int n ){
 	
 	while( n ){
 		
-		z = exp< T >( z );
+		z = exp( z );
 		n--;
 
 	}
@@ -132,7 +132,7 @@ T e_tetration_negative( T z , unsigned int n ){
 	
 	while( n ){
 		
-		z = log< T >( z );
+		z = log( z );
 		n--;
 
 	}
@@ -179,15 +179,14 @@ ortogonal< Real , Complex > e_tetration_negative( ortogonal< Real , Complex >  w
 }
 
 template< typename T >
-T e_tetrationInteger( T w , int n ){
+T e_tetration_integer( T w , int n ){
 	
 	return n < 0 ? e_tetration_negative< T >( w , -n ) : e_tetration_positive< T >( w , n );
 
 }
 
-
 template< typename Real , typename Complex >
-ortogonal< Real , Complex > e_tetrationInteger( ortogonal< Real , Complex > w , int n ){
+ortogonal< Real , Complex > e_tetration_integer( ortogonal< Real , Complex > w , int n ){
 	
 	return n < 0 ? e_tetration_negative< Real , Complex >( w , -n ) : e_tetration_positive< Real , Complex >( w , n );
 
