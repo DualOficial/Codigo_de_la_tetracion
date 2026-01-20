@@ -299,6 +299,12 @@ T tet( const T & base , const T & final_exp , T height , const T & v ){
 	
 	if( tetration_recursive ){
 		
+		if( abs( final_exp - v ) > T( 1 ).real() ){
+			
+			return pow( base , tet( base , log( base , final_exp ) , height , v ) );
+
+		}
+
 		auto half = T( 0.5 ).real();
 
 		if( height.real() < v.real() - half ){
@@ -318,7 +324,7 @@ T tet( const T & base , const T & final_exp , T height , const T & v ){
 
 			return tetration_integer( base , tet( base , final_exp , height , v ) , a );
 		}
-
+		
 	}
 
 	if( base == exp( exp( -T( 1 ) ) ) ) return natural_tet( final_exp , height );
@@ -326,7 +332,7 @@ T tet( const T & base , const T & final_exp , T height , const T & v ){
 	T a = v - T( 1 );
 	T b = tetration_integer( base , final_exp , -tetration_complexity ) - a;
 	
-	T log_base = ( base == exp( T( 1 ) ) ? 1 : log( base ) );
+	T log_base = log( base );
 	T c = v * log_base;
 	T d = pow( c , height );
 	T x = ( log_base * ( d - T( 1 ) ) / ( c - T( 1 ) ) - d + T( 1 ) ) / T( 2 );
@@ -335,9 +341,59 @@ T tet( const T & base , const T & final_exp , T height , const T & v ){
 }
 
 template< typename T >
-T tet( const T & base , const T & final_exp , T height ){
+T tet( const T & base , const T & final_exp , const T & height ){
 	
 	return tet( base , final_exp , height , alpha_tet( base ) );
+	
+}
+
+template< typename T >
+T tet_e( const T & final_exp , T height , const T & v ){
+	
+	if( tetration_recursive ){
+		
+		if( abs( final_exp - v ) > T( 1 ).real() ){
+			
+			return exp( tet_e( log( final_exp ) , height , v ) );
+
+		}
+
+		auto half = T( 0.5 ).real();
+
+		if( height.real() < v.real() - half ){
+			
+			int a = ( int ) floor( height.real() - ( v.real() - half ) );
+
+			height = height - T( a );
+
+			return e_tetration_integer( tet_e( final_exp , height , v ) , a );
+		}
+		
+		if( height.real() > v.real() + half ){
+			
+			int a = ( int ) floor( height.real() - ( v.real() - half ) );
+
+			height = height - T( a );
+
+			return e_tetration_integer( tet_e( final_exp , height , v ) , a );
+		}
+		
+	}
+
+	T a = v - T( 1 );
+	T b = e_tetration_integer( final_exp , -tetration_complexity ) - a;
+	
+	T c = v;
+	T d = pow( c , height );
+	T x = ( ( d - T( 1 ) ) / ( c - T( 1 ) ) - d + T( 1 ) ) / T( 2 );
+
+	return e_tetration_integer( pow( b , d * pow( b , x ) ) + a , tetration_complexity );
+}
+
+template< typename T >
+T tet_e( const T & final_exp , const T & height ){
+	
+	return tet_e( final_exp , height , alpha_tet( exp( T( 1 ) ) ) );
 	
 }
 
@@ -346,17 +402,32 @@ T tet_gen( const T & base , const T & final_exp , T result , const T & v ){
 	
 	if( base == exp( exp( -T( 1 ) ) ) ) return natural_gen( final_exp , result );
 
-	T log_base = ( base == exp( T( 1 ) ) ? 1 : log( base ) );
 	T a = tetration_integer( base , result , -tetration_complexity ) - v;
 	T b = tetration_integer( base , final_exp , -tetration_complexity ) - v;
 
-	return log( v * log_base , a / b );
+	return log( v * log( base ) , a / b );
 }
 
 template< typename T >
 T tet_gen( const T & base , const T & final_exp , T result ){
 	
 	return tet_gen( base , final_exp , result , alpha_tet( base ) );
+
+}
+
+template< typename T >
+T tet_gen_e( const T & final_exp , const T & result , const T & v ){
+	
+	T a = e_tetration_integer( result , -tetration_complexity ) - v;
+	T b = e_tetration_integer( final_exp , -tetration_complexity ) - v;
+
+	return log( v , a / b );
+}
+
+template< typename T >
+T tet_gen_e( const T & final_exp , const T & result ){
+	
+	return tet_gen_e( final_exp , result , alpha_tet( exp( T( 1 ) ) ) );
 
 }
 
