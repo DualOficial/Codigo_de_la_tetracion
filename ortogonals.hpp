@@ -309,7 +309,7 @@ template< typename T >
 T e_tetration_negative( T z , unsigned int n );
 
 template< typename T >
-T e_tetrationInteger( T w , int n );
+T e_tetration_integer( T w , int n );
 
 template< typename Real , typename Complex >
 ortogonal< Real , Complex > e_tetration_positive( ortogonal< Real , Complex > w , unsigned int n );
@@ -318,7 +318,7 @@ template< typename Real , typename Complex >
 ortogonal< Real , Complex > e_tetration_negative( ortogonal< Real , Complex > w , unsigned int n );
 
 template< typename Real , typename Complex >
-ortogonal< Real , Complex > e_tetrationInteger( ortogonal< Real , Complex > w , int n );
+ortogonal< Real , Complex > e_tetration_integer( ortogonal< Real , Complex > w , int n );
 
 template<>
 float e_tetration_negative( float z , unsigned int n );
