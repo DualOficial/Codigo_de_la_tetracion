@@ -1,6 +1,105 @@
 #pragma once
 
 #include"other_permutations.hpp"
+#include<vector>
+#include<map>
+
+//Alpha Derivates Algorithm
+
+class Product;
+
+struct Sum{
+	
+	Sum();
+	
+	void insert( const Product & product );
+
+	vector< Product > products;
+};
+
+Sum Derivate( const Sum & sum );
+
+struct Product{
+	
+	Product();
+
+	void insert( unsigned int index , unsigned int power );
+
+	map< unsigned int , unsigned int > elements;
+	unsigned int constant;
+};
+
+template< typename T >
+struct Monomial{
+	
+	Monomial();
+	Monomial( const T & c , unsigned int a );
+
+	unsigned int n;
+	T constant;
+
+};
+
+template< typename T >
+Monomial< T > constant( const T & c );
+
+template< typename T >
+struct Formula{
+	
+	Formula();
+
+	Formula< T > & operator=( const Formula< T > & other );
+
+	void insert( unsigned int n , const T & constant );
+
+	vector< Monomial< T > > monomials;
+
+};
+
+template< typename T >
+Formula< T > operator+( Formula< T > first , const Formula< T > & second );
+
+template< typename T >
+Formula< T > & operator+=( Formula< T > & first , const Formula< T > & second );
+
+template< typename T >
+Formula< T > operator*( const Formula< T > first , const Formula< T > & second );
+
+template< typename T >
+Formula< T > & operator*=( Formula< T > & first , const Formula< T > & second );
+
+template< typename T >
+Formula< T > pow( const Formula< T > & f , unsigned int n );
+
+template< typename T >
+Formula< T > Simplify( const Formula< T > & formula );
+
+template< typename T >
+T Compute( const Formula< T > & formula , const T & accelo , const T & alpha_value );
+
+template< typename T >
+Formula< T > Extension( Formula< T > formula , const T & alpha_value );
+
+template< typename T >
+Formula< T > Resolve( const Sum & sum , const vector< Formula< T > > & prev_formulas , const T & alpha_value );
+
+void Print( const Sum & sum );
+
+typedef Monomial< fcomplex> fMonomial;
+typedef Monomial< dcomplex > dMonomial;
+typedef Monomial< lcomplex > lMonomial;
+typedef Monomial< complex_single > Monomial_single;
+typedef Monomial< complex50 > Monomial50;
+typedef Monomial< complex100 > Monomial100;
+
+typedef Formula< fcomplex > fFormula;
+typedef Formula< dcomplex > dFormula;
+typedef Formula< lcomplex > lFormula;
+typedef Formula< complex_single > Formula_single;
+typedef Formula< complex50 > Formula50;
+typedef Formula< complex100 > Formula100;
+
+//functions
 
 template< typename T >
 std::complex< T > alpha_tet( const std::complex< T > & base );
@@ -23,5 +122,13 @@ T tet_gen( const T & base , const T & final_exp , T result , const T & v );
 
 template< typename T >
 T tet_gen( const T & base , const T & final_exp , T result );
+
+//solo funciona con valores cercanos a alpha, donde e^alpha = alpha
+
+template< typename T >
+T exphalf( T z , const T & alpha_value );
+
+template< typename T >
+T exphalf( const T & z );
 
 #include"tetration.inl"
