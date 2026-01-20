@@ -6,7 +6,15 @@
 
 //Alpha Derivates Algorithm
 
-class Product;
+struct Product{
+	
+	Product();
+
+	void insert( unsigned int index , unsigned int power );
+
+	map< unsigned int , unsigned int > elements;
+	unsigned int constant;
+};
 
 struct Sum{
 	
@@ -18,16 +26,6 @@ struct Sum{
 };
 
 Sum Derivate( const Sum & sum );
-
-struct Product{
-	
-	Product();
-
-	void insert( unsigned int index , unsigned int power );
-
-	map< unsigned int , unsigned int > elements;
-	unsigned int constant;
-};
 
 template< typename T >
 struct Formula{
@@ -103,13 +101,25 @@ template< typename T >
 T tet( const T & base , const T & final_exp , T height , const T & v );
 
 template< typename T >
-T tet( const T & base , const T & final_exp , T height );
+T tet( const T & base , const T & final_exp , const T & height );
+
+template< typename T >
+T tet_e( const T & final_exp , T height , const T & v );
+
+template< typename T >
+T tet_e( const T & final_exp , const T & height );
 
 template< typename T >
 T tet_gen( const T & base , const T & final_exp , T result , const T & v );
 
 template< typename T >
 T tet_gen( const T & base , const T & final_exp , T result );
+
+template< typename T >
+T tet_gen_e( const T & final_exp , const T & result , const T & v );
+
+template< typename T >
+T tet_gen_e( const T & final_exp , const T & result );
 
 //solo funciona con valores cercanos a alpha, donde e^alpha = alpha
 
