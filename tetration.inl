@@ -1,3 +1,216 @@
+//alhorithm
+
+template< typename T >
+Monomial< T >::Monomial() : n() , constant(){
+	
+	//nothing
+
+}
+
+template< typename T >
+Monomial< T >::Monomial( const T & c , unsigned int a ) : n( a ) , constant( c ){
+	
+	//nothing
+
+}
+
+template< typename T >
+Monomial< T > constant( const T & c ){
+	
+	return Monomial< T >( c , 0 );
+
+}
+
+template< typename T >
+Formula< T >::Formula() : monomials(){
+	
+	//nothing
+
+}
+
+template< typename T >
+void Formula< T >::insert( unsigned int n , const T & constant ){
+	
+	for( Monomial< T > & m : monomials ){
+		
+		if( m.n == n ){
+			
+			m.constant += constant;
+
+			return;
+		}
+		
+	}
+
+	monomials.push_back( Monomial< T >( constant , n ) );
+}
+
+template< typename T >
+Formula< T > Simplify( const Formula< T > & formula ){
+	
+	Formula< T > result;
+	bool flag = false;
+
+	for( const Monomial< T > & m : formula.monomials ){
+		
+		for( Monomial< T > & k : result.monomials ){
+			
+			if( k.n == m.n ){
+				
+				k.constant += m.constant;
+				flag = true;
+
+				break;
+			}
+
+		}
+
+		if( !flag ){
+			
+			result.monomials.push_back( m );
+
+		}
+
+		flag = false;
+	}
+
+	return result;
+}
+
+template< typename T >
+Formula< T > & Formula< T >::operator=( const Formula< T > & other ){
+	
+	monomials = other.monomials;
+
+	return *this;
+}
+
+template< typename T >
+Formula< T > operator+( Formula< T > first , const Formula< T > & second ){
+	
+	for( const Monomial< T > & m : second.monomials ){
+		
+		first.insert( m.n , m.constant );
+
+	}
+
+	return first;
+}
+
+template< typename T >
+Formula< T > & operator+=( Formula< T > & first , const Formula< T > & second ){
+	
+	return first = first + second;
+
+}
+
+template< typename T >
+Formula< T > operator*( const Formula< T > first , const Formula< T > & second ){
+	
+	Formula< T > result;
+
+	for( const Monomial< T > & m1 : first.monomials ){
+		
+		for( const Monomial< T > & m2 : second.monomials ){
+			
+			result.insert( m1.n + m2.n , m1.constant * m2.constant );
+
+		}
+
+	}
+
+	return result;
+}
+
+template< typename T >
+Formula< T > & operator*=( Formula< T > & first , const Formula< T > & second ){
+	
+	return first = first * second;
+
+}
+
+template< typename T >
+Formula< T > pow( const Formula< T > & f , unsigned int n ){
+	
+	Formula< T > result;
+
+	result.monomials.push_back( constant( T( 1 ) ) );
+
+	while( n > 0 ){
+		
+		result *= f;
+
+		n--;
+	}
+
+	return result;
+}
+
+template< typename T >
+T Compute( const Formula< T > & formula , const T & accelo , const T & alpha_value ){
+	
+	T result;
+
+	for( const Monomial< T > & m : formula.monomials ){
+		
+		result += pow( alpha_value , accelo * T( m.n ) ) * m.constant;
+
+	}
+
+	return result;
+}
+
+template< typename T >
+Formula< T > Extension( Formula< T > formula , const T & alpha_value ){
+	
+	T sum_constants;
+
+	for( Monomial< T > & m : formula.monomials ){
+		
+		m.constant /= pow( alpha_value , T( m.n ) ) - T( 1 );
+
+		sum_constants += m.constant;
+	}
+
+	formula.insert( 0 , -sum_constants );
+
+	return formula;
+}
+
+template< typename T >
+Formula< T > Resolve( const Sum & sum , const vector< Formula< T > > & prev_formulas , const T & alpha_value ){
+	
+	if( prev_formulas.empty() ){
+		
+		Formula< T > result;
+
+		result.monomials.push_back( Monomial( T( 1 ) , 1 ) );
+
+		return result;
+	}
+
+	Formula< T > result;
+
+	for( const Product & product : sum.products ){
+		
+		Formula< T > f;
+
+		f.monomials.push_back( Monomial( T( product.constant ) , 1 ) );
+		
+		for( const auto & i : product.elements ){
+			
+			f *= pow( Extension( prev_formulas[ i.first ] , alpha_value ) , i.second );
+			
+		}
+
+		result += f;
+	}
+
+	return result;
+}
+
+//functions
+
 template< typename T >
 std::complex< T > alpha_tet( const std::complex< T > & base ){
 	
@@ -92,5 +305,62 @@ template< typename T >
 T tet_gen( const T & base , const T & final_exp , T result ){
 	
 	return tet_gen( base , final_exp , result , alpha_tet( base ) );
+
+}
+
+template< typename T >
+T exphalf( T z , const T & alpha_value ){
+	
+	static array< T , 27 > array = {
+		
+		T( complex50("0.3181315052047641353126542515876645172035176138714048","1.337235701430689408901162143193710612539502138460512") ),
+		T( complex50("0.9199697049219804666911757744245158931410482535237969","0.7267824659204923854082068222411697217046000669303214") ),
+		T( complex50("0.5444367456232741730929185975307049552351030330982572","0.1724482342350999088234068362168849809363841189336084") ),
+		T( complex50("0.106843471264890473486350283313987538045207061648842","0.01561652155827337058224752889043212152935044566232995") ),
+		T( complex50("0.07854540011851279382553022631119705847055083506699241","-0.0153719367584218146670885277041829163939047199664483") ),
+		T( complex50("-0.2200800373124322989203643809392675290604041453002812","0.3462963293875575843422664833538908442712751927691642") ),
+		T( complex50("-2.260877518676347551574262187863194448379234307425556","-2.14984109358418163257080589123723099208616200444634") ),
+		T( complex50("12.93619654604917863910128794422093580411618005796299","-15.73739998426389404937352562922178004592996414521458") ),
+		T( complex50("102.0806788959624167985822954838644622368405134093014","66.60699178177363017703030419078339910504476277730122") ),
+		T( complex50("-332.3254830079439108652838753257195919134465963143308","622.3460361371498993078956970797815864547496721264637") ),
+		T( complex50("-3596.497762300994532171737195139250573935943218156936","-1735.732011083951115573103066331340335964272219473825") ),
+		T( complex50("10267.51097622702274205975997761836242666483027085977","-18976.00067295173643159991057539999061253810711280539") ),
+		T( complex50("76508.95489387618227964010375682886326650562991069394","74965.20259892646511120789817795374620970115965341005") ),
+		T( complex50("-696929.6074541035097968878310956726506239687580339685","-37941.54586540734530719872720546109848820662525732873") ),
+		T( complex50("6550459.660496413392559977862522729043217666917127941","-7715864.137420130646770329174223065415614081718105144") ),
+		T( complex50("92272836.40288271068572711084220778757830040200531182","117377123.745022922220926962796933007696565642961146") ),
+		T( complex50("-1651062067.990868591409789519481465292972588422694699","1113389060.693196703867320285433657818707674717531323") ),
+		T( complex50("-12989368634.93378871840204307544923305910291376589462","-21284867369.95333360405699661223329611404051063516819") ),
+		T( complex50("264179424056.6065703828256447308607516270662162860089","-140322602681.7565058434977778041329835249250261026463") ),
+		T( complex50("1281835054286.353441946077638089876313629280175191131","3228149057207.492508462704607066943930231009926554322") ),
+		T( complex50("-39123975489992.60325917664247778957362354396422970695","6617169790981.837991981713821262692896484036685581484") ),
+		T( complex50("94997691777216.90024195223236985247533615976989829353","-469383256220414.5392912394641008308820257036802209032") ),
+		T( complex50("5663118041530312.080481394568697902353795145056943259","4497791639054646.489959870904936485123227991485725259") ),
+		T( complex50("-114563148775708181.0683043330974061203015031976881757","61695369769802191.52301098722727616892960152140093478") ),
+		T( complex50("-487075561715334732.7872809687163018438172638618192433","-2414894575857040942.047002429527327817639099584259605") ),
+		T( complex50("44762991880007564453.05379278466787776630600595745202","-2232774523395700183.188635458807696255514606507753085") ),
+		T( complex50("16014318633038950247.44442878825347844656360128937067","725222939587673131870.661223544154437311704309778185") )
+
+	};
+
+	z -= alpha_value;
+
+	T result;
+	T term = 1;
+
+	for( unsigned int i = 0; i < array.size(); i++ ){
+		
+		result += term * array[ i ];
+		term *= z / T( i + 1 );
+
+	}
+
+	return result;
+}
+
+template< typename T >
+T exphalf( const T & z ){
+	
+	return exphalf( z , alpha_tet( exp( T( 1 ) ) ) );
 
 }
