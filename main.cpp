@@ -166,6 +166,9 @@ while( true ){
 En este ejemplo, se calcularon las derivadas de la tetración de accelo( exponente de tetración ) 0.5
 centradas en un alpha.
 
+Por cierto, cuando hagas un shader, que no se te olvide poner "#ADD ORTOGONAL SHADER" para tener numeros ortogonales,
+ortoper( con perspectiva ), entre otras funciones.
+
 Gracias te da Dual por ver el tutorial hasta aqui :)
 
 Mi canal: https://www.youtube.com/@DualMath
