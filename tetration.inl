@@ -1,27 +1,6 @@
 //alhorithm
 
 template< typename T >
-Monomial< T >::Monomial() : n() , constant(){
-	
-	//nothing
-
-}
-
-template< typename T >
-Monomial< T >::Monomial( const T & c , unsigned int a ) : n( a ) , constant( c ){
-	
-	//nothing
-
-}
-
-template< typename T >
-Monomial< T > constant( const T & c ){
-	
-	return Monomial< T >( c , 0 );
-
-}
-
-template< typename T >
 Formula< T >::Formula() : monomials(){
 	
 	//nothing
@@ -31,18 +10,16 @@ Formula< T >::Formula() : monomials(){
 template< typename T >
 void Formula< T >::insert( unsigned int n , const T & constant ){
 	
-	for( Monomial< T > & m : monomials ){
-		
-		if( m.n == n ){
-			
-			m.constant += constant;
+	auto i = monomials.find( n );
 
-			return;
-		}
+	if( i == monomials.end() ){
 		
+		monomials.insert( make_pair( n , constant ) );
+
+		return;
 	}
 
-	monomials.push_back( Monomial< T >( constant , n ) );
+	i->second += constant;
 }
 
 template< typename T >
@@ -51,13 +28,13 @@ Formula< T > Simplify( const Formula< T > & formula ){
 	Formula< T > result;
 	bool flag = false;
 
-	for( const Monomial< T > & m : formula.monomials ){
+	for( const auto & m : formula.monomials ){
 		
-		for( Monomial< T > & k : result.monomials ){
+		for( auto & k : result.monomials ){
 			
-			if( k.n == m.n ){
+			if( k.first == m.first ){
 				
-				k.constant += m.constant;
+				k.second += m.second;
 				flag = true;
 
 				break;
@@ -67,7 +44,7 @@ Formula< T > Simplify( const Formula< T > & formula ){
 
 		if( !flag ){
 			
-			result.monomials.push_back( m );
+			result.monomials.insert( m );
 
 		}
 
@@ -88,9 +65,9 @@ Formula< T > & Formula< T >::operator=( const Formula< T > & other ){
 template< typename T >
 Formula< T > operator+( Formula< T > first , const Formula< T > & second ){
 	
-	for( const Monomial< T > & m : second.monomials ){
+	for( const auto & m : second.monomials ){
 		
-		first.insert( m.n , m.constant );
+		first.insert( m.first , m.second );
 
 	}
 
@@ -109,11 +86,11 @@ Formula< T > operator*( const Formula< T > first , const Formula< T > & second )
 	
 	Formula< T > result;
 
-	for( const Monomial< T > & m1 : first.monomials ){
+	for( const auto & m1 : first.monomials ){
 		
-		for( const Monomial< T > & m2 : second.monomials ){
+		for( const auto & m2 : second.monomials ){
 			
-			result.insert( m1.n + m2.n , m1.constant * m2.constant );
+			result.insert( m1.first + m2.first , m1.second * m2.second );
 
 		}
 
@@ -134,7 +111,7 @@ Formula< T > pow( const Formula< T > & f , unsigned int n ){
 	
 	Formula< T > result;
 
-	result.monomials.push_back( constant( T( 1 ) ) );
+	result.monomials.insert( make_pair( 0 , T( 1 ) ) );
 
 	while( n > 0 ){
 		
@@ -147,13 +124,13 @@ Formula< T > pow( const Formula< T > & f , unsigned int n ){
 }
 
 template< typename T >
-T Compute( const Formula< T > & formula , const T & accelo , const T & alpha_value ){
+T Compute( const Formula< T > & formula , const T & accelo , const T & base , const T & alpha_value ){
 	
 	T result;
 
-	for( const Monomial< T > & m : formula.monomials ){
+	for( const auto & m : formula.monomials ){
 		
-		result += pow( alpha_value , accelo * T( m.n ) ) * m.constant;
+		result += pow( alpha_value * log( base ) , accelo * T( m.first ) ) * m.second;
 
 	}
 
@@ -161,15 +138,29 @@ T Compute( const Formula< T > & formula , const T & accelo , const T & alpha_val
 }
 
 template< typename T >
-Formula< T > Extension( Formula< T > formula , const T & alpha_value ){
+T Compute( const Formula< T > & formula , const T & accelo , const T & alpha_value ){
+	
+	T result;
+
+	for( const auto & m : formula.monomials ){
+		
+		result += pow( alpha_value , accelo * T( m.first ) ) * m.second;
+
+	}
+
+	return result;
+}
+
+template< typename T >
+Formula< T > Extension( Formula< T > formula , const T & base , const T & alpha_value ){
 	
 	T sum_constants;
 
-	for( Monomial< T > & m : formula.monomials ){
+	for( auto & m : formula.monomials ){
 		
-		m.constant /= pow( alpha_value , T( m.n ) ) - T( 1 );
+		m.second /= pow( alpha_value * log( base ) , T( m.first ) ) - T( 1 );
 
-		sum_constants += m.constant;
+		sum_constants += m.second;
 	}
 
 	formula.insert( 0 , -sum_constants );
@@ -178,13 +169,42 @@ Formula< T > Extension( Formula< T > formula , const T & alpha_value ){
 }
 
 template< typename T >
-Formula< T > Resolve( const Sum & sum , const vector< Formula< T > > & prev_formulas , const T & alpha_value ){
+Formula< T > Extension( Formula< T > formula , const T & alpha_value ){
+	
+	T sum_constants;
+
+	for( auto & m : formula.monomials ){
+		
+		m.second /= pow( alpha_value , T( m.first ) ) - T( 1 );
+
+		sum_constants += m.second;
+	}
+
+	formula.insert( 0 , -sum_constants );
+
+	return formula;
+}
+
+template< typename T >
+Formula< T > Resolve( const Sum & sum , const vector< Formula< T > > & prev_formulas , const T & base , const T & alpha_value ){
 	
 	if( prev_formulas.empty() ){
 		
 		Formula< T > result;
 
-		result.monomials.push_back( Monomial( T( 1 ) , 1 ) );
+		result.monomials.insert( make_pair( 1 , T( 1 ) ) );
+
+		return result;
+	}
+
+	if( prev_formulas.size() == 1 ){
+		
+		Formula< T > result;
+
+		T constant = log( base ) / ( alpha_value * log( base ) - T( 1 ) );
+
+		result.monomials.insert( make_pair( 1 , -constant ) );
+		result.monomials.insert( make_pair( 2 , constant ) );
 
 		return result;
 	}
@@ -195,7 +215,39 @@ Formula< T > Resolve( const Sum & sum , const vector< Formula< T > > & prev_form
 		
 		Formula< T > f;
 
-		f.monomials.push_back( Monomial( T( product.constant ) , 1 ) );
+		f.monomials.insert( make_pair( 1 , T( product.constant ) ) );
+		
+		for( const auto & i : product.elements ){
+			
+			f *= pow( Extension( prev_formulas[ i.first ] , base , alpha_value ) , i.second );
+			
+		}
+
+		result += f;
+	}
+
+	return result;
+}
+
+template< typename T >
+Formula< T > Resolve( const Sum & sum , const vector< Formula< T > > & prev_formulas , const T & alpha_value ){
+	
+	if( prev_formulas.empty() ){
+		
+		Formula< T > result;
+
+		result.monomials.insert( make_pair( 1 , T( 1 ) ) );
+
+		return result;
+	}
+
+	Formula< T > result;
+
+	for( const Product & product : sum.products ){
+		
+		Formula< T > f;
+
+		f.monomials.insert( make_pair( 1 , T( product.constant ) ) );
 		
 		for( const auto & i : product.elements ){
 			
