@@ -5,10 +5,6 @@
 #include<iostream>
 #include<map>
 
-#define M_PI 3.14159265358979323846l
-#define M_TAU 6.28318530717958647692l
-#define M_HALF_PI 1.57079632679489661923l
-
 template< typename Real , typename Complex >
 class ortogonal;
 
