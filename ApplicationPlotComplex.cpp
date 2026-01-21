@@ -417,28 +417,28 @@ void ApplicationPlotComplex::update(){
 		
 		if( Keyboard::isKeyPressed( Keyboard::Scancode::Z ) ){
 			
-			ortoAngle -= deltaTime * velAngle * M_PI;
+			ortoAngle -= deltaTime * velAngle * constants::pi< long double >();
 			
 			updateShader = true;
 		}
 		
 		if( Keyboard::isKeyPressed( Keyboard::Scancode::X ) ){
 			
-			ortoAngle += deltaTime * velAngle * M_PI;
+			ortoAngle += deltaTime * velAngle * constants::pi< long double >();
 			
 			updateShader = true;
 		}
 		
 		if( Keyboard::isKeyPressed( Keyboard::Scancode::C ) ){
 			
-			ortoAngle2 -= deltaTime * velAngle * M_PI;
+			ortoAngle2 -= deltaTime * velAngle * constants::pi< long double >();
 			
 			updateShader = true;
 		}
 		
 		if( Keyboard::isKeyPressed( Keyboard::Scancode::V ) ){
 			
-			ortoAngle2 += deltaTime * velAngle * M_PI;
+			ortoAngle2 += deltaTime * velAngle * constants::pi< long double >();
 			
 			updateShader = true;
 		}
