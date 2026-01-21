@@ -88,11 +88,7 @@ typedef Formula< complex100 > Formula100;
 //functions
 
 template< typename T >
-std::complex< T > alpha_tet( const std::complex< T > & base );
-
-complex_single alpha_tet( const complex_single & base );
-complex50 alpha_tet( const complex50 & base );
-complex100 alpha_tet( const complex100 & base );
+T alpha_tet( const T & base );
 
 extern int tetration_complexity;
 extern bool tetration_recursive;
