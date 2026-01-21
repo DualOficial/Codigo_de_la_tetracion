@@ -1091,23 +1091,15 @@ T InitPoint(T z, int k){
 template< typename T >
 T wlambert( T z , int k ){
 	
-	return z;
-
-}
-
-template< typename T >
-std::complex< T > wlambert( std::complex< T > z , int k ){
-	
 	//For some particular z and k W(z,k) has simple value:
-	if( z == std::complex< T >( 0 ) ) return ( k == 0 ) ? 0.l : -INFINITY;
-	if( z == -exp( -std::complex< T >( 1 ) ) && ( k == 0 || k == -1 ) ) return -std::complex< T >( 1 );
-	if( z == exp( std::complex< T >( 1 ) ) && k == 0 ) return std::complex< T >( 1 );
+	if( z == T( 0 ) ) return ( k == 0 ) ? 0.l : -INFINITY;
+	if( z == -exp( -T( 1 ) ) && ( k == 0 || k == -1 ) ) return -T( 1 );
+	if( z == exp( T( 1 ) ) && k == 0 ) return T( 1 );
 	
 	//Halley method begins
-	std::complex< T > w( InitPoint( z , k ) ) , wprev; // intermediate values in the Halley method
+	T w( InitPoint( z , k ) ) , wprev; // intermediate values in the Halley method
 	const unsigned int maxiter = 30; // max number of iterations. This eliminates improbable infinite loops
 	unsigned int iter = 0; // iteration counter
-	auto prec = std::numeric_limits< T >::epsilon(); // difference threshold between the last two iteration results (or the iter number of iterations is taken)
 	
 	do{
 		
@@ -1115,7 +1107,7 @@ std::complex< T > wlambert( std::complex< T > z , int k ){
 		w -= T( 2 ) * ( ( zexpz( w ) - z ) * zexpz_d( w ) ) / ( T( 2 ) * pow( zexpz_d( w ) , T( 2 ) ) - ( zexpz( w ) - z ) * zexpz_dd( w ) );
 		iter++;
 		
-	} while( ( abs( w - wprev ) > prec ) && iter < maxiter );
+	} while( abs( w - wprev ) > std::numeric_limits< decltype( z.real() ) >::epsilon() && iter < maxiter );
 	
 	return w;
 }
