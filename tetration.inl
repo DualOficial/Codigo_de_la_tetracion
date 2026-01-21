@@ -264,32 +264,32 @@ Formula< T > Resolve( const Sum & sum , const vector< Formula< T > > & prev_form
 //functions
 
 template< typename T >
-std::complex< T > alpha_tet( const std::complex< T > & base ){
+T alpha_tet( const T & base ){
 	
 	if( base == exp( T( 1 ) ) ){
 		
-		std::complex< T > z = 2;
-		std::complex< T > prev_z;
+		T z = 2;
+		T prev_z;
 
 		do{
 			
 			prev_z = z;
 			z = log( z );
 
-		} while( abs( z - prev_z ) > std::numeric_limits< T >::epsilon() );
+		} while( abs( z - prev_z ) > std::numeric_limits< decltype( base.real() ) >::epsilon() );
 		
 		return z;
 	}
 	
-	std::complex< T > z = ( base == T( 2 ) ? 3 : 2 );
-	std::complex< T > prev_z;
+	T z = ( base == T( 2 ) ? 3 : 2 );
+	T prev_z;
 
 	do{
 		
 		prev_z = z;
 		z = log( base , z );
 
-	} while( abs( z - prev_z ) > std::numeric_limits< T >::epsilon() );
+	} while( abs( z - prev_z ) > std::numeric_limits< decltype( base.real() ) >::epsilon() );
 	
 	return z;
 }
@@ -434,6 +434,16 @@ T tet_gen_e( const T & final_exp , const T & result ){
 template< typename T >
 T exphalf( T z , const T & alpha_value ){
 	
+	if( tetration_recursive ){
+		
+		if( abs( z - alpha_value ) > T( 1 ).real() ){
+			
+			return exp( exphalf( log( z ) , alpha_value ) );
+
+		}
+
+	}
+
 	static array< T , 27 > array = {
 		
 		T( complex50("0.3181315052047641353126542515876645172035176138714048","1.337235701430689408901162143193710612539502138460512") ),
