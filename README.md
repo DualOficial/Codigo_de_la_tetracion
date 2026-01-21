@@ -18,5 +18,7 @@ Facebook: https://www.facebook.com/DualMath
 Tiktok: https://www.tiktok.com/@dualmath
 
 Creditos:
+
 W de lambert: https://github.com/IstvanMezo/LambertW-function
+
 kuznetsob tetration( other method ): https://github.com/lukaszgryglicki/cpptet
