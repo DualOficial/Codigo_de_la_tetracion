@@ -21,4 +21,4 @@ Creditos:
 
 W de lambert: https://github.com/IstvanMezo/LambertW-function
 
-kuznetsob tetration( other method ): https://github.com/lukaszgryglicki/cpptet
+tetración de kuznetsob( otro metodo ): https://github.com/lukaszgryglicki/cpptet
