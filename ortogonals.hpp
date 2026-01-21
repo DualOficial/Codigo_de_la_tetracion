@@ -362,18 +362,6 @@ T InitPoint( T z, int k);
 template< typename T >
 T wlambert( T z , int k = 0 );
 
-template< typename T >
-std::complex< T > wlambert( std::complex< T > z , int k = 0 );
-
-template<>
-complex50 wlambert( complex50 z , int k );
-
-template<>
-complex100 wlambert( complex100 z , int k );
-
-template<>
-complex_single wlambert( complex_single z , int k );
-
 template< typename Real , typename Complex >
 ostream & operator<<( ostream & o , const ortogonal< Real , Complex > & w );
 
