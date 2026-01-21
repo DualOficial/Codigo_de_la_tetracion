@@ -1088,6 +1088,8 @@ T InitPoint(T z, int k){
 	return ip;
 }
 
+//Creditos por W de Lambert a https://github.com/IstvanMezo/LambertW-function
+
 template< typename T >
 T wlambert( T z , int k ){
 	
