@@ -26,7 +26,7 @@ using namespace boost::math;
 int main(){
 	
 	////////////Codigo de Ejemplo para hacer una grafica real de la tetración
-
+	
 	adjust_precision< float50 >();
 
 	tetration_complexity = 72; //Aqui se especifica las iteraciones que usara la tetración
@@ -89,6 +89,17 @@ funciones de esta clase:
 a) add_func, esta usela para funciones reales
 b) add_func_complex, esta grafica el camino que deja una serie de puntos en plano complejo
 
+Para esta grafica, hay una serie de teclas que se pueden usar:
+O: maximizar
+W: arriba
+S: abajo
+E: derecha
+A: izquierda
+Direcciones: moverte( obviamente xD )
+D: agrandar entorno al mouse( zoom )
+A: empequeñezer entorno al mouse
+Hay otras teclas en el codigo pero no sirven para nada aun, como el texto index que siempre es 0.
+
 2.Use ApplicationPlotComplex para graficar con un shader, un plano de colores
 Esto es muy usual en el analisis complejo.
 
@@ -104,6 +115,23 @@ Aqui hay una serie de shaders que podria compilar:
 1.shader.frag //contiene la permutación
 2.other_permutations_shader.frag //contiene las funciones de other_permutation.hpp
 3.tetration_shader.frag //contiene la tetración natural y la de euler
+
+Para esta grafica, hay una serie de teclas que se pueden usar:
+Pondre a la derecha de algunas teclas las variables que manipulan en el shader.
+Direccionales: para morverte
+O: para maximizar
+D: para agrandar entorno al mouse( zoom )
+A: para empequeñezer entorno al mouse
+E: moverte a la derecha, igual que la tecla Right
+Q: moverte a la izquierda, igual que la tecla Left
+W: moverte arriba, igual que Up
+S: moverte abajo, igual que Down
+Z: mover para abajo el plano en O1 : "index"
+X: mover para arriba el plano en O1 : "index"
+C: mover para abajo el plano en O2 : "index2"
+V: mover para arriba el plano en O2 : "index2"
+B: bajar un indice( puede servir, para aumentar las iteraciones de una función ) : "value"
+N: aumentar un indice( el mismo que en B ) : "value"
 
 ////////////Por ultimo
 1. TestFunc te sirve para ver como una función progresa
@@ -162,6 +190,37 @@ while( true ){
 // fin del ejemplo
 
 En este ejemplo, se calcularon las derivadas de la tetración de accelo( exponente de tetración ) 0.5
+centradas en un alpha.
+
+También, si quiere obtener las derivadas de la tetración de cualquier base entorno a su alpha
+( si la base es b, su alpha cumple: b^a=a )
+entonces, puede usar el siguiente codigo:
+
+adjust_precision< long double >();
+
+lcomplex base = 2.l;
+lcomplex alpha = alpha_tet< long double >( base );
+
+cout<<alpha<<" : "<<0<<endl;
+
+Sum sum;
+vector< lFormula > formulas;
+unsigned int n = 1;
+
+while( true ){
+	
+	formulas.push_back( Resolve( sum , formulas , base , alpha ) );
+
+	cout<<Compute< lcomplex >( formulas.back() , 0.7l , base , alpha )<<" : "<<n<<endl;
+
+	sum = Derivate( sum );
+	n++;
+
+}
+
+// fin del ejemplo
+
+En este ejemplo, se calcularon las derivadas de la tetración base 2 de accelo( exponente de tetración ) 0.7
 centradas en un alpha.
 
 Por cierto, cuando hagas un shader, que no se te olvide poner "#ADD ORTOGONAL SHADER" para tener numeros ortogonales,
