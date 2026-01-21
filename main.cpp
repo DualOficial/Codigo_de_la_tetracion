@@ -26,7 +26,7 @@ using namespace boost::math;
 int main(){
 	
 	////////////Codigo de Ejemplo para hacer una grafica real de la tetración
-	
+
 	adjust_precision< float50 >();
 
 	tetration_complexity = 72; //Aqui se especifica las iteraciones que usara la tetración
@@ -35,10 +35,10 @@ int main(){
 	ApplicationPlot app;
 
 	app.set_velocity_time( 10 );
-	app.add_bi_func( []( long double x ){ return ( long double ) tet< lcomplex >( 3.l , 1.5l , x ).real(); } , Color::Red );
+	app.add_bi_func( []( long double x ){ return tet< lcomplex >( 3.l , 1.5l , x ).real(); } , Color::Red );
 
 	app.run();
-	
+
 	return 0;
 }
 
@@ -66,7 +66,7 @@ tetration_complexity = 72; //Aqui se especifica las iteraciones que usara la tet
 ApplicationPlot app;
 
 app.set_velocity_time( 10 );
-app.add_bi_func( []( long double x ){ return ( long double ) tet< lcomplex >( 3.l , 1.5l , x ).real(); } , Color::Red );
+app.add_bi_func( []( long double x ){ return tet< lcomplex >( 3.l , 1.5l , x ).real(); } , Color::Red );
 
 app.run();
 
@@ -79,7 +79,7 @@ permutation_complexity = 1000;
 ApplicationPlot app;
 
 app.set_velocity_time( 10 );
-app.add_bi_func( []( long double x ){ return ( long double ) per< lcomplex >( 2.l , x ).real(); } , Color::Red );
+app.add_bi_func( []( long double x ){ return per< lcomplex >( 2.l , x ).real(); } , Color::Red );
 
 app.run();
 
@@ -137,9 +137,9 @@ N: aumentar un indice( el mismo que en B ) : "value"
 1. TestFunc te sirve para ver como una función progresa
 2. ortogonals contiene obviante los numeros ortogonales
 3. ortogonalper contiene los ortogonales bajo una perspectiva
-basicamente, si no quieres trabajar con z sino con log( z ) use la perspectiva 1,
-y si quiere trabajar con log( log( z ) ) use la perspectiva 2, por al contrario-
-si usa la perspectiva -1 trabajara con exp( z ) y si usa la perspectiva -2
+basicamente, si no quieres trabajar con z sino con log( z ) use la perspectiva -1,
+y si quiere trabajar con log( log( z ) ) use la perspectiva -2, por al contrario-
+si usa la perspectiva 1 trabajara con exp( z ) y si usa la perspectiva 2
 trabajara con exp( exp( z ) ), y así indefinidamente.
 
 4.dual, esta es una clase que permite usar los numeros duales( xddd como DualMath ).
@@ -149,10 +149,10 @@ Sirve para derivadas.
 contiene varias funciones, parecidas a la permutación, en su forma de creación.
 Todas ellas tienen un punto fijo con derivada 1, por lo que se puede usar un teorema de acoplación.
 Entre estas estan:
-a) minus tetration, basada en e^x-1 repetio
+a) minus tetration, basada en e^x-1 repetido
 b) plus tetration, basada en e^(x-1) repetido
 c) hyper square, basada en 1/2 * x^2 + 1/2 repetido
-d) neutral tetration, basada en (e^1/e)^x repetido
+d) natural tetration, basada en (e^1/e)^x repetido
 
 6.Language: aunque nada que ver, permite crear un mini lenguaje, por cierto, esta en versión beta
 por lo que no es tan util.
