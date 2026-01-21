@@ -236,14 +236,14 @@ void ApplicationPlot::update(){
 		
 		if( Keyboard::isKeyPressed( Keyboard::Scancode::X ) ){
 			
-			ortoAngle += deltaTime * M_PI * velAngle;
+			ortoAngle += deltaTime * constants::pi< long double >() * velAngle;
 			
 			updateGraphics = true;
 		}
 		
 		if( Keyboard::isKeyPressed( Keyboard::Scancode::Z ) ){
 			
-			ortoAngle -= deltaTime * M_PI * velAngle;
+			ortoAngle -= deltaTime * constants::pi< long double >() * velAngle;
 			
 			updateGraphics = true;
 		}
