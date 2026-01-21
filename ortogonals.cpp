@@ -145,89 +145,14 @@ long double e_tetration_negative( long double z , unsigned int n ){
 	return z;
 }
 
-ortogonal< long double , lcomplex > operator"" ol( long double x ){
+lortogonal operator"" ol( long double x ){
 	
-	return ortogonal< long double , lcomplex >( x );
-	
-}
-
-ortogonal< long double , lcomplex > operator"" oil( long double x ){
-	
-	return ortogonal< long double , lcomplex >( 0.l , x );
+	return lortogonal( x );
 	
 }
 
-template<>
-complex50 wlambert( complex50 z , int k ){
+lortogonal operator"" oil( long double x ){
 	
-	//For some particular z and k W(z,k) has simple value:
-	if( z == complex50( 0 ) ) return ( k == 0 ) ? 0.l : -INFINITY;
-	if( z == -exp( -complex50( 1 ) ) && ( k == 0 || k == -1 ) ) return -complex50( 1 );
-	if( z == exp( complex50( 1 ) ) && k == 0 ) return complex50( 1 );
+	return lortogonal( 0.l , x );
 	
-	//Halley method begins
-	complex50 w( InitPoint( z , k ) ) , wprev; // intermediate values in the Halley method
-	const unsigned int maxiter = 30; // max number of iterations. This eliminates improbable infinite loops
-	unsigned int iter = 0; // iteration counter
-	auto prec = std::numeric_limits< float50 >::epsilon(); // difference threshold between the last two iteration results (or the iter number of iterations is taken)
-	
-	do{
-		
-		wprev = w;
-		w -= complex50( 2 ) * ( ( zexpz( w ) - z ) * zexpz_d( w ) ) / ( complex50( 2 ) * pow( zexpz_d( w ) , complex50( 2 ) ) - ( zexpz( w ) - z ) * zexpz_dd( w ) );
-		iter++;
-		
-	} while( ( abs( w - wprev ) > prec ) && iter < maxiter );
-	
-	return w;
-}
-
-template<>
-complex100 wlambert( complex100 z , int k ){
-	
-	//For some particular z and k W(z,k) has simple value:
-	if( z == complex100( 0 ) ) return ( k == 0 ) ? 0.l : -INFINITY;
-	if( z == -exp( -complex100( 1 ) ) && ( k == 0 || k == -1 ) ) return -complex100( 1 );
-	if( z == exp( complex100( 1 ) ) && k == 0 ) return complex100( 1 );
-	
-	//Halley method begins
-	complex100 w( InitPoint( z , k ) ) , wprev; // intermediate values in the Halley method
-	const unsigned int maxiter = 30; // max number of iterations. This eliminates improbable infinite loops
-	unsigned int iter = 0; // iteration counter
-	auto prec = std::numeric_limits< float100 >::epsilon(); // difference threshold between the last two iteration results (or the iter number of iterations is taken)
-	
-	do{
-		
-		wprev = w;
-		w -= complex100( 2 ) * ( ( zexpz( w ) - z ) * zexpz_d( w ) ) / ( complex100( 2 ) * pow( zexpz_d( w ) , complex100( 2 ) ) - ( zexpz( w ) - z ) * zexpz_dd( w ) );
-		iter++;
-		
-	} while( ( abs( w - wprev ) > prec ) && iter < maxiter );
-	
-	return w;
-}
-
-template<>
-complex_single wlambert( complex_single z , int k ){
-	
-	//For some particular z and k W(z,k) has simple value:
-	if( z == complex_single( 0 ) ) return ( k == 0 ) ? 0.l : -INFINITY;
-	if( z == -exp( -complex_single( 1 ) ) && ( k == 0 || k == -1 ) ) return -complex_single( 1 );
-	if( z == exp( complex_single( 1 ) ) && k == 0 ) return complex_single( 1 );
-	
-	//Halley method begins
-	complex_single w( InitPoint( z , k ) ) , wprev; // intermediate values in the Halley method
-	const unsigned int maxiter = 30; // max number of iterations. This eliminates improbable infinite loops
-	unsigned int iter = 0; // iteration counter
-	auto prec = std::numeric_limits< float_single >::epsilon(); // difference threshold between the last two iteration results (or the iter number of iterations is taken)
-	
-	do{
-		
-		wprev = w;
-		w -= complex_single( 2 ) * ( ( zexpz( w ) - z ) * zexpz_d( w ) ) / ( complex_single( 2 ) * pow( zexpz_d( w ) , complex_single( 2 ) ) - ( zexpz( w ) - z ) * zexpz_dd( w ) );
-		iter++;
-		
-	} while( ( abs( w - wprev ) > prec ) && iter < maxiter );
-	
-	return w;
 }
