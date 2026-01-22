@@ -1,680 +1,1111 @@
-#include"ApplicationPlot.hpp"
+#include"ortogonals.hpp"
+#include<algorithm>
 
-ApplicationPlot::ApplicationPlot() : lines( PrimitiveType::Lines , 4 ) , coords( PrimitiveType::Lines ){
+template< typename T >
+T branch( T angle ){
 	
-	initVars();
+	T x = ceil( ( angle + constants::pi< T >() ) / constants::tau< T >() ) - T( 1 );
 	
-	window.create( VideoMode( Vector2u( 700 , 700 ) ) , "ApplicationPlot" );
-	
-	staticSize = Vector2l( window.getSize() );
-
-	velAngle = 1.l;
-	ration = ( long double )( window.getSize().x ) / ( long double )( window.getSize().y );
-
-	left_ = -8.l * ration;
-	bottom = -8.l;
-	width = 16.l * ration;
-	height = 16.l;
-	windowSize = Vector2l( window.getSize() );
-	
-	text = new Text( font , "" , 32 );
-	text2 = new Text( font , "" , 32 );
-	text3 = new Text( font , "" , 32 );
-
-	font.openFromFile( "tuffy.ttf" );
-	text->setString( "z:\nr-range:\ni-range:" );
-	text->setFillColor( Color::White );
-	text->setCharacterSize( 30 );
-	text->setOutlineThickness( 5 );
-	text->setOutlineColor( Color::Black );
-	text->setPosition( Vector2f( 100.f , 450.f - text->getGlobalBounds().size.x / 2.f ) );
-	text2->setString( "iteration:" );
-	text2->setFillColor( Color::White );
-	text2->setCharacterSize( 30 );
-	text2->setPosition( Vector2f( 100.f , VideoMode::getDesktopMode().size.y - 100.f - text->getGlobalBounds().size.x / 2.f ) );
-	text2->setOutlineThickness( 3 );
-	text2->setFillColor( Color::Black );
-	text2->setOutlineColor( Color::White );
-	text3->setString( "iteration:" );
-	text3->setFillColor( Color::White );
-	text3->setCharacterSize( 30 );
-	text3->setPosition( Vector2f( 100.f , VideoMode::getDesktopMode().size.y - 50.f - text->getGlobalBounds().size.x / 2.f ) );
-	text3->setOutlineThickness( 3 );
-	text3->setFillColor( Color::Black );
-	text3->setOutlineColor( Color::White );
-	
-	clock.restart();
-	deltaClock.restart();
-
+	return x;
 }
 
-void ApplicationPlot::initVars(){
+template< typename T >
+T collapse( T angle ){
 	
-	timer = 0.l;
-	index = 0;
-	vel = 1.l;
-	updateGraphics = true;
-	ortogonal = false;
-	module = false;
-	colored = true;
-	fullscreen = false;
-	isTextData = true;
-	isTextIterations = true;
-	ortoAngle = 0.l;
-	countNumbers = 0;
-	velTime = 1.l;
-	accTime = 0.l;
-	updatesForSecond = 1000;
-	z = 0.l;
-	n = 0;
-
+	return angle - branch( angle ) * constants::tau< T >();
+	
 }
 
-void ApplicationPlot::set_acceleration_time( long double acc ){
+template< typename T >
+T rebranch( T z1 , T z2 ){
 	
-	accTime = acc;
-
+	return collapse( z1 ) + branch( z2 ) * constants::tau< T >();
+	
 }
 
-void ApplicationPlot::events(){
+template< typename T >
+int is_sing( T z ){
 	
-	while( const std::optional event = window.pollEvent() ){
+	if( z == T( 0 ) ) return -1;
+	if( z == T( 1 ) ) return 0;
+	if( z == exp( T( 1 ) ) ) return 1;
+	if( z == exp( exp( T( 1 ) ) ) ) return 2;
+	if( z == exp( exp( exp( T( 1 ) ) ) ) ) return 3;
+	
+	return 4;
+}
+
+template< typename T >
+T value_tetration( int k ){
+	
+	if( k == -1 ) return T( 0 );
+	if( k == 0 ) return T( 1 );
+	if( k == 1 ) return exp( T( 1 ) );
+	if( k == 2 ) return exp( exp( T( 1 ) ) );
+	if( k == 3 ) return exp( exp( exp( T( 1 ) ) ) );
+	if( k > 3 ) return std::numeric_limits< T >::infinity();
+	
+	return -1.l;
+}
+
+template< typename Real , typename Complex >
+bool ortogonal< Real , Complex >::overpased_sing() const{
+	
+	return type == Tetration ? info.sing > 3 : false;
+	
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex > ortogonal< Real , Complex >::make_sing( int k ){
+	
+	ortogonal< Real , Complex > w;
+	
+	w.info.sing = k;
+	
+	if( k >= 0 ){
 		
-		if( event->is< sf::Event::Closed >() ){
+		w.type = ortogonal< Real , Complex >::Tetration;
+		
+	}
+	else{
+		
+		w.type = ortogonal< Real , Complex >::Sing;
+		
+	}
+	
+	return w;
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex >::operator Complex() const{
+	
+	if( type ){
+		
+		return type == Tetration ? value_tetration< Real >( info.sing ) : Complex( std::numeric_limits< Real >::quiet_NaN() , std::numeric_limits< Real >::quiet_NaN() );
+		
+	}
+	
+	return info.z;
+}
+
+template< typename Real , typename Complex >
+int ortogonal< Real , Complex >::sing() const{
+	
+	if( !type ){
+		
+		cerr<<"class ortogonal -> Erorr sing: a normal ortogonal can't be a singularity"<<endl;
+		
+		return 0;
+	}
+
+	return info.sing;
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex > collapse( const ortogonal< Real , Complex > & w ){
+	
+	return ortogonal< Real , Complex >( w.z() );
+
+}
+
+template< typename T >
+T e_tetration_positive( T z , unsigned int n ){
+	
+	while( n ){
+		
+		z = exp( z );
+		n--;
+
+	}
+
+	return z;
+}
+
+template< typename T >
+T e_tetration_negative( T z , unsigned int n ){
+	
+	while( n ){
+		
+		z = log( z );
+		n--;
+
+	}
+
+	return z;
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex > e_tetration_positive( ortogonal< Real , Complex > w , unsigned int n ){
+	
+	if( w.getType() ){
+		
+		return ortogonal< Real ,  Complex >::make_sing( w.sing() + n );
+
+	}
+
+	while( n ){
+		
+		w = exp< Real , Complex >( w );
+		n--;
+
+	}
+
+	return w;
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex > e_tetration_negative( ortogonal< Real , Complex >  w , unsigned int n ){
+	
+	if( w.getType() ){
+		
+		return ortogonal< Real ,  Complex >::make_sing( w.sing() - n );
+
+	}
+
+	while( n ){
+		
+		w = log< Real , Complex >( w );
+		n--;
+
+	}
+
+	return w;
+}
+
+template< typename T >
+T e_tetration_integer( T w , int n ){
+	
+	return n < 0 ? e_tetration_negative< T >( w , -n ) : e_tetration_positive< T >( w , n );
+
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex > e_tetration_integer( ortogonal< Real , Complex > w , int n ){
+	
+	return n < 0 ? e_tetration_negative< Real , Complex >( w , -n ) : e_tetration_positive< Real , Complex >( w , n );
+
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex > collapse( const ortogonal< Real , Complex > & w , int level ){
+	
+	if( w.getType() == ortogonal::Sing ){
+		
+		cerr<<"class ortogonal -> collapse : Invalid collapse in singularities"<<endl;
+
+		return ortogonal::NaN;
+	}
+	
+	if( level < 0 ){
+		
+		return ortogonal( e_tetration_positive( e_tetration_negative( w.z() , -level ) , -level ) );
+
+	}
+
+	ortogonal result( w.z() );
+	
+	for( int i = 0; i < level; i++ ){
+		
+		result.add_branch( i , w.branch( i ) );
+
+	}
+
+	return result;
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex > kproduct( int n , ortogonal< Real , Complex > z , ortogonal< Real , Complex > w ){
+	
+	if( n < 0 ){
+		
+		for( unsigned int i = 0; i < -n; i++ ){
+		
+			z = exp( z );
+			w = exp( w );
+		
+		}
+	
+		ortogonal< Real , Complex > result = z + w;
+	
+		for( unsigned int i = 0; i < -n; i++ ){
+		
+			result = log( result );
+		
+		}
+
+		return result;
+	}
+
+	if( n == 0 ) return z + w;
+
+	for( unsigned int i = 0; i < n - 1; i++ ){
+		
+		z = log( z );
+		w = log( w );
+		
+	}
+	
+	ortogonal< Real , Complex > result = z * w;
+	
+	for( unsigned int i = 0; i < n - 1; i++ ){
+		
+		result = exp( result );
+		
+	}
+	
+	return result;
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex > kinverse( int n , ortogonal< Real , Complex > w ){
+	
+	if( n < 0 ){
+		
+		for( unsigned int i = 0; i < -n; i++ ){
+		
+			w = exp( w );
+		
+		}
+	
+		ortogonal< Real , Complex > result = -w;
+	
+		for( unsigned int i = 0; i < -n; i++ ){
+		
+			result = log( result );
+		
+		}
+	
+		return result;
+	}
+
+	if( n == 0 ) return -w;
+	if( n == 1 ) return inverse( w );
+
+	for( unsigned int i = 0; i < n - 1; i++ ){
+		
+		w = log( w );
+		
+	}
+	
+	ortogonal< Real , Complex > result = inverse( w );
+	
+	for( unsigned int i = 0; i < n - 1; i++ ){
+		
+		result = exp( result );
+		
+	}
+	
+	return result;
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex > inverse( const ortogonal< Real , Complex > & w ){
+	
+	return exp< Real , Complex >( -log< Real , Complex >( w ) );
+	
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex > operator+( Real x , const ortogonal< Real , Complex > & w ){
+	
+	return w + x;
+	
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex > operator-( Real x , const ortogonal< Real , Complex > & w ){
+	
+	return -w + x;
+	
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex > operator*( Real x , const ortogonal< Real , Complex > & w ){
+	
+	return w * x;
+	
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex > operator/( Real x , const ortogonal< Real , Complex > & w ){
+	
+	return inverse< Real , Complex >( w ) * x;
+	
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex > exp( const ortogonal< Real , Complex > & w ){
+	
+	if( w.type ){
+		
+		if( w.type == ortogonal< Real , Complex >::Sing ) return ortogonal< Real , Complex >::make_sing( w.info.sing + 1 );
+		
+		ortogonal< Real , Complex > result = ortogonal< Real , Complex >::make_sing( w.info.sing + 1 );
+		
+		for( map< unsigned int , int >::const_iterator i = w.branchs.begin(); i != w.branchs.end(); i++ ){
 			
-			window.close();
+			result.branchs.insert( make_pair( i->first + 1 , i->second ) );
 			
 		}
 		
-		if( const auto info = event->getIf< sf::Event::MouseWheelScrolled >() ){
-			
-			if( window.hasFocus() ){
-				
-				zoom( 1.l + info->delta * 0.1l , window );
-				
-			}
-			
-		}
+		return result;
+	}
+	
+	Real angle = w.info.z.imag();
+	int new_branch = branch( angle );
+	
+	ortogonal< Real , Complex > result( exp( w.info.z ) );
+	
+	if( ( ( Real )( new_branch ) * constants::tau< Real >() < angle && result.info.z.imag() < 0 )
+	||  ( ( Real )( new_branch ) * constants::tau< Real >() >= angle && result.info.z.imag() > 0 ) ){
 		
-		if( const auto key = event->getIf< sf::Event::KeyPressed >() ){
+		result.info.z = Complex( result.info.z.real() , 0 );
+		
+	}
+	
+	if( new_branch != 0 ){
+		
+		result.branchs.insert( make_pair( 0 , new_branch ) );
+		
+	}
+	
+	for( map< unsigned int , int >::const_iterator i = w.branchs.begin(); i != w.branchs.end(); i++ ){
+		
+		result.branchs.insert( make_pair( i->first + 1 , i->second ) );
+		
+	}
+	
+	return result;
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex > log( const ortogonal< Real , Complex > & w ){
+	
+	if( w.type ){
+		
+		if( w.type == ortogonal< Real , Complex >::Sing ) return ortogonal< Real , Complex >::make_sing( w.info.sing - 1 );
+		if( w.info.sing == 0 ) return ortogonal< Real , Complex >::make_sing( -1 );
+		
+		if( w.branch( 0 ) == 0 ){
 			
-			if( key->scancode == Keyboard::Scancode::R ){
-				
-				ortoAngle = 0.l;
-				updateGraphics = true;
-				
-			}
+			ortogonal< Real , Complex > result = ortogonal< Real , Complex >::make_sing( w.info.sing - 1 );
 			
-			if( key->scancode == Keyboard::Scancode::H ){
+			for( map< unsigned int , int >::const_iterator i = w.branchs.begin(); i != w.branchs.end(); i++ ){
 				
-				ortogonal = !ortogonal;
-				updateGraphics = true;
-				
-			}
-			
-			if( key->scancode == Keyboard::Scancode::C ){
-				
-				index--;
-				updateGraphics = true;
-				
-			}
-			
-			if( key->scancode == Keyboard::Scancode::V ){
-				
-				index++;
-				updateGraphics = true;
-				
-			}
-			
-			if( key->scancode == Keyboard::Scancode::I ){
-				
-				module = !module;
-				updateGraphics = true;
-				
-			}
-			
-			if( key->scancode == Keyboard::Scancode::K ){
-				
-				colored = !colored;
-				updateGraphics = true;
-				
-			}
-			
-			if( key->scancode == Keyboard::Scancode::T ){
-				
-				ration = ( long double )( window.getSize().x ) / ( long double )( window.getSize().y );
-				
-				left_ = -1.l * ration;
-				bottom = -1.l;
-				width = 2.l * ration;
-				height = 2.l;
-				
-				updateGraphics = true;
-				
-			}
-			
-			if( key->scancode == Keyboard::Scancode::Escape ){
-				
-				window.close();
-				
-			}
-			
-			if( key->scancode == Keyboard::Scancode::O ){
-				
-				fullscreen = !fullscreen;
-				
-				if( fullscreen ){
+				if( i->first != 0 ){
 					
-					prevWindowSize = window.getSize();
-					window.close();
-					window.create( VideoMode::getDesktopMode() , "Fractal de Collatz-Uribe" , State::Fullscreen );
-					staticSize = Vector2l( window.getSize() );
+					result.branchs.insert( make_pair( i->first - 1 , i->second ) );
 					
 				}
-				else{
-					
-					window.close();
-					window.create( VideoMode( Vector2u( prevWindowSize.x , prevWindowSize.y ) ) , "Fractal de Collatz-Uribe" );
-					staticSize = Vector2l( prevWindowSize );
-					
-				}
 				
 			}
 			
-			if( key->scancode == Keyboard::Scancode::P ){
-				
-				isTextData = !isTextData;
-				
-			}
+			return result;
+		}
+		
+		Real angle = arg( w );
+		
+		ortogonal< Real , Complex > result( log( abs< Real , Complex >( value_tetration< Real >( w.info.sing ) ) ) , angle );
+		
+		for( map< unsigned int , int >::const_iterator i = w.branchs.begin(); i != w.branchs.end(); i++ ){
 			
-			if( key->scancode == Keyboard::Scancode::L ){
+			if( i->first != 0 ){
 				
-				isTextIterations = !isTextIterations;
+				result.branchs.insert( make_pair( i->first - 1 , i->second ) );
 				
 			}
 			
 		}
 		
+		return result;
 	}
 	
-}
-
-void ApplicationPlot::update(){
+	ortogonal< Real , Complex > result( log( abs< Real , Complex >( w ) ) , arg( w ) );
 	
-	Vector2l newWindowSize = Vector2l( window.getSize() );
-	
-	if( windowSize != newWindowSize ){
+	for( map< unsigned int , int >::const_iterator i = w.branchs.begin(); i != w.branchs.end(); i++ ){
 		
-		resized( window );
-		
-	}
-	
-	windowSize = newWindowSize;
-	windowPosition = Vector2l( window.getPosition() );
-	
-	if( window.hasFocus() ){
-		
-		Vector2l position( Mouse::getPosition( window ) );
-		long double u = position.x / windowSize.x * width + left_;
-		long double v = ( windowSize.y - position.y ) / windowSize.y * height + bottom;
-		
-		window.setTitle( "ApplicationPlot : " + to_string( u ) + " + " + to_string( v ) + "i"
-		+                " , r-range: " + to_string( left_ ) + " to " + to_string( left_ + width )
-		+                " , i-range: " + to_string( bottom ) + "i to " + to_string( bottom + height ) + "i"
-		+                " , time: " + to_string( timer )
-		+                " , index: " + to_string( index ) );
-		
-		if( fullscreen ){
+		if( i->first != 0 ){
 			
-			text->setString( "z: " + to_string( u ) + " + " + to_string( v ) + "i\n"
-			+               "r-range: " + to_string( left_ ) + " to " + to_string( left_ + width ) + "\n"
-			+               "i-range: " + to_string( bottom ) + "i to " + to_string( bottom + height ) + "i");
-			text2->setString( "time: " + to_string( timer ) );
-			text3->setString( "index: " + to_string( index ) );
-			
-		}
-		
-		if( Keyboard::isKeyPressed( Keyboard::Scancode::X ) ){
-			
-			ortoAngle += deltaTime * constants::pi< long double >() * velAngle;
-			
-			updateGraphics = true;
-		}
-		
-		if( Keyboard::isKeyPressed( Keyboard::Scancode::Z ) ){
-			
-			ortoAngle -= deltaTime * constants::pi< long double >() * velAngle;
-			
-			updateGraphics = true;
-		}
-		
-		if( Keyboard::isKeyPressed( Keyboard::Scancode::D ) ){
-			
-			zoom( 1.l + 1.01l * deltaTime , window );
-			
-		}
-		
-		if( Keyboard::isKeyPressed( Keyboard::Scancode::A ) ){
-			
-			zoom( 1.l - 1.01l * deltaTime , window );
-			
-		}
-		
-		if( Keyboard::isKeyPressed( Keyboard::Scancode::Right ) || Keyboard::isKeyPressed( Keyboard::Scancode::E ) ){
-			
-			left_ += width * deltaTime * vel;
-			updateGraphics = true;
-			
-		}
-		
-		if( Keyboard::isKeyPressed( Keyboard::Scancode::Left ) || Keyboard::isKeyPressed( Keyboard::Scancode::Q ) ){
-			
-			left_ -= width * deltaTime * vel;
-			updateGraphics = true;
-			
-		}
-		
-		if( Keyboard::isKeyPressed( Keyboard::Scancode::Down ) || Keyboard::isKeyPressed( Keyboard::Scancode::S ) ){
-			
-			bottom -= height * deltaTime * vel;
-			updateGraphics = true;
-			
-		}
-		
-		if( Keyboard::isKeyPressed( Keyboard::Scancode::Up ) || Keyboard::isKeyPressed( Keyboard::Scancode::W ) ){
-			
-			bottom += height * deltaTime * vel;
-			updateGraphics = true;
+			result.branchs.insert( make_pair( i->first - 1 , i->second ) );
 			
 		}
 		
 	}
 	
-	if( updateGraphics ){
+	return result;
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex > pow( const ortogonal< Real , Complex > & u , const ortogonal< Real , Complex > & v ){
+	
+	return exp< Real , Complex >( v * log< Real , Complex >( u ) );
+	
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex > cos( const ortogonal< Real , Complex > & w ){
+	
+	return ( exp< Real , Complex >( w * ortogonal< Real , Complex >::I ) + exp( -w * ortogonal< Real , Complex >::I ) ) / Real( 2 );
+	
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex > sin( const ortogonal< Real , Complex > & w ){
+	
+	return ( exp< Real , Complex >( w * ortogonal< Real , Complex >::I ) - exp< Real , Complex >( -w * ortogonal< Real , Complex >::I ) ) / Complex( 0 , 2 );
+	
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex > tan( const ortogonal< Real , Complex > & w ){
+	
+	return sin< Real , Complex >( w ) / cos< Real , Complex >( w );
+	
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex > sec( const ortogonal< Real , Complex > & w ){
+	
+	return inverse< Real , Complex >( cos< Real , Complex >( w ) );
+	
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex > csc( const ortogonal< Real , Complex > & w ){
+	
+	return inverse< Real , Complex >( sin< Real , Complex >( w ) );
+	
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex > cot( const ortogonal< Real , Complex > & w ){
+	
+	return cos< Real , Complex >( w ) / sin< Real , Complex >( w );
+	
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex > cosh( const ortogonal< Real , Complex > & w ){
+	
+	return ( exp< Real , Complex >( w ) + exp< Real , Complex >( -w ) ) / Real( 2 );
+	
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex > sinh( const ortogonal< Real , Complex > & w ){
+	
+	return ( exp< Real , Complex >( w ) - exp< Real , Complex >( -w ) ) / Real( 2 );
+	
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex > tanh( const ortogonal< Real , Complex > & w ){
+	
+	return sinh< Real , Complex >( w ) / cosh< Real , Complex >( w );
+	
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex > sech( const ortogonal< Real , Complex > & w ){
+	
+	return inverse< Real , Complex >( cosh< Real , Complex >( w ) );
+	
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex > csch( const ortogonal< Real , Complex > & w ){
+	
+	return inverse< Real , Complex >( sinh< Real , Complex >( w ) );
+	
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex > coth( const ortogonal< Real , Complex > & w ){
+	
+	return inverse< Real , Complex >( tanh< Real , Complex >( w ) );
+	
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex > sqrt( const ortogonal< Real , Complex > & w ){
+	
+	return pow< Real , Complex >( w , ortogonal< Real , Complex >( 0.5 ) );
+	
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex > cbrt( const ortogonal< Real , Complex > & w ){
+	
+	return pow< Real , Complex >( w , Real( 1 ) / Real( 3 ) );
+	
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex > root( const ortogonal< Real , Complex > & u ,const ortogonal< Real , Complex > & v ){
+	
+	return pow< Real , Complex >( u , inverse< Real , Complex >( v ) );
+	
+}
+
+template< typename Real , typename Complex >
+Real arg( const ortogonal< Real , Complex > & w ){
+	
+	return arg( w.z() ) + w.branch( 0 ) * constants::tau< Real >();
+	
+}
+
+template< typename Real , typename Complex >
+Real abs( const ortogonal< Real , Complex > & w ){
+	
+	return abs( w.z() );
+	
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex > wlambert( const ortogonal< Real , Complex > & w ){
+	
+	return wlambert( Complex( w ) , w.branch( 0 ) );
+	
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex > wave( const ortogonal< Real , Complex > & w ){
+	
+	return exp< Real , Complex >( wlambert< Real , Complex >( log< Real , Complex >( w ) ) );
+	
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex >::ortogonal() : type( Sing ) , branchs(){
+	
+	info.sing = -1;
+	
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex >::ortogonal( const Complex & z ) : branchs(){
+	
+	int k = is_sing( z );
+	
+	if( k == 4 ){
 		
-		lines[ 0 ].position = Vector2f( 0.l , staticSize.y + bottom / height * staticSize.y );
-		lines[ 1 ].position = Vector2f( staticSize.x , staticSize.y + bottom / height * staticSize.y );
-		lines[ 2 ].position = Vector2f( -left_ / width * staticSize.x , 0.l );
-		lines[ 3 ].position = Vector2f( -left_ / width * staticSize.x , staticSize.y );
+		info.z = z;
+		type = Normal;
 		
-		for( int i = 0; i < points.size(); i++ ){
+	}
+	else if( k == -1 ){
+		
+		info.sing = -1;
+		type = Sing;
+		
+	}
+	else{
+		
+		info.sing = k;
+		type = Tetration;
+		
+	}
+	
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex >::ortogonal( Real r ) : branchs(){
+	
+	int k = is_sing( r );
+	
+	if( k == 4 ){
+		
+		info.z = r;
+		type = Normal;
+		
+	}
+	else if( k == -1 ){
+		
+		info.sing = -1;
+		type = Sing;
+		
+	}
+	else{
+		
+		info.sing = k;
+		type = Tetration;
+		
+	}
+	
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex >::ortogonal( Real r , Real i ) : ortogonal( Complex( r , i ) ){
+	
+	//nothing
+	
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex >::ortogonal( const ortogonal & other ) : info( other.info ) , type( other.type ) , branchs( other.branchs ){
+	
+	//nothing
+	
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex >::~ortogonal(){
+	
+	//nothing
+	
+}
+
+template< typename Real , typename Complex >
+const ortogonal< Real , Complex > ortogonal< Real , Complex >::I = ortogonal( Real( 1 ) , Real( 0 ) );
+
+template< typename Real , typename Complex >
+const ortogonal< Real , Complex > ortogonal< Real , Complex >::NaN = ortogonal( std::numeric_limits< Real >::quiet_NaN() , std::numeric_limits< Real >::quiet_NaN() );
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex > & ortogonal< Real , Complex >::operator=( const ortogonal & other ){
+	
+	type = other.type;
+	info = other.info;
+	branchs = other.branchs;
+
+	return *this;
+}
+
+template< typename Real , typename Complex >
+void ortogonal< Real , Complex >::add_branch( unsigned int index , int value ){
+	
+	if( value == 0 || type == Sing ) return;
+	
+	if( type == Tetration ){
+		
+		if( index <= info.sing ){
 			
-			Vector2l v = math_points[ i ];
-			Vector2l position( ( v.x - left_ ) * staticSize.x / width  , staticSize.y - ( v.y - bottom ) * staticSize.y / height );
+			branchs.insert( make_pair( index , branch( index ) + value ) );
 			
-			points[ i ].setPosition( Vector2f( position.x , position.y ) );
+			return;
+		}
+		
+		cout<<"class ortogonal : Error in add_branch -> Index exceeded in the tetration type."<<endl;
+		
+		return;
+	}
+	
+	branchs.insert( make_pair( index , branch( index ) + value ) );
+	
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex > ortogonal< Real , Complex >::operator-() const{
+	
+	if( type ){
+		
+		if( type == Sing ){
+			
+			return ( info.sing == -1 ) ? *this : ortogonal::NaN;
 			
 		}
 		
-		countNumbers = ceil( width ) + ceil( height );
-		numbers.clear();
+		return make_orto( Complex( -value_tetration< Real >( info.sing ) ) , 0 , -branch( 0 ) );
+	}
+
+	if( info.z.imag() == Real( 0 ) ) return make_orto( Complex( -info.z.real() ) , -branch( 0 ) );
+	
+	return make_orto( -info.z , -branch( 0 ) );
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex > ortogonal< Real , Complex >::operator+( const ortogonal & other ) const{
+	
+	if( !type && !other.type ){
 		
-		if( coords.getVertexCount() / 2 != countNumbers ){
+		Complex r = info.z + other.info.z;
+		
+		if( info.z.imag() > 0 && arg( other.info.z ) < arg( info.z ) - constants::pi< Real >() && r.imag() < 0 && r.real() < 0 ){
 			
-			coords.clear();
+			return make_orto( r , branch( 0 ) + other.branch( 0 ) + 1 );
 			
 		}
 		
-		if( width < 280.f && height < 280.f ){
+		if( info.z.imag() < 0 && arg( other.info.z ) > arg( info.z ) + constants::pi< Real >() && r.imag() > 0 && r.real() < 0 ){
 			
-			coords.resize( countNumbers * 2 );
-			
-			for( int i = 0; i < ceil( width ); i++ ){
-				
-				long double x = ceil( left_ ) + i;
-				
-				coords[ i * 2 ].position = Vector2f( ( x - left_ ) * staticSize.x / width , lines[ 0 ].position.y - 5.l );
-				coords[ i * 2 + 1 ].position = Vector2f( ( x - left_ ) * staticSize.x / width , lines[ 0 ].position.y + 5.l );
-				
-			}
-			
-			for( int i = 0; i < ceil( height ); i++ ){
-				
-				long double y = ceil( bottom ) + i;
-				
-				coords[ i * 2 + ceil( width ) * 2 ].position = Vector2f( lines[ 2 ].position.x - 5.l , staticSize.y - ( y - bottom ) * staticSize.y / height );
-				coords[ i * 2 + 1 + ceil( width ) * 2 ].position = Vector2f( lines[ 2 ].position.x + 5.l , staticSize.y - ( y - bottom ) * staticSize.y / height );
-				
-			}
-			
-			//numbers.resize( countNumbers );
-			Vector2f scale( staticSize.x / 700.f * 10.f / 1.f / width , staticSize.y / 700.f * 10.f / 1.f / height );
-			
-			if( width < 21.f || height < 21.f ){
-				
-				scale = Vector2f( staticSize.x / 700.f * 0.4 , staticSize.y / 700.f * 0.7 );
-				
-			}
-			/*
-			for( int i = 0; i < ceil( width ); i++ ){
-				
-				numbers[ i ].setFont( font );
-				numbers[ i ].setString( to_stringi( ceil( left_ ) + i ) );
-				numbers[ i ].setScale( scale );
-				
-				if( ceil( left_ ) + i == 0 ){
-					
-					numbers[ i ].setPosition( lines[ 2 ].position.x , lines[ 0 ].position.y );
-					
-				}
-				else{
-					
-					numbers[ i ].setPosition( coords[ i * 2 ].position.x - numbers[ i ].getGlobalBounds().width / 2.f , lines[ 0 ].position.y );
-					
-				}
-				
-			}
-			
-			for( int i = 0; i < ceil( height ); i++ ){
-				
-				if( ceil( bottom ) + i == 0 ){
-					
-					continue;
-					
-				}
-				
-				numbers[ ceil( width ) + i ].setFont( font );
-				numbers[ ceil( width ) + i ].setString( to_stringi( ceil( bottom ) + i ) );
-				numbers[ ceil( width ) + i ].setScale( scale );
-				numbers[ ceil( width ) + i ].setPosition( lines[ 2 ].position.x , coords[ i * 2 + ceil( width ) * 2 ].position.y - numbers[ i ].getGlobalBounds().height / 2.f );
-				
-			}
-			*/
-		}
-		
-	}
-	
-	if( clock.getElapsedTime().asSeconds() > 1.l / ( long double )( updatesForSecond ) ){
-		
-		//add_func( []( long double x ){ return F( x ).real(); } );
-
-		for( vector< RealFunction >::iterator i = real_functions.begin(); i != real_functions.end(); i++ ){
-			
-			draw_func( i->func , i->color , i->right , i->is_print_text );
-
-		}
-		
-		for( vector< ComplexFunction >::iterator i = complex_functions.begin(); i != complex_functions.end(); i++ ){
-			
-			draw_complex_func( i->func , i->angle , i->color , i->is_print_text );
-
-		}
-
-		for( vector< VectorFunction >::iterator i = vector_functions.begin(); i != vector_functions.end(); i++ ){
-			
-			draw_vector_func( i->func , i->color , i->is_print_text );
-
-		}
-		
-		clock.restart();
-		timer += velTime / ( long double )( updatesForSecond );
-		velTime += accTime / ( long double )( updatesForSecond );
-
-	}
-	
-	updateGraphics = false;
-	
-}
-
-void ApplicationPlot::render(){
-	
-	window.clear();
-	
-	if( fullscreen ){
-		
-		if( isTextData ){
-			
-			window.draw( * text );
-			window.draw( * text2 );
+			return make_orto( r , branch( 0 ) + other.branch( 0 ) - 1 );
 			
 		}
 		
-		if( isTextIterations ){
+		return make_orto( r , branch( 0 ) + other.branch( 0 ) );
+	}
+	
+	if( type == Sing ) return info.sing + 1 ? ( info.sing + 2 ? ortogonal::NaN : *this ) : other;
+	if( other.type == Sing ) return other.info.sing + 1 ? ( other.info.sing + 2 ? ortogonal::NaN : other ) : *this;
+	if( overpased_sing() && !other.overpased_sing() ) return *this;
+	if( !overpased_sing() && other.overpased_sing() ) return other;
+	if( overpased_sing() && other.overpased_sing() ) return info.sing > other.info.sing ? *this : other;
+	
+	Complex a = type ? value_tetration< Real >( info.sing ) : info.z;
+	Complex b = other.type ? value_tetration< Real >( other.info.sing ) : other.info.z;
+	
+	return make_orto( a + b , branch( 0 ) + other.branch( 0 ) );
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex > ortogonal< Real , Complex >::operator*( const ortogonal & other ) const{
+	
+	if( !type && !other.type ){
+		
+		Real angle1 = arg( info.z ) + ( Real )( branch( 0 ) ) * constants::tau< Real >();
+		Real angle2 = arg( other.info.z ) + ( Real )( other.branch( 0 ) ) * constants::tau< Real >();
+		int new_branch = ::branch< Real >( angle1 + angle2 );
+		
+		Complex product = info.z * other.info.z;
+		Complex orto_z( log( abs( info.z ) ) , angle1 );
+		Complex orto_z2( log( abs( other.info.z ) ) , angle2 );
+		Complex orto_r = log( product );
+		
+		if( orto_z.imag() > 0 && arg( orto_z2 ) < arg( orto_z ) - constants::pi< Real >() && orto_r.imag() < 0 && orto_r.real() < 0 ){
 			
-			window.draw( * text3 );
+			return make_orto( product , new_branch , branch( 1 ) + other.branch( 1 ) + 1 );
 			
 		}
 		
+		if( orto_z.imag() < 0 && arg( orto_z2 ) > arg( orto_z ) + constants::pi< Real >() && orto_r.imag() > 0 && orto_r.real() < 0 ){
+			
+			return make_orto( product , new_branch , branch( 1 ) + other.branch( 1 ) - 1 );
+			
+		}
+		
+		return make_orto( product , new_branch );
 	}
 	
-	window.draw( lines );
-	window.draw( coords );
+	if( type == Sing ) return info.sing == -1 ? *this : ortogonal::NaN;
+	if( other.type == Sing ) return other.info.sing == -1 ? other : ortogonal::NaN;
 	
-	for( CircleShape & point : points ){
+	if( overpased_sing() && !other.overpased_sing() ) return *this;
+	if( !overpased_sing() && other.overpased_sing() ) return other;
+	if( overpased_sing() && other.overpased_sing() ) return info.sing > other.info.sing ? *this : other;
+	
+	if( type ) if( info.sing == 0 ) return other;
+	if( other.type ) if( other.info.sing == 0 ) return *this;
+	
+	Complex a = type ? value_tetration< Real >( info.sing ) : info.z;
+	Complex b = other.type ? value_tetration< Real >( other.info.sing ) : other.info.z;
+	
+	Real angle1 = arg( a ) + ( Real )( branch( 0 ) ) * constants::tau< Real >();
+	Real angle2 = arg( b ) + ( Real )( other.branch( 0 ) ) * constants::tau< Real >();
+	int new_branch = ::branch< Real >( angle1 + angle2 );
+	
+	return make_orto( a * b , new_branch , branch( 1 ) + other.branch( 1 ) );
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex > ortogonal< Real , Complex >::operator-( const ortogonal & other ) const{
+	
+	return *this + -other;
+	
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex > ortogonal< Real , Complex >::operator/( const ortogonal & other ) const{
+	
+	return *this * inverse( other );
+	
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex > operator+( const Complex & z , const ortogonal< Real , Complex > & other ){
+	
+	return other + z;
+	
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex > operator-( const Complex & z , const ortogonal< Real , Complex > & other ){
+	
+	return -other + z;
+	
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex > operator*( const Complex & z , const ortogonal< Real , Complex > & other ){
+	
+	return other * z;
+	
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex > operator/( const Complex & z , const ortogonal< Real , Complex > & other ){
+	
+	return inverse( other ) * z;
+	
+}
+
+template< typename Real , typename Complex >
+int ortogonal< Real , Complex >::branch( unsigned int index ) const{
+	
+	if( type == Sing ){
 		
-		window.draw( point );
+		return -1;
 		
 	}
 	
-	for( Text & number : numbers ){
+	if( branchs.find( index ) != branchs.end() ){
 		
-		window.draw( number );
+		return branchs.at( index );
 		
 	}
 	
-	window.display();
+	return 0;
+}
+
+template< typename Real , typename Complex >
+int ortogonal< Real , Complex >::complexity() const{
+	
+	if( type == Sing ){
+		
+		return -1;
+		
+	}
+	
+	if( type == Tetration ){
+		
+		if( branchs.empty() ){
+			
+			return 0;
+			
+		}
+		
+		map< unsigned int , int >::const_iterator i = max_element( branchs.begin() , branchs.end() );
+		
+		return i->second + 1;
+	}
+	
+	if( branchs.empty() ){
+		
+		return 0;
+		
+	}
+	
+	map< unsigned int , int >::const_iterator i = max_element( branchs.begin() , branchs.end() );
+	
+	return i->second + 1;
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex > & ortogonal< Real , Complex >::operator+=( const ortogonal & other ){
+	
+	return *this = *this + other;
+	
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex > & ortogonal< Real , Complex >::operator-=( const ortogonal & other ){
+	
+	return *this = *this - other;
+	
+}
+template< typename Real , typename Complex >
+ortogonal< Real , Complex > & ortogonal< Real , Complex >::operator*=( const ortogonal & other ){
+	
+	return *this = *this * other;
+	
+}
+
+template< typename Real , typename Complex >
+ortogonal< Real , Complex > & ortogonal< Real , Complex >::operator/=( const ortogonal & other ){
+	
+	return *this = *this / other;
+	
+}
+
+template< typename Real , typename Complex >
+bool ortogonal< Real , Complex >::operator==( const ortogonal & other ) const{
+	
+	return ( type ? info.sing == other.info.sing : info.z == other.info.z ) && type == other.type && branchs == other.branchs;
 
 }
 
-void ApplicationPlot::run(){
+template< typename Real , typename Complex >
+bool ortogonal< Real , Complex >::operator!=( const ortogonal & other ) const{
 	
-	while( window.isOpen() ){
-		
-		deltaTime = deltaClock.restart().asSeconds();
-		
-		events();
-		update();
-		render();
+	return !( *this == other );
 
+}
+
+template< typename Real , typename Complex >
+const ortogonal< Real , Complex >::Type & ortogonal< Real , Complex >::getType() const{
+	
+	return type;
+	
+}
+
+template< typename Real , typename Complex >
+Complex ortogonal< Real , Complex >::z() const{
+	
+	if( type == Sing ){
+		
+		if( info.sing == -1 ) return 0;
+		
+		cout<<"class ortogonal -> Error in z part : Can't exists the z part of a singularity minor that -1"<<endl;
+		
+		return Complex( std::numeric_limits< Real >::quiet_NaN() , std::numeric_limits< Real >::quiet_NaN() );
+	}
+	
+	return type == Tetration ? value_tetration< Real >( info.sing ) : info.z;
+}
+
+template< typename Real , typename Complex >
+Real ortogonal< Real , Complex >::real() const{
+	
+	if( type == Sing ){
+		
+		if( info.sing == -1 ) return 0;
+		
+		cout<<"class ortogonal -> Error in real part : Can't exists the real part of a singularity minor that -1"<<endl;
+		
+		return std::numeric_limits< Real >::quiet_NaN();
+	}
+	
+	return type == Tetration ? value_tetration< Real >( info.sing ) : info.z.real();
+}
+
+template< typename Real , typename Complex >
+Real ortogonal< Real , Complex >::imag() const{
+	
+	if( type == Sing ){
+		
+		if( info.sing == -1 ) return 0;
+		
+		cout<<"class ortogonal -> Error in imaginary part : Can't exists the imaginary part of a singularity minor that -1"<<endl;
+		
+		return std::numeric_limits< Real >::quiet_NaN();
+	}
+	
+	return type == Tetration ? 0 : info.z.imag();
+}
+
+template< typename Real , typename Complex >
+std::ostream & operator<<( std::ostream & o , const ortogonal< Real , Complex > & w ){
+	
+	if( w.type == ortogonal< Real , Complex >::Sing ){
+		
+		if( w.info.sing == -1 ) return o<<Complex( 0 )<<endl;
+
+		o<<"singularity("<<w.info.sing<<")";
+		
+		return o;
+	}
+	
+	if( w.type == ortogonal< Real , Complex >::Tetration ){
+		
+		if( w.info.sing > 3 ){
+			
+			o<<"singularity("<<w.info.sing<<")";
+			
+		}
+		else{
+			
+			o<<Complex( value_tetration< Real >( w.info.sing ) );
+			
+		}
+		
+		for( map< unsigned int , int >::const_iterator i = w.branchs.begin(); i != w.branchs.end(); i++ ){
+			
+			o<<" , o"<<i->first<<" : "<<i->second;
+			
+		}
+		
+		return o;
+	}
+	
+	o<<w.info.z;
+	
+	for( map< unsigned int , int >::const_iterator i = w.branchs.begin(); i != w.branchs.end(); i++ ){
+		
+		o<<" , o"<<i->first<<" : "<<i->second;
+		
+	}
+	
+	return o;
+}
+
+template< typename T >
+T zexpz( T z ){
+	
+	return z * exp( z );
+	
+}
+
+template< typename T >
+T zexpz_d( T z ){
+	
+	return exp( z ) + z * exp( z );
+	
+}
+
+template< typename T >
+T zexpz_dd( T z ){
+	
+	return exp( z ) * T( 2 ) + z * exp( z );
+	
+}
+
+template< typename T >
+T InitPoint(T z, int k){
+	
+	T I( 0 , 1 );
+	T two_pi_k_I = T( k ) * T( 3.141592653589793238462643383279502884l * 2.l ) * I;
+	T ip( log(z) + two_pi_k_I - log(log(z) + two_pi_k_I) );// initial point coming from the general asymptotic approximation
+	T p( sqrt( T( 2 ) * ( exp( T( 1 ) ) * z + T( 1 ) ) ) );// used when we are close to the branch cut around zero and when k=0,-1
+	
+	//we are close to the branch cut, the initial point must be chosen carefully
+	if( k == 0 && abs( z - exp( -T( 1 ) ) ) <= T( 1 ).real() ){
+		
+		if( k == 0 ) ip = -T( 1 ) + p - T( 1 ) / T( 3 ) * ( p * p ) + T( 11 ) / T( 72 ) * ( p * p * p );
+		if( k == 1 && z.imag() < T( 0 ).real() ) ip = -T( 1 ) - p - T( 1 ) / T( 3 ) * ( p * p ) - T( 11 ) / T( 72 ) * ( p * p * p );
+		if( k == -1 && z.imag() > T( 0 ).real() ) ip = -T( 1 ) - p - T( 1 ) / T( 3 ) * ( p * p ) - T( 11 ) / T( 72 ) * ( p * p * p );
+		
+	}
+	
+	if( k == 0 && abs(z - T( 0.5 )) <= T( 0.5 ).real() ){
+		
+		// (1,1) Pade approximant for W(0,a)
+		ip = ( T( 0.35173371l ) * ( T( 0.1237166l ) + T( 7.061302897l ) * z ) ) / ( T( 2 ) + T( 0.827184l ) * ( T( 1 ) + T( 2 ) * z ) );
+		
+	}
+	
+	if( k == -1 && abs( z - T( 0.5 ) ) <= T( 0.5 ).real() ){
+		
+		// (1,1) Pade approximant for W(-1,a)
+		ip = -( ( ( T( 2.2591588985l ) +
+		T( 4.22096l ) * I ) * ( ( -T( 14.073271l ) - T( 33.767687754l ) * I ) * z - ( T( 12.7127l ) -
+		T( 19.071643l ) * I ) * ( T( 1 ) + T( 2 ) * z ) ) ) / ( T( 2 ) - ( T( 17.23103l ) - T( 10.629721l ) * I ) * ( T( 1 ) + T( 2 ) * z ) ) );
+		
 	}
 
+	return ip;
 }
 
-void ApplicationPlot::zoom( float scale , RenderWindow & window ){
-	
-	Vector2f postion( Mouse::getPosition( window ) );
-	
-	long double u = postion.x / windowSize.x * width + left_;
-	long double v = ( windowSize.y - postion.y ) / windowSize.y * height + bottom;
-	
-	long double factor = 1.l / scale;
-	long double b = factor;
-	long double a = u * ( 1.l - b );
-	long double d = factor;
-	long double c = v * ( 1.l - d );
-	
-	left_ = a + left_ * b;
-	bottom = c + bottom * d;
-	width *= factor;
-	height *= factor;
-	
-	updateGraphics = true;
-	
-}
+//Creditos por W de Lambert a https://github.com/IstvanMezo/LambertW-function
 
-void ApplicationPlot::resized( RenderWindow & window ){
+template< typename T >
+T wlambert( T z , int k ){
 	
-	Vector2l newWindowPosition( window.getPosition() );
-	Vector2l newWindowSize( window.getSize().x , window.getSize().y );
-	long double differenceX = windowPosition.x - newWindowPosition.x;
-	long double differenceY = newWindowPosition.y + newWindowSize.y - ( windowPosition.y + windowSize.y );
+	//For some particular z and k W(z,k) has simple value:
+	if( z == T( 0 ) ) return ( k == 0 ) ? 0.l : -std::numeric_limits< decltype( z.real() ) >::infinity();
+	if( z == -exp( -T( 1 ) ) && ( k == 0 || k == -1 ) ) return -T( 1 );
+	if( z == exp( T( 1 ) ) && k == 0 ) return T( 1 );
 	
-	left_ -= differenceX / windowSize.x * width;
-	bottom -= differenceY / windowSize.y * height;
-	width *= newWindowSize.x / windowSize.x;
-	height *= newWindowSize.y / windowSize.y;
+	//Halley method begins
+	T w( InitPoint( z , k ) ) , wprev; // intermediate values in the Halley method
+	const unsigned int maxiter = wlambert_complexity; // max number of iterations. This eliminates improbable infinite loops
+	unsigned int iter = 0; // iteration counter
 	
-	updateGraphics = true;
-	
-}
-
-void ApplicationPlot::draw_func( const function< long double( long double ) > & f , const Color & color , bool is_right , bool is_print ){
-	
-	long double a = is_right ? timer : -timer;
-	Vector2l result( a ,f( a ) );
-	Vector2f position( ( result.x - left_ ) * staticSize.x / width  , staticSize.y - ( result.y - bottom ) * staticSize.y / height );
-	CircleShape point( 2.l );
-	point.setFillColor( color );
-	point.setPosition( Vector2f( position.x , position.y ) );
-	
-	if( is_print ){
+	do{
 		
-		cout<<result.y<<" , "<<timer<<endl;
-
-	}
-
-	points.push_back( point );
-	math_points.push_back( result );
-	
-}
-
-void ApplicationPlot::draw_complex_func( const function< lcomplex( lcomplex ) > & f , long double angle , const Color & color , bool is_print ){
-	
-	lcomplex r = f( lcomplex( cos( angle ) * timer , sin( angle ) * timer ) );
-	Vector2l result( r.real() , r.imag() );
-	Vector2f position( ( result.x - left_ ) * staticSize.x / width  , staticSize.y - ( result.y - bottom ) * staticSize.y / height );
-	CircleShape point( 2.l );
-	point.setFillColor( color );
-	point.setPosition( Vector2f( position.x , position.y ) );
-	
-	if( is_print ){
+		wprev = w;
+		w -= T( 2 ) * ( ( zexpz( w ) - z ) * zexpz_d( w ) ) / ( T( 2 ) * pow( zexpz_d( w ) , T( 2 ) ) - ( zexpz( w ) - z ) * zexpz_dd( w ) );
+		iter++;
 		
-		cout<<angle<<" , "<<timer<<endl;
-
-	}
-
-	points.push_back( point );
-	math_points.push_back( result );
-
-}
-
-void ApplicationPlot::draw_vector_func( const function< Vector2l( long double ) > & f , const Color & color , bool is_print ){
+	} while( abs( w - wprev ) > std::numeric_limits< decltype( z.real() ) >::epsilon() && iter < maxiter );
 	
-	Vector2l result = f( timer );
-	Vector2f position( ( result.x - left_ ) * staticSize.x / width  , staticSize.y - ( result.y - bottom ) * staticSize.y / height );
-	CircleShape point( 2.l );
-	point.setFillColor( color );
-	point.setPosition( Vector2f( position.x , position.y ) );
-	
-	if( is_print ){
-		
-		cout<<result.x<<" , "<<result.y<<" : "<<timer<<endl;
-
-	}
-
-	points.push_back( point );
-	math_points.push_back( result );
-
-}
-
-void ApplicationPlot::add_func( function< long double( long double ) > f , const Color & color , bool right , bool is_print ){
-	
-	RealFunction real_func;
-	
-	real_func.func = f;
-	real_func.color = color;
-	real_func.is_print_text = is_print;
-	real_func.right = right;
-
-	real_functions.push_back( real_func );
-
-}
-
-void ApplicationPlot::add_bi_func( function< long double( long double ) > f , const Color & color , bool is_print ){
-	
-	add_func( f , color , true , is_print );
-	add_func( f , color , false , is_print );
-
-}
-
-void ApplicationPlot::add_complex_func( function< lcomplex( lcomplex ) > f , long double angle , const Color & color , bool is_print ){
-	
-	ComplexFunction complex_func;
-	
-	complex_func.func = f;
-	complex_func.angle = angle * constants::pi< long double >() / 180.l;
-	complex_func.color = color;
-	complex_func.is_print_text = is_print;
-
-	complex_functions.push_back( complex_func );
-	
-}
-
-void ApplicationPlot::add_complex_func( function< lcomplex( lcomplex ) > f , const Color & color , bool is_print ){
-	
-	ComplexFunction complex_func;
-	
-	complex_func.func = f;
-	complex_func.angle = 0.l;
-	complex_func.color = color;
-	complex_func.is_print_text = is_print;
-
-	complex_functions.push_back( complex_func );
-	
-}
-
-void ApplicationPlot::add_complex_func( function< lcomplex( long double ) > f , const Color & color , bool right , bool is_print ){
-	
-	ComplexFunction complex_func;
-	
-	complex_func.func = [ f ]( lcomplex value ){ return f( value.real() ); };
-	complex_func.angle = ( right ? 0.l : constants::pi< long double >() );
-	complex_func.color = color;
-	complex_func.is_print_text = is_print;
-
-	complex_functions.push_back( complex_func );
-	
-}
-
-////////////
-
-void ApplicationPlot::add_bi_complex_func( function< lcomplex( lcomplex ) > f , long double angle , const Color & color , bool is_print ){
-	
-	add_complex_func( f , angle , color , is_print );
-	add_complex_func( f , angle + 180.l , color , is_print );
-	
-}
-
-void ApplicationPlot::add_bi_complex_func( function< lcomplex( lcomplex ) > f , const Color & color , bool is_print ){
-	
-	add_complex_func( f , color , is_print );
-	add_complex_func( f , 180.l , color , is_print );
-
-}
-
-void ApplicationPlot::add_bi_complex_func( function< lcomplex( long double ) > f , const Color & color , bool is_print ){
-	
-	add_complex_func( f , color , is_print );
-	add_complex_func( f , color , true , is_print );
-	
-}
-
-void ApplicationPlot::add_vector_func( function< Vector2l( long double ) > f , const Color & color , bool is_print ){
-	
-	VectorFunction vector_func;
-	
-	vector_func.func = [ f ]( lcomplex value ){ return f( value.real() ); };
-	vector_func.color = color;
-	vector_func.is_print_text = is_print;
-
-	vector_functions.push_back( vector_func );
-
-}
-
-void ApplicationPlot::set_time( long double time ){
-	
-	timer = time;
-
-}
-
-void ApplicationPlot::set_velocity_time( long double vel ){
-	
-	velTime = vel;
-
-}
-
-void ApplicationPlot::set_updates_for_second( unsigned int N ){
-	
-	updatesForSecond = N;
-
+	return w;
 }
