@@ -539,7 +539,7 @@ void ApplicationPlot::draw_complex_func( const function< lcomplex( lcomplex ) > 
 	
 	if( is_print ){
 		
-		cout<<r<<" , "<<timer<<endl;
+		cout<<angle<<" , "<<timer<<endl;
 
 	}
 
@@ -592,7 +592,7 @@ void ApplicationPlot::add_complex_func( function< lcomplex( lcomplex ) > f , lon
 	ComplexFunction complex_func;
 	
 	complex_func.func = f;
-	complex_func.angle = angle;
+	complex_func.angle = angle * constants::pi< long double >() / 180.l;
 	complex_func.color = color;
 	complex_func.is_print_text = is_print;
 
@@ -618,7 +618,7 @@ void ApplicationPlot::add_complex_func( function< lcomplex( long double ) > f , 
 	ComplexFunction complex_func;
 	
 	complex_func.func = [ f ]( lcomplex value ){ return f( value.real() ); };
-	complex_func.angle = 180.l;
+	complex_func.angle = ( right ? 0.l : constants::pi< long double >() );
 	complex_func.color = color;
 	complex_func.is_print_text = is_print;
 
