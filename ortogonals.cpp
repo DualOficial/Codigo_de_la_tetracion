@@ -4,6 +4,8 @@
 #include<algorithm>
 #include<limits>
 
+int wlambert_complexity = 30;
+
 template<>
 float log( float a , float b ){
 	
