@@ -37,6 +37,9 @@ namespace kuz{
 	template< typename T >
 	T tet( T final_exp , T height );
 
+	template< typename T >
+	T tet_gen( T final_exp , T result );
+	
 }
 
-#include"kuznetsob.inl"
+#include"kuznetsov.inl"
