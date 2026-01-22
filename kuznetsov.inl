@@ -474,5 +474,12 @@ namespace kuz{
 		return tet( tet_gen( final_exp ) + height );
 
 	}
-
+	
+	template< typename T >
+	T tet_gen( T final_exp , T result ){
+		
+		return tet_gen( result ) - tet_gen( final_exp );
+		
+	}
+	
 }
