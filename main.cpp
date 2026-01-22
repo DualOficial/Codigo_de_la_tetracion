@@ -15,7 +15,7 @@
 #include"other_permutations.hpp"
 #include"Language.hpp"
 #include"tetration.hpp"
-#include"kuznetsob.hpp"
+#include"kuznetsov.hpp"
 #include<fstream>
 
 using namespace std;
