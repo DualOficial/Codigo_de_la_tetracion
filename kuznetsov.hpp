@@ -1,7 +1,7 @@
 #pragma once
 
 //CREDITOS A https://github.com/lukaszgryglicki/cpptet
-//Esto implementa el metodo de kuznetsob, que no entiendo todavia, pero aqui lo tienen por comodidad ;)
+//Esto implementa el metodo de kuznetsov, que no entiendo todavia, pero aqui lo tienen por comodidad ;)
 
 #include"definitions.hpp"
 
