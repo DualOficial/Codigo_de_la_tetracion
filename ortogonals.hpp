@@ -355,6 +355,8 @@ T zexpz_dd( T z );
 template< typename T >
 T InitPoint( T z, int k);
 
+extern int wlambert_complexity; //con 30 iteraciones ya es suficiente precisión
+
 template< typename T >
 T wlambert( T z , int k = 0 );
 
