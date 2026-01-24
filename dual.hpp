@@ -22,6 +22,9 @@ public:
 	dual & operator*=( const dual & other ) const;
 	dual & operator/=( const dual & other ) const;
 	
+	bool operator==( const dual & other ) const;
+	bool operator!=( const dual & other ) const;
+
 	static const dual e;
 	
 	T r;
