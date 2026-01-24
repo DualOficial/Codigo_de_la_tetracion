@@ -320,3 +320,491 @@ std::istream & operator>>( std::istream & i , dual< T > & other ){
 	return i>>other.r>>other.i;
 	
 }
+
+//Dual_Struct
+
+template< typename T >
+Dual_Struct< T >::Dual_Struct() : a() , b() , type(){}
+
+template< typename T >
+Dual_Struct< T >::Dual_Struct( any x , any y , bool t ) : a( x ) , b( y ) , type( t ){}
+
+template< typename T >
+Dual_Struct< T >::Dual_Struct( T x , unsigned int complexity ){
+	
+	if( complexity ){
+		
+		*this = dual_intern_value( x , complexity - 1 );
+
+		return;
+	}
+
+	a = x;
+	b = T();
+	type = Value_Element;
+
+}
+
+template< typename T >
+const T & Dual_Struct< T >::z() const{
+	
+	if( type == Value_Element ){
+		
+		return a;
+
+	}
+
+	return a.z();
+}
+
+template< typename T >
+bool Dual_Struct< T >::operator==( const T & x ) const{
+	
+	if( type == Value_Element ){
+		
+		return any_cast< T >( a ) == x && any_cast< T >( b ) == T( 0 );
+
+	}
+
+	return any_cast< Dual_Struct< T > >( a ) == x && any_cast< Dual_Struct< T > >( b ) == T( 0 );
+}
+
+template< typename T >
+bool Dual_Struct< T >::operator!=( const T & x ) const{
+	
+	return !( *this == x );
+
+}
+
+template< typename T >
+bool Dual_Struct< T >::operator==( const Dual_Struct & d ) const{
+	
+	return a == d.a && b == d.b && type == d.type;
+
+}
+
+template< typename T >
+bool Dual_Struct< T >::operator!=( const Dual_Struct & d ) const{
+	
+	return !( *this == d );
+
+}
+
+template< typename T >
+Dual_Struct< T > & Dual_Struct< T >::operator=( const Dual_Struct & d ){
+	
+	a = d.a;
+	b = d.b;
+	type = d.type;
+
+	return *this;
+}
+
+template< typename T >
+Dual_Struct< T > Dual_Struct< T >:: operator+( const Dual_Struct & d ) const{
+	
+	if( type == Value_Element ){
+		
+		return Dual_Struct( any_cast< T >( a ) + any_cast< T >( d.a ) , any_cast< T >( b ) + any_cast< T >( d.b ) , Value_Element );
+
+	}
+	
+	return Dual_Struct( any_cast< Dual_Struct >( a ) + any_cast< Dual_Struct >( d.a ) , any_cast< Dual_Struct >( b ) + any_cast< Dual_Struct >( d.b ) , Dual_Element );
+}
+
+template< typename T >
+Dual_Struct< T > Dual_Struct< T >::operator-( const Dual_Struct & d ) const{
+	
+	if( type == Value_Element ){
+		
+		return Dual_Struct( any_cast< T >( a ) - any_cast< T >( d.a ) , any_cast< T >( b ) - any_cast< T >( d.b ) , Value_Element );
+
+	}
+	
+	return Dual_Struct( any_cast< Dual_Struct >( a ) - any_cast< Dual_Struct >( d.a ) , any_cast< Dual_Struct >( b ) - any_cast< Dual_Struct >( d.b ) , Dual_Element );
+}
+
+template< typename T >
+Dual_Struct< T > Dual_Struct< T >::operator-() const{
+	
+	if( type == Value_Element ){
+		
+		return Dual_Struct( -any_cast< T >( a ) , -any_cast< T >( b ) , Value_Element );
+
+	}
+
+	return Dual_Struct( -any_cast< Dual_Struct >( a ) , -any_cast< Dual_Struct >( b ) , Dual_Element );
+}
+
+template< typename T >
+Dual_Struct< T > Dual_Struct< T >::operator*( const Dual_Struct & d ) const{
+	
+	if( type == Value_Element ){
+		
+		return Dual_Struct( any_cast< T >( a ) * any_cast< T >( d.a ) , any_cast< T >( a ) * any_cast< T >( d.b ) + any_cast< T >( b ) * any_cast< T >( d.a ) , Value_Element );
+
+	}
+	
+	return Dual_Struct( any_cast< Dual_Struct >( a ) * any_cast< Dual_Struct >( d.a ) , any_cast< Dual_Struct >( a ) * any_cast< Dual_Struct >( d.b ) + any_cast< Dual_Struct >( b ) * any_cast< Dual_Struct >( d.a ) , Dual_Element );
+}
+
+template< typename T >
+Dual_Struct< T > inverse( const Dual_Struct< T > & d ){
+	
+	if( d.type ){
+		
+		return Dual_Struct< T >( T( 1 ) / any_cast< Dual_Struct< T > >( d.a ) , -any_cast< Dual_Struct< T > >( d.b ) / ( any_cast< Dual_Struct< T > >( d.a ) * any_cast< Dual_Struct< T > >( d.a ) ) , d.type );
+
+	}
+
+	return Dual_Struct< T >( T( 1 ) / any_cast< T >( d.a ) , -any_cast< T >( d.b ) / ( any_cast< T >( d.a ) * any_cast< T >( d.a ) ) , d.type );
+}
+
+template< typename T >
+Dual_Struct< T > Dual_Struct< T >::operator/( const Dual_Struct & d ) const{
+	
+	return *this * inverse( d );
+	
+}
+
+template< typename T >
+Dual_Struct< T > Dual_Struct< T >::operator*( const T & x ) const{
+	
+	if( type == Value_Element ){
+		
+		return Dual_Struct( any_cast< T >( a ) * x , any_cast< T >( b ) * x , Value_Element );
+
+	}
+	
+	return Dual_Struct( any_cast< Dual_Struct >( a ) * x , any_cast< Dual_Struct >( b ) * x , Dual_Element );
+}
+
+template< typename T >
+Dual_Struct< T > Dual_Struct< T >::operator/( const T & x ) const{
+	
+	if( type == Value_Element ){
+		
+		return Dual_Struct( any_cast< T >( a ) / x , any_cast< T >( b ) / x , Value_Element );
+
+	}
+	
+	return Dual_Struct( any_cast< Dual_Struct >( a ) / x , any_cast< Dual_Struct >( b ) / x , Dual_Element );
+}
+
+template< typename T >
+Dual_Struct< T > Dual_Struct< T >::operator+( const T & x ) const{
+	
+	if( type == Value_Element ){
+		
+		return Dual_Struct( any_cast< T >( a ) + x , any_cast< T >( b ) , Value_Element );
+
+	}
+	
+	return Dual_Struct( any_cast< Dual_Struct >( a ) + x , any_cast< Dual_Struct >( b ) , Dual_Element );
+}
+
+template< typename T >
+Dual_Struct< T > Dual_Struct< T >::operator-( const T & x ) const{
+	
+	if( type == Value_Element ){
+		
+		return Dual_Struct( any_cast< T >( a ) - x , any_cast< T >( b ) , Value_Element );
+
+	}
+	
+	return Dual_Struct( any_cast< Dual_Struct >( a ) - x , any_cast< Dual_Struct >( b ) , Dual_Element );
+}
+
+template< typename T >
+Dual_Struct< T > operator+( const T & x , const Dual_Struct< T > & d ){
+	
+	return d + x;
+
+}
+
+template< typename T >
+Dual_Struct< T > operator-( const T & x , const Dual_Struct< T > & d ){
+	
+	return -d + x;
+
+}
+
+template< typename T >
+Dual_Struct< T > operator/( const T & x , const Dual_Struct< T > & d ){
+	
+	return inverse( d ) * x;
+
+}
+
+template< typename T >
+Dual_Struct< T > operator*( const T & x , const Dual_Struct< T > & d ){
+	
+	return d * x;
+
+}
+
+//functions
+
+template< typename T >
+Dual_Struct< T > exp( const Dual_Struct< T > & z ){
+	
+	if( z.type ){
+		
+		Dual_Struct< T > exp_r = exp( any_cast< Dual_Struct< T > >( z.a ) );
+		
+		return Dual_Struct< T >( exp_r , exp_r * any_cast< Dual_Struct< T > >( z.b ) , z.type );
+	}
+
+	T exp_r = exp( any_cast< T >( z.a ) );
+	
+	return Dual_Struct< T >( exp_r , exp_r * any_cast< T >( z.b ) , z.type );
+}
+
+template< typename T >
+Dual_Struct< T > abs( const Dual_Struct< T > & z ){
+	
+	if( z.type ){
+		
+		return Dual_Struct< T >( abs( any_cast< Dual_Struct< T > >( z.a ) ) , sign( any_cast< Dual_Struct< T > >( z.a ) ) * any_cast< Dual_Struct< T > >( z.b ) , z.type );
+
+	}
+
+	return Dual_Struct< T >( abs( any_cast< T >( z.a ) ) , sign( any_cast< T >( z.a ) ) * any_cast< T >( z.b ) , z.type );
+}
+
+template< typename T >
+Dual_Struct< T > log( const Dual_Struct< T > & z ){
+	
+	if( z.type ){
+		
+		return Dual_Struct< T >( log( any_cast< Dual_Struct< T > >( z.a ) ) , any_cast< Dual_Struct< T > >( z.b ) / any_cast< Dual_Struct< T > >( z.a ) , z.type );
+
+	}
+	
+	return Dual_Struct< T >( log( any_cast< T >( z.a ) ) , any_cast< T >( z.b ) / any_cast< T >( z.a ) , z.type );
+}
+
+template< typename T >
+Dual_Struct< T > pow( const Dual_Struct< T > & z , const Dual_Struct< T > & w ){
+	
+	return exp( w * log( z ) );
+	
+}
+
+template< typename T >
+Dual_Struct< T > cos( const Dual_Struct< T > & z ){
+	
+	if( z.type ){
+		
+		return Dual_Struct< T >( cos( any_cast< Dual_Struct< T > >( z.a ) ) , -any_cast< Dual_Struct< T > >( z.b ) * sin( any_cast< Dual_Struct< T > >( z.a ) ) , z.type );
+
+	}
+
+	return Dual_Struct< T >( cos( any_cast< T >( z.a ) ) , -any_cast< T >( z.b ) * sin( any_cast< T >( z.a ) ) , z.type );
+}
+
+template< typename T >
+Dual_Struct< T > sin( const Dual_Struct< T > & z ){
+	
+	if( z.type ){
+		
+		return Dual_Struct< T >( sin( any_cast< Dual_Struct< T > >( z.a ) ) , any_cast< Dual_Struct< T > >( z.b ) * cos( any_cast< Dual_Struct< T > >( z.a ) ) , z.type );
+
+	}
+
+	return Dual_Struct< T >( sin( any_cast< T >( z.a ) ) , any_cast< T >( z.b ) * cos( any_cast< T >( z.a ) ) , z.type );
+}
+
+template< typename T >
+Dual_Struct< T > tan( const Dual_Struct< T > & z ){
+	
+	if( z.type ){
+		
+		Dual_Struct< T > cos_a = cos( any_cast< Dual_Struct< T > >( z.a ) );
+
+		return Dual_Struct< T >( sin( any_cast< Dual_Struct< T > >( z.a ) ) / cos_a , any_cast< Dual_Struct< T > >( z.b ) / ( cos_a * cos_a ) , z.type );
+	}
+
+	T cos_a = cos( any_cast< T >( z.a ) );
+
+	return Dual_Struct< T >( sin( any_cast< T >( z.a ) ) / cos_a , any_cast< T >( z.b ) / ( cos_a * cos_a ) , z.type );
+}
+
+template< typename T >
+Dual_Struct< T > sec( const Dual_Struct< T > & z ){
+	
+	if( z.type ){
+		
+		Dual_Struct< T > sec_a = inverse( cos( any_cast< Dual_Struct< T > >( z.a ) ) );
+		
+		return Dual_Struct< T >( sec_a , sin( any_cast< Dual_Struct< T > >( z.a ) ) * sec_a * sec_a * any_cast< Dual_Struct< T > >( z.b ) , z.type );
+	}
+
+	T sec_a = T( 1 ) / cos( any_cast< T >( z.a ) );
+	
+	return Dual_Struct< T >( sec_a , sin( any_cast< T >( z.a ) ) * sec_a * sec_a * any_cast< T >( z.b ) , z.type );
+}
+
+template< typename T >
+Dual_Struct< T > csc( const Dual_Struct< T > & z ){
+	
+	if( z.type ){
+		
+		Dual_Struct< T > csc_a = inverse( sin( any_cast< Dual_Struct< T > >( z.a ) ) );
+	
+		return Dual_Struct< T >( csc_a , -cos( any_cast< Dual_Struct< T > >( z.a ) ) * csc_a * csc_a * any_cast< Dual_Struct< T > >( z.b ) , z.type );
+	}
+
+	T csc_a = T( 1 ) / sin( any_cast< T >( z.a ) );
+	
+	return Dual_Struct< T >( csc_a , -cos( any_cast< T >( z.a ) ) * csc_a * csc_a * any_cast< T >( z.b ) , z.type );
+}
+
+template< typename T >
+Dual_Struct< T > cot( const Dual_Struct< T > & z ){
+	
+	if( z.type ){
+		
+		Dual_Struct< T > sin_a = sin( any_cast< Dual_Struct< T > >( z.a ) );
+		
+		return Dual_Struct< T >( cos( any_cast< Dual_Struct< T > >( z.a ) ) / sin_a , -any_cast< Dual_Struct< T > >( z.b ) / ( sin_a * sin_a ) , z.type );
+	}
+
+	T sin_a = sin( any_cast< T >( z.a ) );
+	
+	return Dual_Struct< T >( cos( any_cast< T >( z.a ) ) / sin_a , -any_cast< T >( z.b ) / ( sin_a * sin_a ) , z.type );
+}
+
+template< typename T >
+Dual_Struct< T > sqrt( const Dual_Struct< T > & z ){
+	
+	if( z.type ){
+		
+		Dual_Struct< T > sqrt_a = sqrt( any_cast< Dual_Struct< T > >( z.a ) );
+		
+		return Dual_Struct< T >( sqrt_a , any_cast< Dual_Struct< T > >( z.b ) / ( sqrt_a * T( 2 ) ) , z.type );
+	}
+
+	T sqrt_a = sqrt( any_cast< T >( z.a ) );
+	
+	return Dual_Struct< T >( sqrt_a , any_cast< T >( z.b ) / ( sqrt_a * T( 2 ) ) , z.type );
+}
+
+template< typename T >
+Dual_Struct< T > cbrt( const Dual_Struct< T > & z ){
+	
+	if( z.type ){
+		
+		Dual_Struct< T > cbrt_a = cbrt( any_cast< Dual_Struct< T > >( z.a ) );
+		
+		return Dual_Struct< T >( cbrt_a , any_cast< Dual_Struct< T > >( z.b ) / ( cbrt_a * cbrt_a * T( 3 ) ) , z.type );
+	}
+
+	Dual_Struct< T > cbrt_a = cbrt( any_cast< T >( z.a ) );
+	
+	return Dual_Struct< T >( cbrt_a , any_cast< T >( z.b ) / ( cbrt_a * cbrt_a * T( 3 ) ) , z.type );
+}
+
+template< typename T >
+Dual_Struct< T > wlambert( const Dual_Struct< T > & z ){
+	
+	if( z.type ){
+		
+		if( any_cast< Dual_Struct< T > >( z.a ) == T( 0 ) ){
+		
+			return z;
+		
+		}
+	
+		Dual_Struct< T > wlambert_a = wlambert( any_cast< Dual_Struct< T > >( z.a ) );
+	
+		return Dual_Struct< T >( wlambert_a , any_cast< Dual_Struct< T > >( z.b ) / ( any_cast< Dual_Struct< T > >( z.a ) * ( T( 1 ) / wlambert_a + T( 1 ) ) ) , z.type );
+	}
+
+	if( any_cast< T >( z.a ) == T( 0 ) ){
+		
+		return z;
+		
+	}
+	
+	T wlambert_a = wlambert( any_cast< T >( z.a ) );
+	
+	return Dual_Struct< T >( wlambert_a , any_cast< T >( z.b ) / ( any_cast< T >( z.a ) * ( T( 1 ) / wlambert_a + T( 1 ) ) ) , z.type );
+}
+
+template< typename T >
+Dual_Struct< T > wave( const Dual_Struct< T > & z ){
+	
+	if( z.type ){
+		
+		Dual_Struct< T > wave_a = wave( any_cast< Dual_Struct< T > >( z.a ) );
+		
+		return Dual_Struct< T >( wave_a , any_cast< Dual_Struct< T > >( z.b ) / ( any_cast< Dual_Struct< T > >( z.a ) * ( T( 1 ) + log( wave_a ) ) ) , z.type );
+	}
+
+	T wave_a = wave( any_cast< T >( z.a ) );
+	
+	return Dual_Struct< T >( wave_a , any_cast< T >( z.b ) / ( any_cast< T >( z.a ) * ( T( 1 ) + log( wave_a ) ) ) , z.type );
+}
+
+template< typename T >
+Dual_Struct< T > asc( const Dual_Struct< T > & z , const Dual_Struct< T > & w ){
+	
+	return pow( z , pow( z , w ) );
+
+}
+
+template< typename T >
+Dual_Struct< T > dual_intern_value( const T & x , unsigned int index ){
+	
+	if( index == 0 ){
+		
+		return Dual_Struct< T >( x , T() , false );
+
+	}
+
+	return Dual_Struct< T >( dual_intern_value( x , index - 1 ) , dual_intern_value( T() , index - 1 ) , true );
+}
+
+template< typename T >
+function< Dual_Struct< T >( Dual_Struct< T > ) > derivate( function< Dual_Struct< T >( Dual_Struct< T > ) > f , unsigned int size ){
+	
+	if( size == 0 ){
+		
+		function< Dual_Struct< T >( Dual_Struct< T > ) > g = [ f ]( Dual_Struct< T > x ){
+			
+			return f( x );
+			
+		};
+
+		return g;
+	}
+
+	if( size == 1 ){
+		
+		function< Dual_Struct< T >( Dual_Struct< T > ) > g = [ f ]( Dual_Struct< T > x ){
+			
+			return Dual_Struct< T >( ( f( Dual_Struct< T >( x.a , T( 1 ) , false ) ) - f( Dual_Struct< T >( x.a , T( 0 ) , false ) ) ).b , T( 0 ) , false );
+			
+		};
+
+		return g;
+	}
+
+	function< Dual_Struct< T >( Dual_Struct< T > ) > g = [ f , size ]( Dual_Struct< T > x ){
+		
+		return any_cast< Dual_Struct< T > >(
+		( f( Dual_Struct< T >( x , dual_intern_value( T( 1 ) , size - 2 ) , true ) ) -
+		f( Dual_Struct< T >( x , dual_intern_value( T( 0 ) , size - 2 ) , true ) ) ).b );
+		
+	};
+
+	return derivate( g , size - 1 );
+}
+
+template< typename T >
+T derivate( function< Dual_Struct< T >( Dual_Struct< T > ) > f , const T & x , unsigned int index ){
+	
+	return any_cast< T >( derivate( f , index )( Dual_Struct< T >( x , T( 0 ) , false ) ).a );
+
+}
