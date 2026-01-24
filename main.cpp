@@ -18,6 +18,7 @@
 #include"kuznetsov.hpp"
 #include"dual.hpp"
 #include<fstream>
+#include<any>
 
 using namespace std;
 using namespace std::literals;
@@ -27,17 +28,18 @@ using namespace boost::math;
 
 int main(){
 	
-	////////////Codigo de Ejemplo para hacer una grafica real de la tetración
-
 	adjust_precision< long double >();
 
-	tetration_complexity = 72; //Aqui se especifica las iteraciones que usara la tetración
-	//Advertencia: la tetración no soporta iteraciones muy grandes. Si quiere mas iteraciones, aumente decimales.
-
+	permutation_complexity = 1000;
+	
 	ApplicationPlot app;
 
 	app.set_velocity_time( 10 );
-	app.add_bi_func( []( long double x ){ return tet< lcomplex >( 3.l , 1.5l , x ).real(); } , Color::Red );
+	app.add_bi_func( []( long double x ){
+		
+		return derivate< long double >( []( lDual_Struct a ){ return per< lDual_Struct >( lDual_Struct( 2.l , 2 ) , a ); } , x , 2 );
+		
+	} , Color::Red );
 
 	app.run();
 
@@ -165,30 +167,33 @@ app.add_bi_func( []( long double x ){
 app.run();
 
 Fin del ejemplo.
-Por cierto, también puedes hacer dobles derivadas, haciendo duales de duales.
+Por cierto, también puedes hacer segundas derivadas, haciendo duales de duales.
+Pero el metodo mas rapido es usando Dual_Struct y la función derivate.
 Aqui un ejemplo:
 
 adjust_precision< long double >();
 
-using dual2 = dual< ldual >;
-
-auto func = []( ldual x ){
-	
-	return anader< ldual >( []( dual2 a ){ return per< dual2 >( ldual( 2.l ) , a ); } , x );
-
-};
+permutation_complexity = 1000;
 
 ApplicationPlot app;
 
 app.set_velocity_time( 10 );
-app.add_bi_func( [ func ]( long double x ){
+app.add_bi_func( []( long double x ){
 	
-	return anader< long double >( func , x );
+	return derivate< long double >( []( lDual_Struct a ){ return per< lDual_Struct >( lDual_Struct( 2.l , 2 ) , a ); } , x , 2 );
 	
-} , Color::Blue );
+	//el primer argumento es la función a derivar
+	//el segundo es la entrada de la derivada
+	//el tercero es la cantidad de derivadas por hacer
+	//En la parte que dice "lDual_Struct( 2.l , 2 )", significa, constante dos, en la derivada 2
+	//Es importante especificar la derivada.
+
+} , Color::Red );
+
 app.run();
 
 Fin del ejemplo.
+En este ejemplo se hizo la segunda derivada de la permutación base 2.
 
 5.other_permutations
 contiene varias funciones, parecidas a la permutación, en su forma de creación.
