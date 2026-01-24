@@ -266,6 +266,20 @@ dual< T > & dual< T >::operator/=( const dual & other ) const{
 }
 
 template< typename T >
+bool dual< T >::operator==( const dual & other ) const{
+	
+	return r == other.r && i == other.i;
+
+}
+
+template< typename T >
+bool dual< T >::operator!=( const dual & other ) const{
+	
+	return !( *this == other );
+
+}
+
+template< typename T >
 dual< T > operator+( const T & first , const dual< T > & second ){
 	
 	return dual< T >( first + second.r , second.i );
