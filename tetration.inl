@@ -280,8 +280,69 @@ T alpha_tet( const T & base ){
 		
 		return z;
 	}
+
+	if( abs( base ) < T( 1 ).real() ){
+		
+		T z = 2;
+		T prev_z;
+
+		do{
+			
+			prev_z = z;
+			z = pow( base , z );
+
+		} while( abs( z - prev_z ) > std::numeric_limits< decltype( base.real() ) >::epsilon() );
+		
+		return z;
+	}
 	
 	T z = ( base == T( 2 ) ? 3 : 2 );
+	T prev_z;
+
+	do{
+		
+		prev_z = z;
+		z = log( base , z );
+
+	} while( abs( z - prev_z ) > std::numeric_limits< decltype( base.real() ) >::epsilon() );
+	
+	return z;
+}
+
+template< typename T >
+T alpha_tet( const T & base , const T & test_value ){
+	
+	if( base == exp( T( 1 ) ) ){
+		
+		T z = test_value;
+		T prev_z;
+
+		do{
+			
+			prev_z = z;
+			z = log( z );
+
+		} while( abs( z - prev_z ) > std::numeric_limits< decltype( base.real() ) >::epsilon() );
+		
+		return z;
+	}
+
+	if( abs( base ) < T( 1 ).real() ){
+		
+		T z = 2;
+		T prev_z;
+
+		do{
+			
+			prev_z = z;
+			z = pow( base , z );
+
+		} while( abs( z - prev_z ) > std::numeric_limits< decltype( base.real() ) >::epsilon() );
+		
+		return z;
+	}
+	
+	T z = test_value;
 	T prev_z;
 
 	do{
@@ -299,12 +360,6 @@ T tet( const T & base , const T & final_exp , T height , const T & v ){
 	
 	if( tetration_recursive ){
 		
-		if( abs( final_exp - v ) > T( 1 ).real() ){
-			
-			return pow( base , tet( base , log( base , final_exp ) , height , v ) );
-
-		}
-
 		auto half = T( 0.5 ).real();
 
 		if( height.real() < v.real() - half ){
@@ -324,11 +379,44 @@ T tet( const T & base , const T & final_exp , T height , const T & v ){
 
 			return tetration_integer( base , tet( base , final_exp , height , v ) , a );
 		}
+
+	}
+
+	if( abs( base ) < T( 1 ).real() ){
+		
+		if( tetration_recursive ){
+			
+			if( abs( final_exp - v ) > T( 1 ).real() ){
+				
+				return log( base , tet( base , pow( base , final_exp ) , height , v ) );
+
+			}
+			
+		}
+		
+		T a = v - T( 1 );
+		T b = tetration_integer( base , final_exp , tetration_complexity ) - a;
+		
+		T log_base = log( base );
+		T c = T( 1 ) / ( v * log_base );
+		T d = pow( c , -height );
+		T x = ( -d * log_base * ( d - T( 1 ) ) / ( c - T( 1 ) ) - c + T( 1 ) ) / T( 2 );
+
+		return tetration_integer( base , pow( b , d * pow( b , x ) ) + a , -tetration_complexity );
+	}
+
+	if( tetration_recursive ){
+		
+		if( abs( final_exp - v ) > T( 1 ).real() ){
+			
+			return pow( base , tet( base , log( base , final_exp ) , height , v ) );
+
+		}
 		
 	}
 
 	if( base == exp( exp( -T( 1 ) ) ) ) return natural_tet( final_exp , height );
-
+	
 	T a = v - T( 1 );
 	T b = tetration_integer( base , final_exp , -tetration_complexity ) - a;
 	
@@ -343,7 +431,7 @@ T tet( const T & base , const T & final_exp , T height , const T & v ){
 template< typename T >
 T tet( const T & base , const T & final_exp , const T & height ){
 	
-	return tet( base , final_exp , height , alpha_tet( base ) );
+	return tet( base , final_exp , height , alpha_tet( base , final_exp ) );
 	
 }
 
@@ -393,13 +481,21 @@ T tet_e( const T & final_exp , T height , const T & v ){
 template< typename T >
 T tet_e( const T & final_exp , const T & height ){
 	
-	return tet_e( final_exp , height , alpha_tet( exp( T( 1 ) ) ) );
+	return tet_e( final_exp , height , alpha_tet( exp( T( 1 ) ) , final_exp ) );
 	
 }
 
 template< typename T >
 T tet_gen( const T & base , const T & final_exp , T result , const T & v ){
 	
+	if( abs( base ) < T( 1 ).real() ){
+		
+		T a = tetration_integer( base , result , tetration_complexity ) - v;
+		T b = tetration_integer( base , final_exp , tetration_complexity ) - v;
+
+		return log( v * log( base ) , a / b );
+	}
+
 	if( base == exp( exp( -T( 1 ) ) ) ) return natural_gen( final_exp , result );
 
 	T a = tetration_integer( base , result , -tetration_complexity ) - v;
@@ -411,7 +507,7 @@ T tet_gen( const T & base , const T & final_exp , T result , const T & v ){
 template< typename T >
 T tet_gen( const T & base , const T & final_exp , T result ){
 	
-	return tet_gen( base , final_exp , result , alpha_tet( base ) );
+	return tet_gen( base , final_exp , result , alpha_tet( base , final_exp ) );
 
 }
 
@@ -427,7 +523,7 @@ T tet_gen_e( const T & final_exp , const T & result , const T & v ){
 template< typename T >
 T tet_gen_e( const T & final_exp , const T & result ){
 	
-	return tet_gen_e( final_exp , result , alpha_tet( exp( T( 1 ) ) ) );
+	return tet_gen_e( final_exp , result , alpha_tet( exp( T( 1 ) ) ) , final_exp );
 
 }
 
@@ -494,6 +590,6 @@ T exphalf( T z , const T & alpha_value ){
 template< typename T >
 T exphalf( const T & z ){
 	
-	return exphalf( z , alpha_tet( exp( T( 1 ) ) ) );
+	return exphalf( z , alpha_tet( exp( T( 1 ) ) , z ) );
 
 }
