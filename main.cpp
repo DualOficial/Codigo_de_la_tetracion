@@ -16,6 +16,7 @@
 #include"Language.hpp"
 #include"tetration.hpp"
 #include"kuznetsov.hpp"
+#include"dual.hpp"
 #include<fstream>
 
 using namespace std;
@@ -28,7 +29,7 @@ int main(){
 	
 	////////////Codigo de Ejemplo para hacer una grafica real de la tetración
 
-	adjust_precision< float50 >();
+	adjust_precision< long double >();
 
 	tetration_complexity = 72; //Aqui se especifica las iteraciones que usara la tetración
 	//Advertencia: la tetración no soporta iteraciones muy grandes. Si quiere mas iteraciones, aumente decimales.
@@ -59,7 +60,7 @@ adjust_precision< float100 >(); para usar numeros reales con 100 decimales de pr
 
 ////////////Codigo de Ejemplo para hacer una grafica real de la tetración
 
-adjust_precision< float50 >();
+adjust_precision< long double >();
 
 tetration_complexity = 72; //Aqui se especifica las iteraciones que usara la tetración
 //Advertencia: la tetración no soporta iteraciones muy grandes. Si quiere mas iteraciones, aumente decimales.
@@ -73,9 +74,10 @@ app.run();
 
 ////////////Codigo de Ejemplo para hacer una grafica real de la permutación
 
-adjust_precision< float50 >();
+adjust_precision< long double >();
 
-permutation_complexity = 1000;
+permutation_complexity = 1000; //La complejidad de la permutación puede ser tan grande como usted quiera.
+//Pero sus cambios cada vez seran menores.
 
 ApplicationPlot app;
 
@@ -145,6 +147,48 @@ trabajara con exp( exp( z ) ), y así indefinidamente.
 
 4.dual, esta es una clase que permite usar los numeros duales( xddd como DualMath ).
 Sirve para derivadas.
+Aqui un ejemplo:
+
+adjust_precision< long double >();
+
+ApplicationPlot app;
+
+app.set_velocity_time( 10 );
+app.add_bi_func( []( long double x ){
+	
+	//anader, es una función que calcula la derivada de otra a partir de numeros duales
+	//para ello debes meterle una función de duales y un numero de cualquier tipo.
+
+	return anader< long double >( []( ldual a ){ return per< ldual >( 2.l , a ); } , x );
+	
+} , Color::Blue );
+app.run();
+
+Fin del ejemplo.
+Por cierto, también puedes hacer dobles derivadas, haciendo duales de duales.
+Aqui un ejemplo:
+
+adjust_precision< long double >();
+
+using dual2 = dual< ldual >;
+
+auto func = []( ldual x ){
+	
+	return anader< ldual >( []( dual2 a ){ return per< dual2 >( ldual( 2.l ) , a ); } , x );
+
+};
+
+ApplicationPlot app;
+
+app.set_velocity_time( 10 );
+app.add_bi_func( [ func ]( long double x ){
+	
+	return anader< long double >( func , x );
+	
+} , Color::Blue );
+app.run();
+
+Fin del ejemplo.
 
 5.other_permutations
 contiene varias funciones, parecidas a la permutación, en su forma de creación.
