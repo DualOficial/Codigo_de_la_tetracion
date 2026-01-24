@@ -1,28 +1,5 @@
-#include<SFML/Graphics.hpp>
-#include<SFML/System.hpp>
-#include<SFML/Window.hpp>
-#include<complex>
-#include<iostream>
-#include<stdlib.h>
-#include<stdio.h>
-#include<sstream>
-#include"ortogonals.hpp"
-#include"ortogonalper.hpp"
-#include"ApplicationPlot.hpp"
-#include"ApplicationPlotComplex.hpp"
-#include"TestFunc.hpp"
-#include"permutation.hpp"
-#include"other_permutations.hpp"
-#include"Language.hpp"
-#include"tetration.hpp"
-#include"kuznetsov.hpp"
-#include"dual.hpp"
-#include<fstream>
-#include<any>
-
-using namespace std;
-using namespace std::literals;
-using namespace boost::math;
+#include"MathGraphics.hpp"
+#include"Math.hpp"
 
 //Tetración: Formula descubierta el 13 de enero en la mañana( como entre las 3am y 4am ), por que dormi tarde.
 
@@ -30,19 +7,16 @@ int main(){
 	
 	adjust_precision< long double >();
 
-	permutation_complexity = 1000;
-	
+	tetration_complexity = 72; //Aqui se especifica las iteraciones que usara la tetración
+	//Advertencia: la tetración no soporta iteraciones muy grandes. Si quiere mas iteraciones, aumente decimales.
+
 	ApplicationPlot app;
 
 	app.set_velocity_time( 10 );
-	app.add_bi_func( []( long double x ){
-		
-		return derivate< long double >( []( lDual_Struct a ){ return per< lDual_Struct >( lDual_Struct( 2.l , 2 ) , a ); } , x , 2 );
-		
-	} , Color::Red );
+	app.add_bi_func( []( long double x ){ return tet< lcomplex >( 3.l , 1.5l , x ).real(); } , Color::Red );
 
 	app.run();
-
+	
 	return 0;
 }
 
