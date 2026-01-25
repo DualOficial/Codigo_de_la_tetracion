@@ -88,6 +88,12 @@ float rebranch( float a1 , float a2 ){
 
 //VEC2 MATH
 
+vec2 conj( vec2 z ){
+	
+	return vec2( z.x , -z.y );
+
+}
+
 vec2 vk( float x ){
 	
 	return vec2( x , 0.0 );
@@ -335,7 +341,19 @@ vec2 wave( vec2 z ){
 
 }
 
-vec2 tetration_integer( vec2 z , int n ){
+vec2 asc( vec2 a , vec2 b ){
+	
+	return pow( a , pow( a , b ) );
+
+}
+
+vec2 log( vec2 a , vec2 b ){
+	
+	return d( log( b ) , log( a ) );
+
+}
+
+vec2 e_tetration_integer( vec2 z , int n ){
 	
 	if( n < 0 ){
 		
@@ -359,6 +377,32 @@ vec2 tetration_integer( vec2 z , int n ){
 	}
 
 	return z;
+}
+
+vec2 tetration_integer( vec2 base , vec2 a , int n ){
+	
+	if( n < 0 ){
+		
+		n = -n;
+		
+		while( n > 0 ){
+			
+			a = log( base , a );
+			n--;
+
+		}
+
+		return a;
+	}
+
+	while( n > 0 ){
+		
+		a = pow( base , a );
+		n--;
+
+	}
+
+	return a;
 }
 
 vec2 kproduct( int n , vec2 u , vec2 v ){
@@ -452,6 +496,17 @@ struct orto{
 	int branch2;
 	
 };
+
+orto conj( orto w ){
+	
+	orto u;
+
+	u.z = conj( w.z );
+	u.branch1 = w.branch1;
+	u.branch2 = w.branch2;
+
+	return u;
+}
 
 orto k( float x ){
 	
@@ -827,6 +882,71 @@ orto kinverse( int n , orto w ){
 	return w;
 }
 
+orto asc( orto a , orto b ){
+	
+	return pow( a , pow( a , b ) );
+
+}
+
+orto log( orto a , orto b ){
+	
+	return d( log( b ) , log( a ) );
+
+}
+
+orto e_tetration_integer( orto a , int n ){
+	
+	if( n < 0 ){
+		
+		n = -n;
+		
+		while( n > 0 ){
+			
+			a = log( a );
+			n--;
+
+		}
+
+		return a;
+	}
+
+	while( n > 0 ){
+		
+		a = exp( a );
+		n--;
+
+	}
+
+	return a;
+}
+
+
+orto tetration_integer( orto base , orto a , int n ){
+	
+	if( n < 0 ){
+		
+		n = -n;
+		
+		while( n > 0 ){
+			
+			a = log( base , a );
+			n--;
+
+		}
+
+		return a;
+	}
+
+	while( n > 0 ){
+		
+		a = pow( base , a );
+		n--;
+
+	}
+
+	return a;
+}
+
 //ORTOGONALS PERSPECTIVE
 
 struct ortoper{
@@ -835,6 +955,16 @@ struct ortoper{
 	int per;
 	
 };
+
+ortoper conj( ortoper a ){
+	
+	ortoper u;
+
+	u.w = conj( a.w );
+	u.per = a.per;
+
+	return u;
+}
 
 orto tetration_integer( orto w , int n ){
 	
@@ -1138,7 +1268,7 @@ ortoper factor( ortoper u , ortoper v ){
 	
 }
 
-ortoper tetration_integer( ortoper w , int n ){
+ortoper e_tetration_integer( ortoper w , int n ){
 	
 	if( n < 0 ){
 		
@@ -1164,33 +1294,9 @@ ortoper tetration_integer( ortoper w , int n ){
 	return w;
 }
 
-vec2 asc( vec2 a , vec2 b ){
-	
-	return pow( a , pow( a , b ) );
-
-}
-
-orto asc( orto a , orto b ){
-	
-	return pow( a , pow( a , b ) );
-
-}
-
 ortoper asc( ortoper a , ortoper b ){
 	
 	return pow( a , pow( a , b ) );
-
-}
-
-vec2 log( vec2 a , vec2 b ){
-	
-	return d( log( b ) , log( a ) );
-
-}
-
-orto log( orto a , orto b ){
-	
-	return d( log( b ) , log( a ) );
 
 }
 
@@ -1198,6 +1304,32 @@ ortoper log( ortoper a , ortoper b ){
 	
 	return d( log( b ) , log( a ) );
 
+}
+
+ortoper tetration_integer( ortoper base , ortoper a , int n ){
+	
+	if( n < 0 ){
+		
+		n = -n;
+		
+		while( n > 0 ){
+			
+			a = log( base , a );
+			n--;
+
+		}
+
+		return a;
+	}
+
+	while( n > 0 ){
+		
+		a = pow( base , a );
+		n--;
+
+	}
+
+	return a;
 }
 
 //GRAPHIC FUNCTIONS
