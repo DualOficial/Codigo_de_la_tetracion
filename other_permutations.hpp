@@ -3,12 +3,7 @@
 #include<functional>
 #include"ortogonals.hpp"
 
-typedef function< lortogonal( lortogonal , lortogonal ) > orto_function;
-
-lortogonal iterated_function( lortogonal ( *f )( lortogonal w ) , unsigned int repetion , lortogonal w );
-orto_function create_permutation( lortogonal ( *f )( lortogonal w ) , lortogonal ( *f_inverse )( lortogonal w ) , long double accoplation );
-
-//tetración mas y menos
+//tetraciÃ³n mas y menos
 
 extern int plus_tetration_complexity;
 extern int minus_tetration_complexity;
@@ -37,7 +32,7 @@ T mtetration( T x , T y );
 template< typename T >
 T ptetration( T x , T y );
 
-//permutación special square
+//permutaciÃ³n special square
 
 extern int hyper_square_complexity;
 
@@ -53,7 +48,7 @@ T hypersquare_integer( T x , int n );
 template< typename T >
 T hypersquare( T x , T y );
 
-//tetración base e^1/e
+//tetraciÃ³n base e^1/e
 
 extern int natural_tetration_complexity;
 
