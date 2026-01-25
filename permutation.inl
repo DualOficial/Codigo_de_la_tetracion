@@ -111,23 +111,10 @@ T F( T x ){
 		term3 = wave( term3 );
 		result *= ( 1.l + log_x / term2 ) / term3;
 		n++;
-		/*
-		if( n % 10000 == 0 ){
-			
-			cout<<result<<" , "<<n<<endl;
-			
-		}
-		*/
-	} while( abs( result - prev_result ) > std::numeric_limits< long double >::epsilon() && n < 100 );
+		
+	} while( abs( result - prev_result ) > std::numeric_limits< long double >::epsilon() && n < permutation_complexity );
 	
 	return result;
-}
-
-template< typename T >
-T riz( T x , T y ){
-	
-	return log( x , log( x , y ) );
-	
 }
 
 template< typename T >
