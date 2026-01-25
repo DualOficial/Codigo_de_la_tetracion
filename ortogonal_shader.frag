@@ -347,7 +347,7 @@ vec2 asc( vec2 a , vec2 b ){
 
 }
 
-vec2 log( vec2 a , vec2 b ){
+vec2 log2( vec2 a , vec2 b ){
 	
 	return d( log( b ) , log( a ) );
 
@@ -387,7 +387,7 @@ vec2 tetration_integer( vec2 base , vec2 a , int n ){
 		
 		while( n > 0 ){
 			
-			a = log( base , a );
+			a = log2( base , a );
 			n--;
 
 		}
@@ -888,7 +888,7 @@ orto asc( orto a , orto b ){
 
 }
 
-orto log( orto a , orto b ){
+orto log2( orto a , orto b ){
 	
 	return d( log( b ) , log( a ) );
 
@@ -929,7 +929,7 @@ orto tetration_integer( orto base , orto a , int n ){
 		
 		while( n > 0 ){
 			
-			a = log( base , a );
+			a = log2( base , a );
 			n--;
 
 		}
@@ -1300,7 +1300,7 @@ ortoper asc( ortoper a , ortoper b ){
 
 }
 
-ortoper log( ortoper a , ortoper b ){
+ortoper log2( ortoper a , ortoper b ){
 	
 	return d( log( b ) , log( a ) );
 
@@ -1314,7 +1314,7 @@ ortoper tetration_integer( ortoper base , ortoper a , int n ){
 		
 		while( n > 0 ){
 			
-			a = log( base , a );
+			a = log2( base , a );
 			n--;
 
 		}
