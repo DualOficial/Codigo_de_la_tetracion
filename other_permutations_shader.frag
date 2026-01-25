@@ -436,9 +436,9 @@ ortoper g_iterared( ortoper x , ortoper y ){
 	return g_integer( pow( a , pow( a , d( y , kper( 2.0 ) ) ) ) , value );
 }
 
-orto f( orto x ){
+vec2 f( vec2 x ){
 	
-	return g_iterared( k( 2.0 ) ,  x );
+	return g_iterared( vk( 2.0 ) ,  x );
 
 }
 
@@ -446,6 +446,6 @@ void main(){
 	
 	ortoper number = adjust( getCoords() );
 	
-	graph( f( to_orto( number ) ).z );
-	
+	graph( f( to_orto( number ).z ) );
+
 }
