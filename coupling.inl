@@ -1,5 +1,3 @@
-#include"coupling.hpp"
-
 template< typename T >
 T coupling( const function< Dual_Struct< T >( Dual_Struct< T > , unsigned int index ) > & f , const T & x ){
 	
