@@ -49,15 +49,32 @@ public:
 	void render();
 	void run();
 
-	void add_func( function< long double( long double ) > f , const Color & color = Color::White  , bool right = true , bool is_print = true );
-	void add_bi_func( function< long double( long double ) > f  , const Color & color = Color::White  , bool is_print = true );
-	void add_complex_func( function< lcomplex( lcomplex ) > , long double angle = 0.l , const Color & color = Color::White  , bool is_print = true );
-	void add_complex_func( function< lcomplex( lcomplex ) > , const Color & color = Color::White  , bool is_print = true );
-	void add_complex_func( function< lcomplex( long double ) > , const Color & color = Color::White , bool right = true , bool is_print = true );
-	void add_bi_complex_func( function< lcomplex( lcomplex ) > , long double angle = 0.l , const Color & color = Color::White  , bool is_print = true );
-	void add_bi_complex_func( function< lcomplex( lcomplex ) > , const Color & color = Color::White  , bool is_print = true );
-	void add_bi_complex_func( function< lcomplex( long double ) > , const Color & color = Color::White , bool is_print = true );
-	void add_vector_func( function< Vector2l( long double ) > , const Color & color = Color::White , bool is_print = true );
+	template< typename T >
+	void add_func( T f , const Color & color = Color::White  , bool right = true , bool is_print = true );
+	
+	template< typename T >
+	void add_bi_func( T f  , const Color & color = Color::White  , bool is_print = true );
+	
+	template< typename T >
+	void add_complex_func( T f , long double angle = 0.l , const Color & color = Color::White  , bool is_print = true );
+	
+	template< typename T >
+	void add_normal_func( T f , const Color & color = Color::White , bool right = true , bool is_print = true );
+	
+	template< typename T >
+	void add_bi_normal_func( T f , const Color & color = Color::White , bool is_print = true );
+
+	template< typename T >
+	void add_complex_func( T f , const Color & color = Color::White  , bool is_print = true );
+	
+	template< typename T >
+	void add_bi_complex_func( T f , long double angle = 0.l , const Color & color = Color::White  , bool is_print = true );
+	
+	template< typename T >
+	void add_bi_complex_func( T f , const Color & color = Color::White  , bool is_print = true );
+	
+	template< typename T >
+	void add_vector_func( T f , const Color & color = Color::White , bool is_print = true );
 	
 	void set_time( long double time );
 	void set_velocity_time( long double vel );
@@ -118,3 +135,5 @@ protected:
 	int countNumbers;
 	
 };
+
+#include"ApplicationPlot.inl"
