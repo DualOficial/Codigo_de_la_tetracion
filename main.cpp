@@ -192,7 +192,7 @@ Aqui un ejemplo de su uso:
 
 adjust_precision< long double >();
 
-lcomplex alpha = alpha_tet< long double >( exp( 1.l ) );
+lcomplex alpha = alpha_tet< lcomplex >( exp( 1.l ) );
 
 cout<<alpha<<" : "<<0<<endl;
 
@@ -223,7 +223,7 @@ entonces, puede usar el siguiente codigo:
 adjust_precision< long double >();
 
 lcomplex base = 2.l;
-lcomplex alpha = alpha_tet< long double >( base );
+lcomplex alpha = alpha_tet< lcomplex >( base );
 
 cout<<alpha<<" : "<<0<<endl;
 
