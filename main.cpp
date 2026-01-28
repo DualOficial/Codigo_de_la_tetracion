@@ -5,6 +5,8 @@
 
 int main(){
 	
+	////////////Codigo de Ejemplo para hacer una grafica real de la tetración
+
 	adjust_precision< long double >();
 
 	tetration_complexity = 72; //Aqui se especifica las iteraciones que usara la tetración
@@ -16,7 +18,7 @@ int main(){
 	app.add_bi_func( []( long double x ){ return tet< lcomplex >( 3.l , 1.5l , x ).real(); } , Color::Red );
 
 	app.run();
-	
+
 	return 0;
 }
 
@@ -141,35 +143,80 @@ app.add_bi_func( []( long double x ){
 app.run();
 
 Fin del ejemplo.
-Por cierto, también puedes hacer segundas derivadas, haciendo duales de duales.
-Pero el metodo mas rapido es usando Dual_Struct y la función derivate.
-Aqui un ejemplo:
+Este fue un metodo viejo, pero si quieres escribir menos lineas y hace multiples derivadas, puedes usar-
+la función derivate que funciona con plantillas; Aqui un ejemplo:
 
 adjust_precision< long double >();
 
-permutation_complexity = 1000;
-
 ApplicationPlot app;
 
-app.set_velocity_time( 10 );
-app.add_bi_func( []( long double x ){
-	
-	return derivate< long double >( []( lDual_Struct a ){ return per< lDual_Struct >( lDual_Struct( 2.l , 2 ) , a ); } , x , 2 );
-	
-	//el primer argumento es la función a derivar
-	//el segundo es la entrada de la derivada
-	//el tercero es la cantidad de derivadas por hacer
-	//En la parte que dice "lDual_Struct( 2.l , 2 )", significa, constante dos, en la derivada 2
-	//Es importante especificar la derivada.
+auto f = []< typename T >( T x ){ return per( T( 2 ) , x ); };
+//Tiene que ser una función plantilla, para soportar varias estructuras.
 
-} , Color::Red );
+auto g = derivate< 1 >( f ); //se guarda la derivada de f, en otra función g.
+
+app.set_velocity_time( 10 );
+app.add_bi_func( [ & ]( long double x ){
+	
+	return g( x ); //se grafica la derivada
+
+} , Color::Cyan );
 
 app.run();
+
+return 0;
 
 Fin del ejemplo.
 En este ejemplo se hizo la segunda derivada de la permutación base 2.
 
-5.other_permutations
+5.coupling
+Este tiene la acoplación( coupling en ingles ) y la ascendiente( ascendant ) que también son funciones plantilla.
+Aqui un ejemplo:
+
+adjust_precision< long double >();
+
+ApplicationPlot app;
+
+auto f = []< typename T >( T x ){ return per( T( 2 ) , x ); }; //siempre plantilla
+auto g = coupling( f ); //se guarda la acoplación
+
+app.set_velocity_time( 10 );
+app.add_bi_func( [ & ]( long double x ){
+	
+	return g( x ); //se grafica la acoplación
+	
+} , Color::Cyan );
+
+app.run();
+
+Fin del ejemplo.
+Por ultimo, se puede crear la versión permutada de una función, osea, g(x,y)=f(f(..f(x)..)) donde aparece f, y veces.
+Aqui un ejemplo:
+
+adjust_precision< long double >();
+
+ApplicationPlot app;
+
+auto f = []< typename T >( T x ){ return pow( x , x ); };
+auto fi = []< typename T >( T x ){ return wave( x ); };
+auto per = Permuted_Function( f , fi , 1.l , 1.l , 2.l );
+//El primer argumento es la función a repetir, el segundo es la inversa, el tercero es el atractor-
+//que cumple f(a)=a, el cuarto es la derivada, el quinto es la aceleración y, por ultimo y ya predeterminado-
+//como 1000 son las iteraciones.
+
+app.set_velocity_time( 10 );
+app.add_bi_func( [ & ]( long double x ){
+
+	return per( 2.l , x );
+
+} , Color::Cyan );
+
+app.run();
+
+Fin del ejemplo.
+Aqui se recreo la permutación.
+
+6.other_permutations
 contiene varias funciones, parecidas a la permutación, en su forma de creación.
 Todas ellas tienen un punto fijo con derivada 1, por lo que se puede usar un teorema de acoplación.
 Entre estas estan:
@@ -178,11 +225,11 @@ b) plus tetration, basada en e^(x-1) repetido
 c) hyper square, basada en 1/2 * x^2 + 1/2 repetido
 d) natural tetration, basada en (e^1/e)^x repetido
 
-6.Language: aunque nada que ver, permite crear un mini lenguaje, por cierto, esta en versión beta
+7.Language: aunque nada que ver, permite crear un mini lenguaje, por cierto, esta en versión beta
 por lo que no es tan util.
 
-7.permutation: contiene la permutación( esperabas mas? )
-8.tetration: contiene la tetración;
+8.permutation: contiene la permutación( esperabas mas? )
+9.tetration: contiene la tetración;
 Por otro lado, también contiene unas clases y funciones.
 Estas permiten calcular las derivadas de la tetración en alpha.
 (alpha seria el numero que cumple: e^alpha=alpha,
