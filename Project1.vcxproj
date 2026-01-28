@@ -112,7 +112,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpp23</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -128,7 +128,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard>stdcpp23</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -141,31 +141,36 @@
     <ClCompile Include="ApplicationPlotComplex.cpp" />
     <ClCompile Include="definitions.cpp" />
     <ClCompile Include="definitions.hpp" />
-    <ClCompile Include="dual.cpp" />
     <ClCompile Include="Language.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="ortogonalper.cpp" />
     <ClCompile Include="ortogonals.cpp" />
     <ClCompile Include="other_permutations.cpp" />
     <ClCompile Include="permutation.cpp" />
     <ClCompile Include="TestFunc.cpp" />
-    <ClCompile Include="TestFunc.hpp" />
     <ClCompile Include="tetration.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ApplicationPlot.hpp" />
     <ClInclude Include="ApplicationPlotComplex.hpp" />
+    <ClInclude Include="coupling.hpp" />
     <ClInclude Include="dual.hpp" />
+    <ClInclude Include="kuznetsov.hpp" />
     <ClInclude Include="Language.hpp" />
+    <ClInclude Include="Math.hpp" />
+    <ClInclude Include="MathGraphics.hpp" />
     <ClInclude Include="ortogonalper.hpp" />
     <ClInclude Include="ortogonals.hpp" />
     <ClInclude Include="other_permutations.hpp" />
     <ClInclude Include="permutation.hpp" />
+    <ClInclude Include="TestFunc.hpp" />
     <ClInclude Include="tetration.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ApplicationPlot.inl" />
+    <None Include="coupling.inl" />
     <None Include="definitions.inl" />
     <None Include="dual.inl" />
+    <None Include="kuznetsov.inl" />
     <None Include="ortogonalper.inl" />
     <None Include="ortogonals.inl" />
     <None Include="other_permutations.inl" />
