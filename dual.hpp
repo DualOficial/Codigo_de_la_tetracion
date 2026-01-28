@@ -2,16 +2,53 @@
 
 #include<iostream>
 #include"definitions.hpp"
-#include<any>
+#include<concepts>
+
+template< typename T >
+class dual;
+
+template< typename T >
+inline constexpr bool is_boost_number = false;
+
+template< unsigned Digits , backends::digit_base_type DigitBase , class Allocator , class Exponent , Exponent MinExponent , Exponent MaxExponent , expression_template_option ExpressionTemplates >
+inline constexpr bool is_boost_number< number< cpp_bin_float< Digits , DigitBase , Allocator , Exponent , MinExponent , MaxExponent > , ExpressionTemplates > > = true;
+
+template< typename T >
+concept is_numeric = std::integral< T > || std::floating_point< T > || is_boost_number< T >;
+
+template< typename T >
+inline constexpr bool is_std_complex = false;
+
+template< typename T >
+inline constexpr bool is_std_complex< std::complex< T > > = true;
+
+template< typename T >
+inline constexpr bool is_boost_complex = false;
+
+template< typename T , expression_template_option U >
+inline constexpr bool is_boost_complex< number< complex_adaptor< T > , U > > = false;
+
+template< typename T >
+concept is_complex = is_std_complex< T > || is_boost_complex< T >;
+
+template< typename T >
+inline constexpr bool is_dual_real = false;
+
+template< typename T >
+inline constexpr bool is_dual_real< dual< T > > = is_dual_real< T > || is_numeric< T >;
+
+template< typename T , typename U >
+concept numeric_same = ( is_dual_real< T > && is_numeric< U > ) || ( !is_dual_real< T > && ( is_complex< U > || is_numeric< U > ) );
 
 template< typename T >
 class dual{
 public:
-	
+
 	dual();
 	dual( T real );
 	dual( T real , T infinitesimal );
 	dual( const dual & other );
+	dual( const numeric_same< T > auto & a );
 	
 	dual operator-() const;
 	dual operator+( const dual & other ) const;
@@ -27,7 +64,7 @@ public:
 	bool operator!=( const dual & other ) const;
 
 	static const dual e;
-	
+
 	T r;
 	T i;
 	
@@ -130,122 +167,10 @@ typedef dual< long double > duall;
 
 //Dual_Struct
 
-//Si notan mucho any, es porque se me dificulto este metodo, puede que no sea el mas optimizado.
+template< unsigned int N , typename F >
+auto derivate( F && f );
 
-template< typename T >
-struct Dual_Struct{
-	
-	enum Type{
-		
-		Value_Element,
-		Dual_Element
-
-	};
-
-	Dual_Struct();
-	Dual_Struct( any x , any y , bool t );
-	Dual_Struct( T x , unsigned int complexity );
-
-	const T & z() const;
-
-	bool operator==( const T & x ) const;
-	bool operator!=( const T & x ) const;
-	bool operator==( const Dual_Struct & d ) const;
-	bool operator!=( const Dual_Struct & d ) const;
-
-	Dual_Struct & operator=( const Dual_Struct & d );
-	Dual_Struct operator+( const Dual_Struct & d ) const;
-	Dual_Struct operator-( const Dual_Struct & d ) const;
-	Dual_Struct operator-() const;
-	Dual_Struct operator*( const Dual_Struct & d ) const;
-
-	Dual_Struct operator/( const Dual_Struct & d ) const;
-	Dual_Struct operator*( const T & x ) const;
-	Dual_Struct operator/( const T & x ) const;
-	Dual_Struct operator+( const T & x ) const;
-	Dual_Struct operator-( const T & x ) const;
-	
-	any a , b;
-	bool type;
-
-};
-
-typedef Dual_Struct< float > fDual_Struct;
-typedef Dual_Struct< double > dDual_Struct;
-typedef Dual_Struct< long double > lDual_Struct;
-typedef Dual_Struct< fcomplex > fcDual_Struct;
-typedef Dual_Struct< dcomplex > dcDual_Struct;
-typedef Dual_Struct< lcomplex > lcDual_Struct;
-
-template< typename T >
-Dual_Struct< T > operator+( const T & x , const Dual_Struct< T > & d );
-
-template< typename T >
-Dual_Struct< T > operator-( const T & x , const Dual_Struct< T > & d );
-
-template< typename T >
-Dual_Struct< T > operator/( const T & x , const Dual_Struct< T > & d );
-
-template< typename T >
-Dual_Struct< T > operator*( const T & x , const Dual_Struct< T > & d );
-
-//functions
-
-template< typename T >
-Dual_Struct< T > inverse( const Dual_Struct< T > & d );
-
-template< typename T >
-Dual_Struct< T > exp( const Dual_Struct< T > & z );
-
-template< typename T >
-Dual_Struct< T > abs( const Dual_Struct< T > & z );
-
-template< typename T >
-Dual_Struct< T > log( const Dual_Struct< T > & z );
-
-template< typename T >
-Dual_Struct< T > pow( const Dual_Struct< T > & z , const Dual_Struct< T > & w );
-
-template< typename T >
-Dual_Struct< T > cos( const Dual_Struct< T > & z );
-
-template< typename T >
-Dual_Struct< T > sin( const Dual_Struct< T > & z );
-
-template< typename T >
-Dual_Struct< T > tan( const Dual_Struct< T > & z );
-
-template< typename T >
-Dual_Struct< T > sec( const Dual_Struct< T > & z );
-
-template< typename T >
-Dual_Struct< T > csc( const Dual_Struct< T > & z );
-
-template< typename T >
-Dual_Struct< T > cot( const Dual_Struct< T > & z );
-
-template< typename T >
-Dual_Struct< T > sqrt( const Dual_Struct< T > & z );
-
-template< typename T >
-Dual_Struct< T > cbrt( const Dual_Struct< T > & z );
-
-template< typename T >
-Dual_Struct< T > wlambert( const Dual_Struct< T > & z );
-
-template< typename T >
-Dual_Struct< T > wave( const Dual_Struct< T > & z );
-
-template< typename T >
-Dual_Struct< T > asc( const Dual_Struct< T > & z , const Dual_Struct< T > & w );
-
-template< typename T >
-Dual_Struct< T > dual_intern_value( const T & x , unsigned int index );
-
-template< typename T >
-function< Dual_Struct< T >( Dual_Struct< T > ) > derivate( function< Dual_Struct< T >( Dual_Struct< T > ) > f , unsigned int size );
-
-template< typename T >
-T derivate( function< Dual_Struct< T >( Dual_Struct< T > ) > f , const T & x , unsigned int index );
+template< typename F >
+auto derivate( F && f );
 
 #include"dual.inl"
