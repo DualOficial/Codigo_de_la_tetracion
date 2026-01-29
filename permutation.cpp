@@ -1,6 +1,7 @@
 #include"permutation.hpp"
 
 int permutation_complexity = 10000;
+bool permutation_recursive = true;
 
 //mala calidad
 
@@ -72,7 +73,7 @@ float_single wlambert( float_single z ){
 
 long double lag_per( long double x ){
 	
-	long double a = M_E;
+	long double a = exp( 1.l );
 	long double sum1 = 0.l;
 	long double sum2 = 0.l;
 	int n = 30;
