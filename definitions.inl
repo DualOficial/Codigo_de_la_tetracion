@@ -1,4 +1,18 @@
 template< typename T >
+real_type< T > real_value( const T & z ){
+	
+	return z;
+
+}
+
+template< is_complex T >
+real_type< T > real_value( const T & z ){
+	
+	return z.real();
+
+}
+
+template< typename T >
 T csc( const T & z ){
 	
 	return T( 1 ) / sin( z );
