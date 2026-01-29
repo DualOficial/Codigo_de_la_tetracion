@@ -70,16 +70,16 @@ T per( T u , T v ){
 	
 	if( permutation_recursive ){
 		
-		if( real_value( v ) > real_type< T >( 1 ) ){
+		if( Real( v ) > real_type< T >( 1 ) ){
 			
-			int a = ( int ) floor( real_value( v ) );
+			int a = ( int ) floor( Real( v ) );
 
 			return perInteger( per( u , v - T( a ) ) , a );
 		}
 
-		if( real_value( v ) < real_type< T >( 0 ) ){
+		if( Real( v ) < real_type< T >( 0 ) ){
 			
-			int a = ( int ) floor( real_value( v ) );
+			int a = ( int ) floor( Real( v ) );
 
 			return perInteger( per( u , v - T( a ) ) , a );
 		}
