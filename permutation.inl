@@ -7,6 +7,14 @@ T wave( const T & x ){
 
 }
 
+template< typename T >
+T wave( const T & x , const T & base ){
+	
+	if( base == T( 0 ) ) return x;
+
+	return pow( wave( pow( x , base ) ) , T( 1 ) / T( base ) );
+}
+
 //Funciones Ortogonales
 
 template< typename T >
@@ -59,6 +67,24 @@ T perInteger( T x , int n ){
 
 template< typename T >
 T per( T u , T v ){
+	
+	if( permutation_recursive ){
+		
+		if( real_value( v ) > real_type< T >( 1 ) ){
+			
+			int a = ( int ) floor( real_value( v ) );
+
+			return perInteger( per( u , v - T( a ) ) , a );
+		}
+
+		if( real_value( v ) < real_type< T >( 0 ) ){
+			
+			int a = ( int ) floor( real_value( v ) );
+
+			return perInteger( per( u , v - T( a ) ) , a );
+		}
+		
+	}
 	
 	T z( perInteger( u , -permutation_complexity ) );
 	T n = asc( z , v );
