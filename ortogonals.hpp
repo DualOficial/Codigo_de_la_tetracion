@@ -5,21 +5,23 @@
 #include<iostream>
 #include<map>
 
-template< typename Real , typename Complex >
+template< typename Complex >
 class ortogonal;
 
-template< typename Real , typename Complex >
+template< typename Complex >
 class ortogonalper;
 
-template< typename Real , typename Complex , typename T >
-void make_orto_base( ortogonal< Real , Complex > & w , unsigned int index , const T & t );
+template< typename Complex , typename T >
+void make_orto_base( ortogonal< Complex > & w , unsigned int index , const T & t );
 
-template< typename Real , typename Complex , typename T , typename... Args >
-void make_orto_base( ortogonal< Real , Complex > & w , unsigned int index , const T & t , Args... args );
+template< typename Complex , typename T , typename... Args >
+void make_orto_base( ortogonal< Complex > & w , unsigned int index , const T & t , Args... args );
 
-template< typename Real , typename Complex >
+template< typename Complex >
 class ortogonal{
 public:
+	
+	using Real = typename real_type< Complex >;
 	
 	enum Type{
 		
@@ -97,22 +99,29 @@ public:
 	
 };
 
-typedef ortogonal< float , fcomplex > fortogonal;
-typedef ortogonal< double , dcomplex > dortogonal;
-typedef ortogonal< long double , lcomplex > lortogonal;
-typedef ortogonal< float50 , complex50 > ortogonal50;
-typedef ortogonal< float100 , complex100 > ortogonal100;
+template< typename T >
+struct value_traits< ortogonal< T > >{
+	
+	using real = real_type< T >;
 
-template< typename Real , typename Complex , typename T >
-void make_orto_base( ortogonal< Real , Complex > & w , unsigned int index , const T & t ){
+};
+
+typedef ortogonal< fcomplex > fortogonal;
+typedef ortogonal< dcomplex > dortogonal;
+typedef ortogonal< lcomplex > lortogonal;
+typedef ortogonal< complex50 > ortogonal50;
+typedef ortogonal< complex100 > ortogonal100;
+
+template< typename Complex , typename T >
+void make_orto_base( ortogonal< Complex > & w , unsigned int index , const T & t ){
 	
 	w.add_branch( index , t );
 	index++;
 	
 }
 
-template< typename Real , typename Complex , typename T , typename... Args >
-void make_orto_base( ortogonal< Real , Complex > & w , unsigned int index , const T & t , Args... args ){
+template< typename Complex , typename T , typename... Args >
+void make_orto_base( ortogonal< Complex > & w , unsigned int index , const T & t , Args... args ){
 	
 	w.add_branch( index , t );
 	index++;
@@ -122,9 +131,9 @@ void make_orto_base( ortogonal< Real , Complex > & w , unsigned int index , cons
 }
 
 template< typename T , typename... Args >
-ortogonal< T , std::complex< T > > make_orto( T x , T y , Args... args ){
+ortogonal< std::complex< T > > make_orto( T x , T y , Args... args ){
 	
-	ortogonal< T , std::complex< T > > result( x , y );
+	ortogonal< std::complex< T > > result( x , y );
 	
 	unsigned int index = 0;
 	
@@ -134,9 +143,9 @@ ortogonal< T , std::complex< T > > make_orto( T x , T y , Args... args ){
 }
 
 template< typename T , typename... Args >
-ortogonal< T , std::complex< T > > make_orto( const std::complex< T > & z , Args... args ){
+ortogonal< std::complex< T > > make_orto( const std::complex< T > & z , Args... args ){
 	
-	ortogonal< T , std::complex< T > > result( z );
+	ortogonal< std::complex< T > > result( z );
 	
 	unsigned int index = 0;
 	
@@ -217,86 +226,86 @@ int is_sing( dcomplex z );
 template<>
 int is_sing( lcomplex z );
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > kproduct( int n , ortogonal< Real , Complex > z , ortogonal< Real , Complex > w );
+template< typename Complex >
+ortogonal< Complex > kproduct( int n , ortogonal< Complex > z , ortogonal< Complex > w );
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > kinverse( int n , ortogonal< Real , Complex > w );
+template< typename Complex >
+ortogonal< Complex > kinverse( int n , ortogonal< Complex > w );
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > inverse( const ortogonal< Real , Complex > & w );
+template< typename Complex >
+ortogonal< Complex > inverse( const ortogonal< Complex > & w );
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > exp( const ortogonal< Real , Complex > & w );
+template< typename Complex >
+ortogonal< Complex > exp( const ortogonal< Complex > & w );
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > log( const ortogonal< Real , Complex > & w );
+template< typename Complex >
+ortogonal< Complex > log( const ortogonal< Complex > & w );
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > pow( const ortogonal< Real , Complex > & u , const ortogonal< Real , Complex > & v );
+template< typename Complex >
+ortogonal< Complex > pow( const ortogonal< Complex > & u , const ortogonal< Complex > & v );
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > root( const ortogonal< Real , Complex > & u , const ortogonal< Real , Complex > & v );
+template< typename Complex >
+ortogonal< Complex > root( const ortogonal< Complex > & u , const ortogonal< Complex > & v );
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > cos( const ortogonal< Real , Complex > & w );
+template< typename Complex >
+ortogonal< Complex > cos( const ortogonal< Complex > & w );
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > sin( const ortogonal< Real , Complex > & w );
+template< typename Complex >
+ortogonal< Complex > sin( const ortogonal< Complex > & w );
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > tan( const ortogonal< Real , Complex > & w );
+template< typename Complex >
+ortogonal< Complex > tan( const ortogonal< Complex > & w );
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > sec( const ortogonal< Real , Complex > & w );
+template< typename Complex >
+ortogonal< Complex > sec( const ortogonal< Complex > & w );
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > csc( const ortogonal< Real , Complex > & w );
+template< typename Complex >
+ortogonal< Complex > csc( const ortogonal< Complex > & w );
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > cot( const ortogonal< Real , Complex > & w );
+template< typename Complex >
+ortogonal< Complex > cot( const ortogonal< Complex > & w );
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > cosh( const ortogonal< Real , Complex > & w );
+template< typename Complex >
+ortogonal< Complex > cosh( const ortogonal< Complex > & w );
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > sinh( const ortogonal< Real , Complex > & w );
+template< typename Complex >
+ortogonal< Complex > sinh( const ortogonal< Complex > & w );
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > tanh( const ortogonal< Real , Complex > & w );
+template< typename Complex >
+ortogonal< Complex > tanh( const ortogonal< Complex > & w );
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > sech( const ortogonal< Real , Complex > & w );
+template< typename Complex >
+ortogonal< Complex > sech( const ortogonal< Complex > & w );
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > csch( const ortogonal< Real , Complex > & w );
+template< typename Complex >
+ortogonal< Complex > csch( const ortogonal< Complex > & w );
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > coth( const ortogonal< Real , Complex > & w );
+template< typename Complex >
+ortogonal< Complex > coth( const ortogonal< Complex > & w );
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > sqrt( const ortogonal< Real , Complex > & w );
+template< typename Complex >
+ortogonal< Complex > sqrt( const ortogonal< Complex > & w );
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > cbrt( const ortogonal< Real , Complex > & w );
+template< typename Complex >
+ortogonal< Complex > cbrt( const ortogonal< Complex > & w );
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > collapse( const ortogonal< Real , Complex > & w );
+template< typename Complex >
+ortogonal< Complex > collapse( const ortogonal< Complex > & w );
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > collapse( const ortogonal< Real , Complex > & w , int level );
+template< typename Complex >
+ortogonal< Complex > collapse( const ortogonal< Complex > & w , int level );
 
-template< typename Real , typename Complex >
-Real arg( const ortogonal< Real , Complex > & w );
+template< typename Complex >
+real_type< Complex > arg( const ortogonal< Complex > & w );
 
-template< typename Real , typename Complex >
-Real abs( const ortogonal< Real , Complex > & w );
+template< typename Complex >
+real_type< Complex > abs( const ortogonal< Complex > & w );
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > wlambert( const ortogonal< Real , Complex > & w );
+template< typename Complex >
+ortogonal< Complex > wlambert( const ortogonal< Complex > & w );
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > wave( const ortogonal< Real , Complex > & w );
+template< typename Complex >
+ortogonal< Complex > wave( const ortogonal< Complex > & w );
 
 template< typename T >
 T e_tetration_positive( T z , unsigned int n );
@@ -307,14 +316,14 @@ T e_tetration_negative( T z , unsigned int n );
 template< typename T >
 T e_tetration_integer( T w , int n );
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > e_tetration_positive( ortogonal< Real , Complex > w , unsigned int n );
+template< typename Complex >
+ortogonal< Complex > e_tetration_positive( ortogonal< Complex > w , unsigned int n );
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > e_tetration_negative( ortogonal< Real , Complex > w , unsigned int n );
+template< typename Complex >
+ortogonal< Complex > e_tetration_negative( ortogonal< Complex > w , unsigned int n );
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > e_tetration_integer( ortogonal< Real , Complex > w , int n );
+template< typename Complex >
+ortogonal< Complex > e_tetration_integer( ortogonal< Complex > w , int n );
 
 template<>
 float e_tetration_negative( float z , unsigned int n );
@@ -360,10 +369,10 @@ extern int wlambert_complexity; //con 30 iteraciones ya es suficiente precisión
 template< typename T >
 T wlambert( T z , int k = 0 );
 
-template< typename Real , typename Complex >
-ostream & operator<<( ostream & o , const ortogonal< Real , Complex > & w );
+template< typename Complex >
+ostream & operator<<( ostream & o , const ortogonal< Complex > & w );
 
-ortogonal< long double , lcomplex > operator"" ol( long double x );
-ortogonal< long double , lcomplex > operator"" oil( long double x );
+ortogonal< lcomplex > operator"" ol( long double x );
+ortogonal< lcomplex > operator"" oil( long double x );
 
 #include"ortogonals.inl"
