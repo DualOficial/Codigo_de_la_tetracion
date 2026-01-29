@@ -1,14 +1,28 @@
 template< typename T >
-real_type< T > real_value( const T & z ){
+real_type< T > Real( const T & z ){
 	
 	return z;
 
 }
 
 template< is_complex T >
-real_type< T > real_value( const T & z ){
+real_type< T > Real( const T & z ){
 	
 	return z.real();
+
+}
+
+template< typename T >
+real_type< T > Imag( const T & z ){
+	
+	return T();
+
+}
+
+template< is_complex T >
+real_type< T > Imag( const T & z ){
+	
+	return z.imag();
 
 }
 
