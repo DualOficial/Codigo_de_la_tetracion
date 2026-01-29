@@ -98,15 +98,26 @@ template< typename T , expression_template_option U >
 inline constexpr bool is_boost_complex< number< complex_adaptor< T > , U > > = false;
 
 template< typename T >
-concept is_complex = is_std_complex< T > || is_boost_complex< T >;
+concept is_complex = requires( T t ){
+	
+	{ t.real() } -> std::convertible_to< real_type< T > >;
+	{ t.imag() } -> std::convertible_to< real_type< T > >;
+
+};
 
 //end traits
 
 template< typename T >
-real_type< T > real_value( const T & z );
+real_type< T > Real( const T & z );
 
 template< is_complex T >
-real_type< T > real_value( const T & z );
+real_type< T > Real( const T & z );
+
+template< typename T >
+real_type< T > Imag( const T & z );
+
+template< is_complex T >
+real_type< T > Imag( const T & z );
 
 template< typename T >
 T csc( const T & z );
