@@ -431,7 +431,7 @@ T tet( const T & base , const T & final_exp , T height , const T & v ){
 template< typename T >
 T tet( const T & base , const T & final_exp , const T & height ){
 	
-	return tet( base , final_exp , height , alpha_tet( T( 2 ) , final_exp ) );
+	return tet( base , final_exp , height , alpha_tet( base , final_exp ) );
 	
 }
 
