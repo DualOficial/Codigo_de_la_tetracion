@@ -266,7 +266,7 @@ Formula< T > Resolve( const Sum & sum , const vector< Formula< T > > & prev_form
 template< typename T >
 T alpha_tet( const T & base ){
 	
-	if( base == exp( T( 1 ) ) ){
+	if( base == exp( real_type< T >( 1 ) ) ){
 		
 		T z = 2;
 		T prev_z;
@@ -276,12 +276,12 @@ T alpha_tet( const T & base ){
 			prev_z = z;
 			z = log( z );
 
-		} while( abs( z - prev_z ) > std::numeric_limits< decltype( base.real() ) >::epsilon() );
+		} while( abs( z - prev_z ) > std::numeric_limits< real_type< T > >::epsilon() );
 		
 		return z;
 	}
 
-	if( abs( base ) < T( 1 ).real() ){
+	if( abs( base ) < real_type< T >( 1 ) ){
 		
 		T z = 2;
 		T prev_z;
@@ -291,7 +291,7 @@ T alpha_tet( const T & base ){
 			prev_z = z;
 			z = pow( base , z );
 
-		} while( abs( z - prev_z ) > std::numeric_limits< decltype( base.real() ) >::epsilon() );
+		} while( abs( z - prev_z ) > std::numeric_limits< real_type< T > >::epsilon() );
 		
 		return z;
 	}
@@ -304,7 +304,7 @@ T alpha_tet( const T & base ){
 		prev_z = z;
 		z = log( base , z );
 
-	} while( abs( z - prev_z ) > std::numeric_limits< decltype( base.real() ) >::epsilon() );
+	} while( abs( z - prev_z ) > std::numeric_limits< real_type< T > >::epsilon() );
 	
 	return z;
 }
@@ -322,12 +322,12 @@ T alpha_tet( const T & base , const T & test_value ){
 			prev_z = z;
 			z = log( z );
 
-		} while( abs( z - prev_z ) > std::numeric_limits< decltype( base.real() ) >::epsilon() );
+		} while( abs( z - prev_z ) > std::numeric_limits< real_type< T > >::epsilon() );
 		
 		return z;
 	}
 
-	if( abs( base ) < T( 1 ).real() ){
+	if( abs( base ) < real_type< T >( 1 ) ){
 		
 		T z = 2;
 		T prev_z;
@@ -337,7 +337,7 @@ T alpha_tet( const T & base , const T & test_value ){
 			prev_z = z;
 			z = pow( base , z );
 
-		} while( abs( z - prev_z ) > std::numeric_limits< decltype( base.real() ) >::epsilon() );
+		} while( abs( z - prev_z ) > std::numeric_limits< real_type< T > >::epsilon() );
 		
 		return z;
 	}
@@ -360,20 +360,20 @@ T tet( const T & base , const T & final_exp , T height , const T & v ){
 	
 	if( tetration_recursive ){
 		
-		auto half = T( 0.5 ).real();
+		auto half = real_type< T >( 0.5 );
 
-		if( height.real() < v.real() - half ){
+		if( real_value( height ) < real_value( v ) - half ){
 			
-			int a = ( int ) floor( height.real() - ( v.real() - half ) );
+			int a = ( int ) floor( real_value( height ) - ( real_value( v ) - half ) );
 
 			height = height - T( a );
 
 			return tetration_integer( base , tet( base , final_exp , height , v ) , a );
 		}
 		
-		if( height.real() > v.real() + half ){
+		if( real_value( height ) > real_value( v ) + half ){
 			
-			int a = ( int ) floor( height.real() - ( v.real() - half ) );
+			int a = ( int ) floor( real_value( height ) - ( real_value( v ) - half ) );
 
 			height = height - T( a );
 
@@ -382,11 +382,11 @@ T tet( const T & base , const T & final_exp , T height , const T & v ){
 
 	}
 
-	if( abs( base ) < T( 1 ).real() ){
+	if( abs( base ) < real_type< T >( 1 ) ){
 		
 		if( tetration_recursive ){
 			
-			if( abs( final_exp - v ) > T( 1 ).real() ){
+			if( abs( final_exp - v ) > real_type< T >( 1 ) ){
 				
 				return log( base , tet( base , pow( base , final_exp ) , height , v ) );
 
@@ -404,10 +404,10 @@ T tet( const T & base , const T & final_exp , T height , const T & v ){
 
 		return tetration_integer( base , pow( b , d * pow( b , x ) ) + a , -tetration_complexity );
 	}
-
+	
 	if( tetration_recursive ){
 		
-		if( abs( final_exp - v ) > T( 1 ).real() ){
+		if( abs( final_exp - v ) > real_type< T >( 1 ) ){
 			
 			return pow( base , tet( base , log( base , final_exp ) , height , v ) );
 
@@ -431,7 +431,7 @@ T tet( const T & base , const T & final_exp , T height , const T & v ){
 template< typename T >
 T tet( const T & base , const T & final_exp , const T & height ){
 	
-	return tet( base , final_exp , height , alpha_tet( base , final_exp ) );
+	return tet( base , final_exp , height , alpha_tet( T( 2 ) , final_exp ) );
 	
 }
 
@@ -440,26 +440,26 @@ T tet_e( const T & final_exp , T height , const T & v ){
 	
 	if( tetration_recursive ){
 		
-		if( abs( final_exp - v ) > T( 1 ).real() ){
+		if( abs( final_exp - v ) > real_type< T >( 1 ) ){
 			
 			return exp( tet_e( log( final_exp ) , height , v ) );
 
 		}
 
-		auto half = T( 0.5 ).real();
+		auto half = real_type< T >( 0.5 );
 
-		if( height.real() < v.real() - half ){
+		if( real_value( height ) < real_value( v ) - half ){
 			
-			int a = ( int ) floor( height.real() - ( v.real() - half ) );
+			int a = ( int ) floor( real_value( height ) - ( real_value( v ) - half ) );
 
 			height = height - T( a );
 
 			return e_tetration_integer( tet_e( final_exp , height , v ) , a );
 		}
 		
-		if( height.real() > v.real() + half ){
+		if( real_value( height ) > real_value( v ) + half ){
 			
-			int a = ( int ) floor( height.real() - ( v.real() - half ) );
+			int a = ( int ) floor( real_value( height ) - ( real_value( v ) - half ) );
 
 			height = height - T( a );
 
@@ -488,7 +488,7 @@ T tet_e( const T & final_exp , const T & height ){
 template< typename T >
 T tet_gen( const T & base , const T & final_exp , T result , const T & v ){
 	
-	if( abs( base ) < T( 1 ).real() ){
+	if( abs( base ) < real_type< T >( 1 ) ){
 		
 		T a = tetration_integer( base , result , tetration_complexity ) - v;
 		T b = tetration_integer( base , final_exp , tetration_complexity ) - v;
@@ -532,7 +532,7 @@ T exphalf( T z , const T & alpha_value ){
 	
 	if( tetration_recursive ){
 		
-		if( abs( z - alpha_value ) > T( 1 ).real() ){
+		if( abs( z - alpha_value ) > real_type< T >( 1 ) ){
 			
 			return exp( exphalf( log( z ) , alpha_value ) );
 
