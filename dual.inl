@@ -5,17 +5,31 @@
 template< typename T >
 const dual< T > dual< T >::e( T( 0 ) , T( 1 ) );
 
+template< no_number_dual T >
+dual_intern_type< T > intern_value( const dual< T > & d ){
+	
+	return d.r;
+
+}
+
+template< number_dual T >
+dual_intern_type< T > intern_value( const dual< T > & d ){
+	
+	return intern_value( d.r );
+
+}
+
 template< number_dual T >
 real_type< T > Real( const T & z ){
 	
-	return z.intern_real();
+	return Real( intern_value( z ) );
 
 }
 
 template< number_dual T >
 real_type< T > Imag( const T & z ){
 	
-	return z.intern_imag();
+	return Imag( intern_value( z ) );
 
 }
 
@@ -72,7 +86,7 @@ dual< T > exp( const dual< T > & z ){
 template< typename T >
 real_type< dual< T > > abs( const dual< T > & z ){
 	
-	return abs( z.intern_value() );
+	return abs( intern_value( z ) );
 	
 }
 
@@ -224,32 +238,12 @@ dual< T >::dual( const dual & other ) : r( other.r ) , i( other.i ){
 }
 
 template< typename T >
-dual< T >::dual( const numeric_same< T > auto & a ) : r( a ) , i(){
+template< typename U >
+requires numeric_same< T , U >
+dual< T >::dual( const U & a ) : r( a ) , i(){
 	
 	//nothing
 	
-}
-
-template< typename T >
-auto dual< T >::intern_value() const{
-	
-	if constexpr( is_dual< T > ) return r.intern_dual();
-
-	return r;
-}
-
-template< typename T >
-auto dual< T >::intern_real() const{
-	
-	return Real( intern_value() );
-
-}
-
-template< typename T >
-auto dual< T >::intern_imag() const{
-	
-	return Imag( intern_value() );
-
 }
 
 template< typename T >
