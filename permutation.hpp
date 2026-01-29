@@ -4,17 +4,15 @@
 #include"ortogonalper.hpp"
 
 extern int permutation_complexity;
-
-#define MIN_WAVE 0.692200627555346353865l
-#define INVERSE_E 0.367879441171442321595l
-#define ALPHA lcomplex( 0.318131505204764135313l , 1.337235701430689408901l )
-#define M_U 4.91l
-#define M_E 2.71828182845904523536l
+extern bool permutation_recursive;
 
 //Funciones Reales o complejos
 
 template< typename T >
 T wave( const T & x );
+
+template< typename T >
+T wave( const T & x , const T & base );
 
 template< typename T >
 T asc( const T & x , const T & y );
@@ -50,7 +48,7 @@ template< typename T >
 T F( T x );
 
 template< typename T >
-T riz( T x , T y );
+T riz( const T & x , const T & y );
 
 template< typename T >
 T riz( T x );
@@ -72,7 +70,7 @@ T F_derivate( T x );
 
 long double lag_per( long double x );
 
-/*En este comentario use tetración beta, por lo que no es realista:
+/*En este comentario use tetraciÃ³n beta, por lo que no es realista:
 e^e^...1/2 veces aproximadamente 2.08787135335467079851
 e^e^...1/2 veces...^e aproximadamente 8.06772354070021379714
 e^e^...1/2 veces...^2 aproximadamente 3.11005265674281204061
