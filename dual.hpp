@@ -26,6 +26,9 @@ template< typename T >
 concept number_dual = is_dual< T >;
 
 template< typename T >
+concept no_number_dual = !is_dual< T >;
+
+template< typename T >
 class dual{
 public:
 	
@@ -35,7 +38,10 @@ public:
 	dual( T real );
 	dual( T real , T infinitesimal );
 	dual( const dual & other );
-	dual( const numeric_same< T > auto & a );
+
+	template< typename U >
+	requires numeric_same< T , U >
+	dual( const U & a );
 	
 	dual operator-() const;
 	dual operator+( const dual & other ) const;
@@ -49,10 +55,6 @@ public:
 	
 	bool operator==( const dual & other ) const;
 	bool operator!=( const dual & other ) const;
-
-	auto intern_value() const;
-	auto intern_real() const;
-	auto intern_imag() const;
 
 	static const dual e;
 
@@ -84,6 +86,12 @@ struct value_traits< dual< T > >{
 	using real = typename real_type< typename dual_intern_type< dual< T > > >;
 	
 };
+
+template< no_number_dual T >
+dual_intern_type< T > intern_value( const dual< T > & d );
+
+template< number_dual T >
+dual_intern_type< T > intern_value( const dual< T > & d );
 
 template< number_dual T >
 real_type< T > Real( const T & z );
