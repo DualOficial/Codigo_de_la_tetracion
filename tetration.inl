@@ -350,7 +350,7 @@ T alpha_tet( const T & base , const T & test_value ){
 		prev_z = z;
 		z = log( base , z );
 
-	} while( abs( z - prev_z ) > std::numeric_limits< decltype( base.real() ) >::epsilon() );
+	} while( abs( z - prev_z ) > std::numeric_limits< real_type< T > >::epsilon() );
 	
 	return z;
 }
@@ -362,18 +362,18 @@ T tet( const T & base , const T & final_exp , T height , const T & v ){
 		
 		auto half = real_type< T >( 0.5 );
 
-		if( real_value( height ) < real_value( v ) - half ){
+		if( Real( height ) < Real( v ) - half ){
 			
-			int a = ( int ) floor( real_value( height ) - ( real_value( v ) - half ) );
+			int a = ( int ) floor( Real( height ) - ( Real( v ) - half ) );
 
 			height = height - T( a );
 
 			return tetration_integer( base , tet( base , final_exp , height , v ) , a );
 		}
 		
-		if( real_value( height ) > real_value( v ) + half ){
+		if( Real( height ) > Real( v ) + half ){
 			
-			int a = ( int ) floor( real_value( height ) - ( real_value( v ) - half ) );
+			int a = ( int ) floor( Real( height ) - ( Real( v ) - half ) );
 
 			height = height - T( a );
 
@@ -448,18 +448,18 @@ T tet_e( const T & final_exp , T height , const T & v ){
 
 		auto half = real_type< T >( 0.5 );
 
-		if( real_value( height ) < real_value( v ) - half ){
+		if( Real( height ) < Real( v ) - half ){
 			
-			int a = ( int ) floor( real_value( height ) - ( real_value( v ) - half ) );
+			int a = ( int ) floor( Real( height ) - ( Real( v ) - half ) );
 
 			height = height - T( a );
 
 			return e_tetration_integer( tet_e( final_exp , height , v ) , a );
 		}
 		
-		if( real_value( height ) > real_value( v ) + half ){
+		if( Real( height ) > Real( v ) + half ){
 			
-			int a = ( int ) floor( real_value( height ) - ( real_value( v ) - half ) );
+			int a = ( int ) floor( Real( height ) - ( Real( v ) - half ) );
 
 			height = height - T( a );
 
