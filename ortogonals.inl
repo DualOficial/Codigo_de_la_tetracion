@@ -48,36 +48,36 @@ T value_tetration( int k ){
 	return -1.l;
 }
 
-template< typename Real , typename Complex >
-bool ortogonal< Real , Complex >::overpased_sing() const{
+template< typename Complex >
+bool ortogonal< Complex >::overpased_sing() const{
 	
 	return type == Tetration ? info.sing > 3 : false;
 	
 }
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > ortogonal< Real , Complex >::make_sing( int k ){
+template< typename Complex >
+ortogonal< Complex > ortogonal< Complex >::make_sing( int k ){
 	
-	ortogonal< Real , Complex > w;
+	ortogonal< Complex > w;
 	
 	w.info.sing = k;
 	
 	if( k >= 0 ){
 		
-		w.type = ortogonal< Real , Complex >::Tetration;
+		w.type = ortogonal< Complex >::Tetration;
 		
 	}
 	else{
 		
-		w.type = ortogonal< Real , Complex >::Sing;
+		w.type = ortogonal< Complex >::Sing;
 		
 	}
 	
 	return w;
 }
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex >::operator Complex() const{
+template< typename Complex >
+ortogonal< Complex >::operator Complex() const{
 	
 	if( type ){
 		
@@ -88,8 +88,8 @@ ortogonal< Real , Complex >::operator Complex() const{
 	return info.z;
 }
 
-template< typename Real , typename Complex >
-int ortogonal< Real , Complex >::sing() const{
+template< typename Complex >
+int ortogonal< Complex >::sing() const{
 	
 	if( !type ){
 		
@@ -101,10 +101,10 @@ int ortogonal< Real , Complex >::sing() const{
 	return info.sing;
 }
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > collapse( const ortogonal< Real , Complex > & w ){
+template< typename Complex >
+ortogonal< Complex > collapse( const ortogonal< Complex > & w ){
 	
-	return ortogonal< Real , Complex >( w.z() );
+	return ortogonal< Complex >( w.z() );
 
 }
 
@@ -134,8 +134,8 @@ T e_tetration_negative( T z , unsigned int n ){
 	return z;
 }
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > e_tetration_positive( ortogonal< Real , Complex > w , unsigned int n ){
+template< typename Complex >
+ortogonal< Complex > e_tetration_positive( ortogonal< Complex > w , unsigned int n ){
 	
 	if( w.getType() ){
 		
@@ -145,7 +145,7 @@ ortogonal< Real , Complex > e_tetration_positive( ortogonal< Real , Complex > w 
 
 	while( n ){
 		
-		w = exp< Real , Complex >( w );
+		w = exp( w );
 		n--;
 
 	}
@@ -153,8 +153,8 @@ ortogonal< Real , Complex > e_tetration_positive( ortogonal< Real , Complex > w 
 	return w;
 }
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > e_tetration_negative( ortogonal< Real , Complex >  w , unsigned int n ){
+template< typename Complex >
+ortogonal< Complex > e_tetration_negative( ortogonal< Complex >  w , unsigned int n ){
 	
 	if( w.getType() ){
 		
@@ -164,7 +164,7 @@ ortogonal< Real , Complex > e_tetration_negative( ortogonal< Real , Complex >  w
 
 	while( n ){
 		
-		w = log< Real , Complex >( w );
+		w = log( w );
 		n--;
 
 	}
@@ -179,15 +179,15 @@ T e_tetration_integer( T w , int n ){
 
 }
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > e_tetration_integer( ortogonal< Real , Complex > w , int n ){
+template< typename Complex >
+ortogonal< Complex > e_tetration_integer( ortogonal< Complex > w , int n ){
 	
-	return n < 0 ? e_tetration_negative< Real , Complex >( w , -n ) : e_tetration_positive< Real , Complex >( w , n );
+	return n < 0 ? e_tetration_negative< Complex >( w , -n ) : e_tetration_positive< Complex >( w , n );
 
 }
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > collapse( const ortogonal< Real , Complex > & w , int level ){
+template< typename Complex >
+ortogonal< Complex > collapse( const ortogonal< Complex > & w , int level ){
 	
 	if( w.getType() == ortogonal::Sing ){
 		
@@ -213,8 +213,8 @@ ortogonal< Real , Complex > collapse( const ortogonal< Real , Complex > & w , in
 	return result;
 }
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > kproduct( int n , ortogonal< Real , Complex > z , ortogonal< Real , Complex > w ){
+template< typename Complex >
+ortogonal< Complex > kproduct( int n , ortogonal< Complex > z , ortogonal< Complex > w ){
 	
 	if( n < 0 ){
 		
@@ -225,7 +225,7 @@ ortogonal< Real , Complex > kproduct( int n , ortogonal< Real , Complex > z , or
 		
 		}
 	
-		ortogonal< Real , Complex > result = z + w;
+		ortogonal< Complex > result = z + w;
 	
 		for( unsigned int i = 0; i < -n; i++ ){
 		
@@ -245,7 +245,7 @@ ortogonal< Real , Complex > kproduct( int n , ortogonal< Real , Complex > z , or
 		
 	}
 	
-	ortogonal< Real , Complex > result = z * w;
+	ortogonal< Complex > result = z * w;
 	
 	for( unsigned int i = 0; i < n - 1; i++ ){
 		
@@ -256,8 +256,8 @@ ortogonal< Real , Complex > kproduct( int n , ortogonal< Real , Complex > z , or
 	return result;
 }
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > kinverse( int n , ortogonal< Real , Complex > w ){
+template< typename Complex >
+ortogonal< Complex > kinverse( int n , ortogonal< Complex > w ){
 	
 	if( n < 0 ){
 		
@@ -267,7 +267,7 @@ ortogonal< Real , Complex > kinverse( int n , ortogonal< Real , Complex > w ){
 		
 		}
 	
-		ortogonal< Real , Complex > result = -w;
+		ortogonal< Complex > result = -w;
 	
 		for( unsigned int i = 0; i < -n; i++ ){
 		
@@ -287,7 +287,7 @@ ortogonal< Real , Complex > kinverse( int n , ortogonal< Real , Complex > w ){
 		
 	}
 	
-	ortogonal< Real , Complex > result = inverse( w );
+	ortogonal< Complex > result = inverse( w );
 	
 	for( unsigned int i = 0; i < n - 1; i++ ){
 		
@@ -298,49 +298,51 @@ ortogonal< Real , Complex > kinverse( int n , ortogonal< Real , Complex > w ){
 	return result;
 }
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > inverse( const ortogonal< Real , Complex > & w ){
+template< typename Complex >
+ortogonal< Complex > inverse( const ortogonal< Complex > & w ){
 	
-	return exp< Real , Complex >( -log< Real , Complex >( w ) );
+	return exp( -log( w ) );
 	
 }
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > operator+( Real x , const ortogonal< Real , Complex > & w ){
+template< typename Complex >
+ortogonal< Complex > operator+( real_type< Complex > x , const ortogonal< Complex > & w ){
 	
 	return w + x;
 	
 }
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > operator-( Real x , const ortogonal< Real , Complex > & w ){
+template< typename Complex >
+ortogonal< Complex > operator-( real_type< Complex > x , const ortogonal< Complex > & w ){
 	
 	return -w + x;
 	
 }
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > operator*( Real x , const ortogonal< Real , Complex > & w ){
+template< typename Complex >
+ortogonal< Complex > operator*( real_type< Complex > x , const ortogonal< Complex > & w ){
 	
 	return w * x;
 	
 }
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > operator/( Real x , const ortogonal< Real , Complex > & w ){
+template< typename Complex >
+ortogonal< Complex > operator/( real_type< Complex > x , const ortogonal< Complex > & w ){
 	
-	return inverse< Real , Complex >( w ) * x;
+	return inverse( w ) * x;
 	
 }
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > exp( const ortogonal< Real , Complex > & w ){
+template< typename Complex >
+ortogonal< Complex > exp( const ortogonal< Complex > & w ){
 	
+	using Real = real_type< Complex >;
+
 	if( w.type ){
 		
-		if( w.type == ortogonal< Real , Complex >::Sing ) return ortogonal< Real , Complex >::make_sing( w.info.sing + 1 );
+		if( w.type == ortogonal< Complex >::Sing ) return ortogonal< Complex >::make_sing( w.info.sing + 1 );
 		
-		ortogonal< Real , Complex > result = ortogonal< Real , Complex >::make_sing( w.info.sing + 1 );
+		ortogonal< Complex > result = ortogonal< Complex >::make_sing( w.info.sing + 1 );
 		
 		for( map< unsigned int , int >::const_iterator i = w.branchs.begin(); i != w.branchs.end(); i++ ){
 			
@@ -354,7 +356,7 @@ ortogonal< Real , Complex > exp( const ortogonal< Real , Complex > & w ){
 	Real angle = w.info.z.imag();
 	int new_branch = branch( angle );
 	
-	ortogonal< Real , Complex > result( exp( w.info.z ) );
+	ortogonal< Complex > result( exp( w.info.z ) );
 	
 	if( ( ( Real )( new_branch ) * constants::tau< Real >() < angle && result.info.z.imag() < 0 )
 	||  ( ( Real )( new_branch ) * constants::tau< Real >() >= angle && result.info.z.imag() > 0 ) ){
@@ -378,17 +380,17 @@ ortogonal< Real , Complex > exp( const ortogonal< Real , Complex > & w ){
 	return result;
 }
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > log( const ortogonal< Real , Complex > & w ){
+template< typename Complex >
+ortogonal< Complex > log( const ortogonal< Complex > & w ){
 	
 	if( w.type ){
 		
-		if( w.type == ortogonal< Real , Complex >::Sing ) return ortogonal< Real , Complex >::make_sing( w.info.sing - 1 );
-		if( w.info.sing == 0 ) return ortogonal< Real , Complex >::make_sing( -1 );
+		if( w.type == ortogonal< Complex >::Sing ) return ortogonal< Complex >::make_sing( w.info.sing - 1 );
+		if( w.info.sing == 0 ) return ortogonal< Complex >::make_sing( -1 );
 		
 		if( w.branch( 0 ) == 0 ){
 			
-			ortogonal< Real , Complex > result = ortogonal< Real , Complex >::make_sing( w.info.sing - 1 );
+			ortogonal< Complex > result = ortogonal< Complex >::make_sing( w.info.sing - 1 );
 			
 			for( map< unsigned int , int >::const_iterator i = w.branchs.begin(); i != w.branchs.end(); i++ ){
 				
@@ -403,9 +405,9 @@ ortogonal< Real , Complex > log( const ortogonal< Real , Complex > & w ){
 			return result;
 		}
 		
-		Real angle = arg( w );
+		real_type< Complex > angle = arg( w );
 		
-		ortogonal< Real , Complex > result( log( abs< Real , Complex >( value_tetration< Real >( w.info.sing ) ) ) , angle );
+		ortogonal< Complex > result( log( abs( value_tetration< real_type< Complex > >( w.info.sing ) ) ) , angle );
 		
 		for( map< unsigned int , int >::const_iterator i = w.branchs.begin(); i != w.branchs.end(); i++ ){
 			
@@ -420,7 +422,7 @@ ortogonal< Real , Complex > log( const ortogonal< Real , Complex > & w ){
 		return result;
 	}
 	
-	ortogonal< Real , Complex > result( log( abs< Real , Complex >( w ) ) , arg( w ) );
+	ortogonal< Complex > result( log( abs( w ) ) , arg( w ) );
 	
 	for( map< unsigned int , int >::const_iterator i = w.branchs.begin(); i != w.branchs.end(); i++ ){
 		
@@ -435,155 +437,155 @@ ortogonal< Real , Complex > log( const ortogonal< Real , Complex > & w ){
 	return result;
 }
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > pow( const ortogonal< Real , Complex > & u , const ortogonal< Real , Complex > & v ){
+template< typename Complex >
+ortogonal< Complex > pow( const ortogonal< Complex > & u , const ortogonal< Complex > & v ){
 	
-	return exp< Real , Complex >( v * log< Real , Complex >( u ) );
-	
-}
-
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > cos( const ortogonal< Real , Complex > & w ){
-	
-	return ( exp< Real , Complex >( w * ortogonal< Real , Complex >::I ) + exp( -w * ortogonal< Real , Complex >::I ) ) / Real( 2 );
+	return exp( v * log( u ) );
 	
 }
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > sin( const ortogonal< Real , Complex > & w ){
+template< typename Complex >
+ortogonal< Complex > cos( const ortogonal< Complex > & w ){
 	
-	return ( exp< Real , Complex >( w * ortogonal< Real , Complex >::I ) - exp< Real , Complex >( -w * ortogonal< Real , Complex >::I ) ) / Complex( 0 , 2 );
-	
-}
-
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > tan( const ortogonal< Real , Complex > & w ){
-	
-	return sin< Real , Complex >( w ) / cos< Real , Complex >( w );
+	return ( exp( w * ortogonal< Complex >::I ) + exp( -w * ortogonal< Complex >::I ) ) / real_type< Complex >( 2 );
 	
 }
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > sec( const ortogonal< Real , Complex > & w ){
+template< typename Complex >
+ortogonal< Complex > sin( const ortogonal< Complex > & w ){
 	
-	return inverse< Real , Complex >( cos< Real , Complex >( w ) );
-	
-}
-
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > csc( const ortogonal< Real , Complex > & w ){
-	
-	return inverse< Real , Complex >( sin< Real , Complex >( w ) );
+	return ( exp( w * ortogonal< Complex >::I ) - exp( -w * ortogonal< Complex >::I ) ) / Complex( 0 , 2 );
 	
 }
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > cot( const ortogonal< Real , Complex > & w ){
+template< typename Complex >
+ortogonal< Complex > tan( const ortogonal< Complex > & w ){
 	
-	return cos< Real , Complex >( w ) / sin< Real , Complex >( w );
-	
-}
-
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > cosh( const ortogonal< Real , Complex > & w ){
-	
-	return ( exp< Real , Complex >( w ) + exp< Real , Complex >( -w ) ) / Real( 2 );
+	return sin( w ) / cos( w );
 	
 }
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > sinh( const ortogonal< Real , Complex > & w ){
+template< typename Complex >
+ortogonal< Complex > sec( const ortogonal< Complex > & w ){
 	
-	return ( exp< Real , Complex >( w ) - exp< Real , Complex >( -w ) ) / Real( 2 );
-	
-}
-
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > tanh( const ortogonal< Real , Complex > & w ){
-	
-	return sinh< Real , Complex >( w ) / cosh< Real , Complex >( w );
+	return inverse( cos( w ) );
 	
 }
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > sech( const ortogonal< Real , Complex > & w ){
+template< typename Complex >
+ortogonal< Complex > csc( const ortogonal< Complex > & w ){
 	
-	return inverse< Real , Complex >( cosh< Real , Complex >( w ) );
-	
-}
-
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > csch( const ortogonal< Real , Complex > & w ){
-	
-	return inverse< Real , Complex >( sinh< Real , Complex >( w ) );
+	return inverse( sin( w ) );
 	
 }
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > coth( const ortogonal< Real , Complex > & w ){
+template< typename Complex >
+ortogonal< Complex > cot( const ortogonal< Complex > & w ){
 	
-	return inverse< Real , Complex >( tanh< Real , Complex >( w ) );
-	
-}
-
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > sqrt( const ortogonal< Real , Complex > & w ){
-	
-	return pow< Real , Complex >( w , ortogonal< Real , Complex >( 0.5 ) );
+	return cos( w ) / sin( w );
 	
 }
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > cbrt( const ortogonal< Real , Complex > & w ){
+template< typename Complex >
+ortogonal< Complex > cosh( const ortogonal< Complex > & w ){
 	
-	return pow< Real , Complex >( w , Real( 1 ) / Real( 3 ) );
-	
-}
-
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > root( const ortogonal< Real , Complex > & u ,const ortogonal< Real , Complex > & v ){
-	
-	return pow< Real , Complex >( u , inverse< Real , Complex >( v ) );
+	return ( exp( w ) + exp( -w ) ) / real_type< Complex >( 2 );
 	
 }
 
-template< typename Real , typename Complex >
-Real arg( const ortogonal< Real , Complex > & w ){
+template< typename Complex >
+ortogonal< Complex > sinh( const ortogonal< Complex > & w ){
 	
-	return arg( w.z() ) + w.branch( 0 ) * constants::tau< Real >();
+	return ( exp( w ) - exp( -w ) ) / real_type< Complex >( 2 );
 	
 }
 
-template< typename Real , typename Complex >
-Real abs( const ortogonal< Real , Complex > & w ){
+template< typename Complex >
+ortogonal< Complex > tanh( const ortogonal< Complex > & w ){
+	
+	return sinh( w ) / cosh( w );
+	
+}
+
+template< typename Complex >
+ortogonal< Complex > sech( const ortogonal< Complex > & w ){
+	
+	return inverse( cosh( w ) );
+	
+}
+
+template< typename Complex >
+ortogonal< Complex > csch( const ortogonal< Complex > & w ){
+	
+	return inverse( sinh( w ) );
+	
+}
+
+template< typename Complex >
+ortogonal< Complex > coth( const ortogonal< Complex > & w ){
+	
+	return inverse( tanh< Complex >( w ) );
+	
+}
+
+template< typename Complex >
+ortogonal< Complex > sqrt( const ortogonal< Complex > & w ){
+	
+	return pow( w , ortogonal< Complex >( 0.5 ) );
+	
+}
+
+template< typename Complex >
+ortogonal< Complex > cbrt( const ortogonal< Complex > & w ){
+	
+	return pow( w , real_type< Complex >( 1 ) / real_type< Complex >( 3 ) );
+	
+}
+
+template< typename Complex >
+ortogonal< Complex > root( const ortogonal< Complex > & u ,const ortogonal< Complex > & v ){
+	
+	return pow( u , inverse( v ) );
+	
+}
+
+template< typename Complex >
+real_type< Complex > arg( const ortogonal< Complex > & w ){
+	
+	return arg( w.z() ) + w.branch( 0 ) * constants::tau< real_type< Complex > >();
+	
+}
+
+template< typename Complex >
+real_type< Complex > abs( const ortogonal< Complex > & w ){
 	
 	return abs( w.z() );
 	
 }
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > wlambert( const ortogonal< Real , Complex > & w ){
+template< typename Complex >
+ortogonal< Complex > wlambert( const ortogonal< Complex > & w ){
 	
 	return wlambert( Complex( w ) , w.branch( 0 ) );
 	
 }
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > wave( const ortogonal< Real , Complex > & w ){
+template< typename Complex >
+ortogonal< Complex > wave( const ortogonal< Complex > & w ){
 	
-	return exp< Real , Complex >( wlambert< Real , Complex >( log< Real , Complex >( w ) ) );
+	return exp( wlambert( log( w ) ) );
 	
 }
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex >::ortogonal() : type( Sing ) , branchs(){
+template< typename Complex >
+ortogonal< Complex >::ortogonal() : type( Sing ) , branchs(){
 	
 	info.sing = -1;
 	
 }
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex >::ortogonal( const Complex & z ) : branchs(){
+template< typename Complex >
+ortogonal< Complex >::ortogonal( const Complex & z ) : branchs(){
 	
 	int k = is_sing( z );
 	
@@ -608,8 +610,8 @@ ortogonal< Real , Complex >::ortogonal( const Complex & z ) : branchs(){
 	
 }
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex >::ortogonal( Real r ) : branchs(){
+template< typename Complex >
+ortogonal< Complex >::ortogonal( Real r ) : branchs(){
 	
 	int k = is_sing( r );
 	
@@ -634,35 +636,35 @@ ortogonal< Real , Complex >::ortogonal( Real r ) : branchs(){
 	
 }
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex >::ortogonal( Real r , Real i ) : ortogonal( Complex( r , i ) ){
+template< typename Complex >
+ortogonal< Complex >::ortogonal( Real r , Real i ) : ortogonal( Complex( r , i ) ){
 	
 	//nothing
 	
 }
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex >::ortogonal( const ortogonal & other ) : info( other.info ) , type( other.type ) , branchs( other.branchs ){
+template< typename Complex >
+ortogonal< Complex >::ortogonal( const ortogonal & other ) : info( other.info ) , type( other.type ) , branchs( other.branchs ){
 	
 	//nothing
 	
 }
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex >::~ortogonal(){
+template< typename Complex >
+ortogonal< Complex >::~ortogonal(){
 	
 	//nothing
 	
 }
 
-template< typename Real , typename Complex >
-const ortogonal< Real , Complex > ortogonal< Real , Complex >::I = ortogonal( Real( 1 ) , Real( 0 ) );
+template< typename Complex >
+const ortogonal< Complex > ortogonal< Complex >::I = ortogonal( Real( 1 ) , Real( 0 ) );
 
-template< typename Real , typename Complex >
-const ortogonal< Real , Complex > ortogonal< Real , Complex >::NaN = ortogonal( std::numeric_limits< Real >::quiet_NaN() , std::numeric_limits< Real >::quiet_NaN() );
+template< typename Complex >
+const ortogonal< Complex > ortogonal< Complex >::NaN = ortogonal( std::numeric_limits< Real >::quiet_NaN() , std::numeric_limits< Real >::quiet_NaN() );
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > & ortogonal< Real , Complex >::operator=( const ortogonal & other ){
+template< typename Complex >
+ortogonal< Complex > & ortogonal< Complex >::operator=( const ortogonal & other ){
 	
 	type = other.type;
 	info = other.info;
@@ -671,8 +673,8 @@ ortogonal< Real , Complex > & ortogonal< Real , Complex >::operator=( const orto
 	return *this;
 }
 
-template< typename Real , typename Complex >
-void ortogonal< Real , Complex >::add_branch( unsigned int index , int value ){
+template< typename Complex >
+void ortogonal< Complex >::add_branch( unsigned int index , int value ){
 	
 	if( value == 0 || type == Sing ) return;
 	
@@ -694,8 +696,8 @@ void ortogonal< Real , Complex >::add_branch( unsigned int index , int value ){
 	
 }
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > ortogonal< Real , Complex >::operator-() const{
+template< typename Complex >
+ortogonal< Complex > ortogonal< Complex >::operator-() const{
 	
 	if( type ){
 		
@@ -713,8 +715,8 @@ ortogonal< Real , Complex > ortogonal< Real , Complex >::operator-() const{
 	return make_orto( -info.z , -branch( 0 ) );
 }
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > ortogonal< Real , Complex >::operator+( const ortogonal & other ) const{
+template< typename Complex >
+ortogonal< Complex > ortogonal< Complex >::operator+( const ortogonal & other ) const{
 	
 	if( !type && !other.type ){
 		
@@ -747,8 +749,8 @@ ortogonal< Real , Complex > ortogonal< Real , Complex >::operator+( const ortogo
 	return make_orto( a + b , branch( 0 ) + other.branch( 0 ) );
 }
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > ortogonal< Real , Complex >::operator*( const ortogonal & other ) const{
+template< typename Complex >
+ortogonal< Complex > ortogonal< Complex >::operator*( const ortogonal & other ) const{
 	
 	if( !type && !other.type ){
 		
@@ -796,50 +798,50 @@ ortogonal< Real , Complex > ortogonal< Real , Complex >::operator*( const ortogo
 	return make_orto( a * b , new_branch , branch( 1 ) + other.branch( 1 ) );
 }
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > ortogonal< Real , Complex >::operator-( const ortogonal & other ) const{
+template< typename Complex >
+ortogonal< Complex > ortogonal< Complex >::operator-( const ortogonal & other ) const{
 	
 	return *this + -other;
 	
 }
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > ortogonal< Real , Complex >::operator/( const ortogonal & other ) const{
+template< typename Complex >
+ortogonal< Complex > ortogonal< Complex >::operator/( const ortogonal & other ) const{
 	
 	return *this * inverse( other );
 	
 }
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > operator+( const Complex & z , const ortogonal< Real , Complex > & other ){
+template< typename Complex >
+ortogonal< Complex > operator+( const Complex & z , const ortogonal< Complex > & other ){
 	
 	return other + z;
 	
 }
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > operator-( const Complex & z , const ortogonal< Real , Complex > & other ){
+template< typename Complex >
+ortogonal< Complex > operator-( const Complex & z , const ortogonal< Complex > & other ){
 	
 	return -other + z;
 	
 }
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > operator*( const Complex & z , const ortogonal< Real , Complex > & other ){
+template< typename Complex >
+ortogonal< Complex > operator*( const Complex & z , const ortogonal< Complex > & other ){
 	
 	return other * z;
 	
 }
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > operator/( const Complex & z , const ortogonal< Real , Complex > & other ){
+template< typename Complex >
+ortogonal< Complex > operator/( const Complex & z , const ortogonal< Complex > & other ){
 	
 	return inverse( other ) * z;
 	
 }
 
-template< typename Real , typename Complex >
-int ortogonal< Real , Complex >::branch( unsigned int index ) const{
+template< typename Complex >
+int ortogonal< Complex >::branch( unsigned int index ) const{
 	
 	if( type == Sing ){
 		
@@ -856,8 +858,8 @@ int ortogonal< Real , Complex >::branch( unsigned int index ) const{
 	return 0;
 }
 
-template< typename Real , typename Complex >
-int ortogonal< Real , Complex >::complexity() const{
+template< typename Complex >
+int ortogonal< Complex >::complexity() const{
 	
 	if( type == Sing ){
 		
@@ -889,56 +891,56 @@ int ortogonal< Real , Complex >::complexity() const{
 	return i->second + 1;
 }
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > & ortogonal< Real , Complex >::operator+=( const ortogonal & other ){
+template< typename Complex >
+ortogonal< Complex > & ortogonal< Complex >::operator+=( const ortogonal & other ){
 	
 	return *this = *this + other;
 	
 }
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > & ortogonal< Real , Complex >::operator-=( const ortogonal & other ){
+template< typename Complex >
+ortogonal< Complex > & ortogonal< Complex >::operator-=( const ortogonal & other ){
 	
 	return *this = *this - other;
 	
 }
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > & ortogonal< Real , Complex >::operator*=( const ortogonal & other ){
+template< typename Complex >
+ortogonal< Complex > & ortogonal< Complex >::operator*=( const ortogonal & other ){
 	
 	return *this = *this * other;
 	
 }
 
-template< typename Real , typename Complex >
-ortogonal< Real , Complex > & ortogonal< Real , Complex >::operator/=( const ortogonal & other ){
+template< typename Complex >
+ortogonal< Complex > & ortogonal< Complex >::operator/=( const ortogonal & other ){
 	
 	return *this = *this / other;
 	
 }
 
-template< typename Real , typename Complex >
-bool ortogonal< Real , Complex >::operator==( const ortogonal & other ) const{
+template< typename Complex >
+bool ortogonal< Complex >::operator==( const ortogonal & other ) const{
 	
 	return ( type ? info.sing == other.info.sing : info.z == other.info.z ) && type == other.type && branchs == other.branchs;
 
 }
 
-template< typename Real , typename Complex >
-bool ortogonal< Real , Complex >::operator!=( const ortogonal & other ) const{
+template< typename Complex >
+bool ortogonal< Complex >::operator!=( const ortogonal & other ) const{
 	
 	return !( *this == other );
 
 }
 
-template< typename Real , typename Complex >
-const ortogonal< Real , Complex >::Type & ortogonal< Real , Complex >::getType() const{
+template< typename Complex >
+const ortogonal< Complex >::Type & ortogonal< Complex >::getType() const{
 	
 	return type;
 	
 }
 
-template< typename Real , typename Complex >
-Complex ortogonal< Real , Complex >::z() const{
+template< typename Complex >
+Complex ortogonal< Complex >::z() const{
 	
 	if( type == Sing ){
 		
@@ -952,8 +954,8 @@ Complex ortogonal< Real , Complex >::z() const{
 	return type == Tetration ? value_tetration< Real >( info.sing ) : info.z;
 }
 
-template< typename Real , typename Complex >
-Real ortogonal< Real , Complex >::real() const{
+template< typename Complex >
+ortogonal< Complex >::Real ortogonal< Complex >::real() const{
 	
 	if( type == Sing ){
 		
@@ -967,8 +969,8 @@ Real ortogonal< Real , Complex >::real() const{
 	return type == Tetration ? value_tetration< Real >( info.sing ) : info.z.real();
 }
 
-template< typename Real , typename Complex >
-Real ortogonal< Real , Complex >::imag() const{
+template< typename Complex >
+ortogonal< Complex >::Real ortogonal< Complex >::imag() const{
 	
 	if( type == Sing ){
 		
@@ -982,10 +984,10 @@ Real ortogonal< Real , Complex >::imag() const{
 	return type == Tetration ? 0 : info.z.imag();
 }
 
-template< typename Real , typename Complex >
-std::ostream & operator<<( std::ostream & o , const ortogonal< Real , Complex > & w ){
+template< typename Complex >
+std::ostream & operator<<( std::ostream & o , const ortogonal< Complex > & w ){
 	
-	if( w.type == ortogonal< Real , Complex >::Sing ){
+	if( w.type == ortogonal< Complex >::Sing ){
 		
 		if( w.info.sing == -1 ) return o<<Complex( 0 )<<endl;
 
@@ -994,7 +996,7 @@ std::ostream & operator<<( std::ostream & o , const ortogonal< Real , Complex > 
 		return o;
 	}
 	
-	if( w.type == ortogonal< Real , Complex >::Tetration ){
+	if( w.type == ortogonal< Complex >::Tetration ){
 		
 		if( w.info.sing > 3 ){
 			
