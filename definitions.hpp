@@ -74,6 +74,40 @@ struct value_traits< number< cpp_bin_float< Digits , DigitBase , Allocator , Exp
 template< typename T >
 using real_type = value_traits< T >::real;
 
+//init traits
+
+template< typename T >
+inline constexpr bool is_boost_number = false;
+
+template< unsigned Digits , backends::digit_base_type DigitBase , class Allocator , class Exponent , Exponent MinExponent , Exponent MaxExponent , expression_template_option ExpressionTemplates >
+inline constexpr bool is_boost_number< number< cpp_bin_float< Digits , DigitBase , Allocator , Exponent , MinExponent , MaxExponent > , ExpressionTemplates > > = true;
+
+template< typename T >
+concept is_numeric = std::integral< T > || std::floating_point< T > || is_boost_number< T >;
+
+template< typename T >
+inline constexpr bool is_std_complex = false;
+
+template< typename T >
+inline constexpr bool is_std_complex< std::complex< T > > = true;
+
+template< typename T >
+inline constexpr bool is_boost_complex = false;
+
+template< typename T , expression_template_option U >
+inline constexpr bool is_boost_complex< number< complex_adaptor< T > , U > > = false;
+
+template< typename T >
+concept is_complex = is_std_complex< T > || is_boost_complex< T >;
+
+//end traits
+
+template< typename T >
+real_type< T > real_value( const T & z );
+
+template< is_complex T >
+real_type< T > real_value( const T & z );
+
 template< typename T >
 T csc( const T & z );
 
