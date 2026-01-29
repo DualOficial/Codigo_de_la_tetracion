@@ -13,12 +13,23 @@ inline constexpr bool is_dual_real = false;
 template< typename T >
 inline constexpr bool is_dual_real< dual< T > > = is_dual_real< T > || is_numeric< T >;
 
+template< typename T >
+inline constexpr bool is_dual = false;
+
+template< typename T >
+inline constexpr bool is_dual< dual< T > > = true;
+
 template< typename T , typename U >
 concept numeric_same = ( is_dual_real< T > && is_numeric< U > ) || ( !is_dual_real< T > && ( is_complex< U > || is_numeric< U > ) );
 
 template< typename T >
+concept number_dual = is_dual< T >;
+
+template< typename T >
 class dual{
 public:
+	
+	using value_type = T;
 
 	dual();
 	dual( T real );
@@ -39,12 +50,46 @@ public:
 	bool operator==( const dual & other ) const;
 	bool operator!=( const dual & other ) const;
 
+	auto intern_value() const;
+	auto intern_real() const;
+	auto intern_imag() const;
+
 	static const dual e;
 
 	T r;
 	T i;
 	
 };
+
+template< typename T >
+struct dual_intern_type_impl{
+	
+	using type = T;
+
+};
+
+template< typename T >
+struct dual_intern_type_impl< dual< T > > {
+	 using type = std::conditional_t< is_dual< typename dual< T >::value_type >,
+		typename dual_intern_type_impl< typename dual< T >::value_type >::type,
+		typename dual< T >::value_type >;
+};
+
+template< typename T >
+using dual_intern_type = typename dual_intern_type_impl< T >::type;
+
+template< typename T >
+struct value_traits< dual< T > >{
+	
+	using real = typename real_type< typename dual_intern_type< dual< T > > >;
+	
+};
+
+template< number_dual T >
+real_type< T > Real( const T & z );
+
+template< number_dual T >
+real_type< T > Imag( const T & z );
 
 template< typename T >
 dual< T > operator+( const T & first , const dual< T > & second );
@@ -86,7 +131,10 @@ template< typename T >
 dual< T > exp( const dual< T > & z );
 
 template< typename T >
-dual< T > abs( const dual< T > & z );
+real_type< dual< T > > abs( const dual< T > & z );
+
+template< typename T >
+dual< T > abs_d( const dual< T > & z );
 
 template< typename T >
 dual< T > log( const dual< T > & z );
