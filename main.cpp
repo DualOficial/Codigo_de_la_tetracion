@@ -216,7 +216,50 @@ app.run();
 Fin del ejemplo.
 Aqui se recreo la permutación.
 
-6.other_permutations
+6.epsilon
+En este encontrara funciones como la permutación factorial( perfact ), y operadores como la integral suma,
+integral producto e integral epsilon( basada en asensiones continuas ).
+Mientras que también vera operadores como las sumatoria, el productorio y elevatorio( epsilon, basado en-
+ascensiones constantes ).
+Aqui un ejemplo:
+
+adjust_precision< long double >();
+
+auto f = []< typename T >( T x ){ return T( 1.5 ); };
+
+ApplicationPlot app;
+
+app.set_velocity_time( 10 );
+app.add_bi_func( [ & ]( long double x ){
+	
+	return epsilon( f , 2.l , 0.l , x );
+	//el primer arugmento es la función, el segundo la base de la elevatoria y, los ultimos son-
+	//el incio y el final.
+
+} , Colors::PinkRed );
+app.run();
+
+Fin del ejemplo.
+Aqui les muestro otro:
+
+adjust_precision< long double >();
+
+auto f = []< typename T >( T x ){ return x; };
+
+ApplicationPlot app;
+
+app.set_velocity_time( 10 );
+app.add_bi_func( [ & ]( long double x ){
+	
+	return epsilon_integral( f , exp( 1.l ) , 0.l , x );
+	//El primer argumento es la función, el segundo la base la elevatoria y, los ultimos dos son el inicio y el final
+
+} , Colors::SpringGreen );
+app.run();
+
+Fin del ejemplo.
+
+7.other_permutations
 contiene varias funciones, parecidas a la permutación, en su forma de creación.
 Todas ellas tienen un punto fijo con derivada 1, por lo que se puede usar un teorema de acoplación.
 Entre estas estan:
@@ -225,11 +268,11 @@ b) plus tetration, basada en e^(x-1) repetido
 c) hyper square, basada en 1/2 * x^2 + 1/2 repetido
 d) natural tetration, basada en (e^1/e)^x repetido
 
-7.Language: aunque nada que ver, permite crear un mini lenguaje, por cierto, esta en versión beta
+8.Language: aunque nada que ver, permite crear un mini lenguaje, por cierto, esta en versión beta
 por lo que no es tan util.
 
-8.permutation: contiene la permutación( esperabas mas? )
-9.tetration: contiene la tetración;
+9.permutation: contiene la permutación( esperabas mas? )
+10.tetration: contiene la tetración;
 Por otro lado, también contiene unas clases y funciones.
 Estas permiten calcular las derivadas de la tetración en alpha.
 (alpha seria el numero que cumple: e^alpha=alpha,
@@ -297,8 +340,13 @@ centradas en un alpha.
 Por cierto, cuando hagas un shader, que no se te olvide poner "#ADD ORTOGONAL SHADER" para tener numeros ortogonales,
 ortoper( con perspectiva ), entre otras funciones.
 
+Y, por ultimo, cuando hagas graficas, puedes usar colores extra con "Colors::", por ejemplo:
+Colors::Purple o Colors::Orange, etc. Esto se encuentra en definitions.hpp.
+
 Gracias te da Dual por ver el tutorial hasta aqui :)
 
 Mi canal: https://www.youtube.com/@DualMath
+Mi facebook: https://www.facebook.com/DualMath
+Mi github: https://github.com/DualOficial
 
 */
