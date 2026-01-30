@@ -41,6 +41,64 @@ T perfact( const T & x , const T & y ){
 }
 
 template< typename T , typename F >
+T sum( F f , T a , T b ){
+	
+	T result = 0;
+
+	if( a > b ){
+		
+		a--;
+		
+		while( a > b ){
+			
+			result -= f( a );
+
+			a--;
+		}
+
+		return result;
+	}
+
+	while( a <= b ){
+		
+		result += f( a );
+
+		a++;
+	}
+
+	return result;
+}
+
+template< typename T , typename F >
+T product( F f , T a , T b ){
+	
+	T result = 1;
+
+	if( a > b ){
+		
+		a--;
+		
+		while( a > b ){
+			
+			result /= f( a );
+
+			a--;
+		}
+
+		return result;
+	}
+
+	while( a <= b ){
+		
+		result *= f( a );
+
+		a++;
+	}
+
+	return result;
+}
+
+template< typename T , typename F >
 T epsilon( F f , T x , T a , T b ){
 	
 	if( a > b ){
@@ -65,6 +123,36 @@ T epsilon( F f , T x , T a , T b ){
 	}
 
 	return x;
+}
+
+template< typename T , typename F >
+T sum_integral( F f , const T & a , const T & b , int complexity ){
+	
+	T result = 0;
+	T y = ( b - a ) / T( complexity );
+
+	for( unsigned int i = 0; i < complexity; i++ ){
+		
+		result += f( a + y * T( i ) ) * y;
+
+	}
+
+	return result;
+}
+
+template< typename T , typename F >
+T product_integral( F f , const T & a , const T & b , int complexity ){
+	
+	T result = 1;
+	T y = ( b - a ) / T( complexity );
+
+	for( unsigned int i = 0; i < complexity; i++ ){
+		
+		result *= pow( f( a + y * T( i ) ) , y );
+
+	}
+
+	return result;
 }
 
 template< typename T , typename F >
