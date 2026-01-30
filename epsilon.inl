@@ -1,0 +1,82 @@
+template< typename T >
+T perfact_integer( T x , int n ){
+	
+	if( n >= 0 ){
+		
+		for( unsigned int i = 1; i <= n; i++ ){
+			
+			x = asc( x , T( i ) );
+			
+		}
+
+		return x;
+	}
+
+	n = -n;
+	
+	for( unsigned int i = 0; i < n; i++ ){
+		
+		x = wave( x , -T( i ) );
+		
+	}
+
+	return x;
+}
+
+template< typename T >
+T perfact( const T & x , const T & y ){
+	
+	T a = perfact_integer( x , -perfact_complexity );
+	T mean = ( y + T( 1 ) ) * T( 0.5 );
+	
+	a = pow( per( pow( a , -T( perfact_complexity ) + mean ) , y ) , T( 1 ) / ( -T( perfact_complexity ) + mean ) );
+	
+	for( int i = 1; i <= perfact_complexity; i++ ){
+		
+		a = asc( a , y + T( i - perfact_complexity ) );
+		
+	}
+
+	return a;
+}
+
+template< typename T , typename F >
+T epsilon( F f , T x , T a , T b ){
+	
+	if( a > b ){
+		
+		a--;
+		
+		while( a > b ){
+			
+			x = wave( x , f( a ) );
+
+			a--;
+		}
+
+		return x;
+	}
+
+	while( a <= b ){
+		
+		x = asc( x , f( a ) );
+
+		a++;
+	}
+
+	return x;
+}
+
+template< typename T , typename F >
+T epsilon_integral( F f , T x , const T & a , const T & b , int complexity ){
+	
+	T y = ( b - a ) / T( complexity );
+
+	for( unsigned int i = 0; i < complexity; i++ ){
+		
+		x = asc( x , f( a + y * T( i ) ) * y );
+
+	}
+
+	return x;
+}
