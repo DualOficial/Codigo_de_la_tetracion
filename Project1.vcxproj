@@ -141,6 +141,7 @@
     <ClCompile Include="ApplicationPlotComplex.cpp" />
     <ClCompile Include="definitions.cpp" />
     <ClCompile Include="definitions.hpp" />
+    <ClCompile Include="epsilon.cpp" />
     <ClCompile Include="Language.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ortogonals.cpp" />
@@ -154,6 +155,7 @@
     <ClInclude Include="ApplicationPlotComplex.hpp" />
     <ClInclude Include="coupling.hpp" />
     <ClInclude Include="dual.hpp" />
+    <ClInclude Include="epsilon.hpp" />
     <ClInclude Include="kuznetsov.hpp" />
     <ClInclude Include="Language.hpp" />
     <ClInclude Include="Math.hpp" />
@@ -170,6 +172,7 @@
     <None Include="coupling.inl" />
     <None Include="definitions.inl" />
     <None Include="dual.inl" />
+    <None Include="epsilon.inl" />
     <None Include="kuznetsov.inl" />
     <None Include="ortogonalper.inl" />
     <None Include="ortogonals.inl" />

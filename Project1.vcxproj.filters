@@ -48,6 +48,9 @@
     <ClCompile Include="other_permutations.cpp">
       <Filter>Archivos de recursos</Filter>
     </ClCompile>
+    <ClCompile Include="epsilon.cpp">
+      <Filter>Archivos de recursos</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dual.hpp">
@@ -92,6 +95,9 @@
     <ClInclude Include="coupling.hpp">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
+    <ClInclude Include="epsilon.hpp">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="dual.inl">
@@ -122,6 +128,9 @@
       <Filter>Archivos de encabezado</Filter>
     </None>
     <None Include="ApplicationPlot.inl">
+      <Filter>Archivos de encabezado</Filter>
+    </None>
+    <None Include="epsilon.inl">
       <Filter>Archivos de encabezado</Filter>
     </None>
   </ItemGroup>
