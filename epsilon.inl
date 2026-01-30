@@ -168,3 +168,29 @@ T epsilon_integral( F f , T x , const T & a , const T & b , int complexity ){
 
 	return x;
 }
+
+template< typename F >
+auto product_derivate( F f ){
+	
+	auto g = derivate( f );
+
+	return [ g = forward< decltype( g ) >( g ) ]< typename T >( T x ){
+		
+		return exp( g( log( x ) ) );
+		
+	};
+}
+
+template< typename F >
+auto epsilon_derivate( F f ){
+	
+	auto g = derivate( f );
+
+	return [ f = forward< F >( f ) , g = forward< decltype( g ) >( g ) ]< typename T >( T x ){
+		
+		T y = f( x );
+		T z = log( y );
+
+		return g( x ) / ( y * z * z );
+	};
+}
