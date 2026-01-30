@@ -28,4 +28,10 @@ T product_integral( F f , const T & a , const T & b , int complexity = 1000 );
 template< typename T , typename F >
 T epsilon_integral( F f , T x , const T & a , const T & b , int complexity = 1000 );
 
+template< typename F >
+auto product_derivate( F f );
+
+template< typename F >
+auto epsilon_derivate( F f );
+
 #include"epsilon.inl"
