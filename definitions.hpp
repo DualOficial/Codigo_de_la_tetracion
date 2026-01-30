@@ -7,8 +7,10 @@
 #include<boost/multiprecision/cpp_complex.hpp>
 #include<boost/multiprecision/number.hpp>
 #include<boost/math/constants/constants.hpp>
+#include<SFML/Graphics/Color.hpp>
 
 using namespace std;
+using namespace sf;
 using namespace boost::multiprecision;
 using namespace boost::math;
 
@@ -159,5 +161,16 @@ void adjust_precision();
 string to_stringl( long double value );
 string to_stringi( int value );
 long double atol( const string & text );
+
+namespace Colors{
+	
+	extern const Color Purple;
+	extern const Color Orange;
+	extern const Color SpringGreen;
+	extern const Color Chartreuse;
+	extern const Color BlueGreen;
+	extern const Color PinkRed;
+
+}
 
 #include"definitions.inl"
