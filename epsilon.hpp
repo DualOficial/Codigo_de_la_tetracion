@@ -1,17 +1,29 @@
 #pragma once
 
-extern int perfact_complexity; //no soporta mucha presición
+extern int perfact_complexity; //no soporta mucha presiciÃ³n
 
 template< typename T >
 T perfact_integer( T x , int n );
 
-//permutación factorial
+//permutaciÃ³n factorial
 
 template< typename T >
 T perfact( const T & x , const T & y );
 
 template< typename T , typename F >
+T sum( F f , T a , T b );
+
+template< typename T , typename F >
+T product( F f , T a , T b );
+
+template< typename T , typename F >
 T epsilon( F f , T x , T a , T b );
+
+template< typename T , typename F >
+T sum_integral( F f , const T & a , const T & b , int complexity = 1000 );
+
+template< typename T , typename F >
+T product_integral( F f , const T & a , const T & b , int complexity = 1000 );
 
 template< typename T , typename F >
 T epsilon_integral( F f , T x , const T & a , const T & b , int complexity = 1000 );
