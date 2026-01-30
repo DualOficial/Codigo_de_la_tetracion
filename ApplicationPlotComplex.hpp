@@ -7,9 +7,6 @@
 #include<functional>
 #include<cmath>
 
-using namespace sf;
-using namespace std;
-
 string getWithLines( const string & text );
 
 typedef Vector2< long double > Vector2l;
