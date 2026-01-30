@@ -1,3 +1,5 @@
+#include<boost/math/quadrature/gauss_kronrod.hpp>
+
 template< typename T >
 T perfact_integer( T x , int n ){
 	
@@ -125,48 +127,40 @@ T epsilon( F f , T x , T a , T b ){
 	return x;
 }
 
-template< typename T , typename F >
-T sum_integral( F f , const T & a , const T & b , int complexity ){
+template< no_complex T , typename F >
+T sum_integral( F f , const T & a , const T & b ){
 	
-	T result = 0;
-	T y = ( b - a ) / T( complexity );
+	using namespace boost::math::quadrature;
 
-	for( unsigned int i = 0; i < complexity; i++ ){
-		
-		result += f( a + y * T( i ) ) * y;
+	return gauss_kronrod< T , 61 >::integrate( f , a , b );
+}
 
-	}
+template< is_complex T , typename F >
+T sum_integral( F f , const T & a , const T & b ){
+	
+	using namespace boost::math::quadrature;
+	
+	real_type< T > c = abs( b - a );
+	T d = ( b - a ) / c;
 
-	return result;
+	auto g = [ f = forward< F >( f ) , a , d ]( real_type< T > x ){ return f( a + x * d ); };
+
+	return gauss_kronrod< real_type< T > , 61 >::integrate( g , real_type< T >( 0 ) , c ) * d;
 }
 
 template< typename T , typename F >
-T product_integral( F f , const T & a , const T & b , int complexity ){
+T product_integral( F f , const T & a , const T & b ){
 	
-	T result = 1;
-	T y = ( b - a ) / T( complexity );
-
-	for( unsigned int i = 0; i < complexity; i++ ){
-		
-		result *= pow( f( a + y * T( i ) ) , y );
-
-	}
-
-	return result;
+	auto g = [ f ]< typename T >( T x ){ return log( f( x ) ); };
+	
+	return exp( sum_integral( g , a , b ) );
 }
 
 template< typename T , typename F >
-T epsilon_integral( F f , T x , const T & a , const T & b , int complexity ){
+T epsilon_integral( F f , T x , const T & a , const T & b ){
 	
-	T y = ( b - a ) / T( complexity );
+	return pow( x , T( 1 ) / ( T( 1 ) - sum_integral( f , a , b ) * log( x ) ) );
 
-	for( unsigned int i = 0; i < complexity; i++ ){
-		
-		x = asc( x , f( a + y * T( i ) ) * y );
-
-	}
-
-	return x;
 }
 
 template< typename F >
