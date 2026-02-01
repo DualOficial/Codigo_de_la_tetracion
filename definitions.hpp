@@ -107,6 +107,9 @@ concept is_complex = requires( T t ){
 
 };
 
+template< typename T >
+concept no_complex = !is_complex< T >;
+
 //end traits
 
 template< typename T >
@@ -164,12 +167,12 @@ long double atol( const string & text );
 
 namespace Colors{
 	
-	extern const Color Purple;
-	extern const Color Orange;
-	extern const Color SpringGreen;
-	extern const Color Chartreuse;
-	extern const Color BlueGreen;
-	extern const Color PinkRed;
+	constexpr Color Purple = Color( 128 , 0 , 255 );
+	constexpr Color Orange = Color( 255 , 128 , 0 );
+	constexpr Color SpringGreen = Color( 0 , 255 , 128 );
+	constexpr Color Chartreuse = Color( 128 , 255 , 0 );
+	constexpr Color BlueGreen = Color( 0 , 128 , 255 );
+	constexpr Color PinkRed = Color( 255 , 0 , 128 );
 
 }
 

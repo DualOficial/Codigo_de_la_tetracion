@@ -9,16 +9,29 @@ template< typename Complex >
 ortogonalper< Complex > make_orto_per( const ortogonal< Complex > & data , int perspective );
 
 template< typename Complex >
+inline constexpr bool is_ortogonalper = false;
+
+template< typename Complex >
+inline constexpr bool is_ortogonalper< ortogonalper< Complex > > = true;
+
+template< typename T >
+concept number_ortoper = is_ortogonalper< T >;
+
+template< typename T >
+concept no_ortoper = !is_ortogonalper< T >;
+
+template< typename Complex >
 class ortogonalper{
 public:
 	
-	using Real = typename real_type< Complex >;
-	using ortogonal = ortogonal< Complex >;
+	using RealType = typename real_type< Complex >;
+	using ComplexType = Complex;
+	using OrtoType = ortogonal< Complex >;
 	
 	ortogonalper();
-	explicit ortogonalper( ortogonal u , int n = 0 );
+	explicit ortogonalper( OrtoType u , int n = 0 );
 	explicit ortogonalper( const Complex & z , int n = 0 );
-	explicit ortogonalper( Real r , int n = 0 );
+	explicit ortogonalper( RealType r , int n = 0 );
 	~ortogonalper();
 
 	ortogonalper & operator=( const ortogonalper & other );
@@ -39,26 +52,26 @@ public:
 	int get_perspective() const;
 
 	ortogonalper change( int n ) const;
-	const ortogonal & w() const;
-	const ortogonal & w_relative() const;
+	const OrtoType & w() const;
+	const OrtoType & w_relative() const;
 	Complex z() const;
 	Complex z_relative() const;
 	int sing() const;
 	int sing_relative() const;
 
-	Real real() const;
-	Real imag() const;
-	Real real_relative() const;
-	Real imag_relative() const;
+	RealType real() const;
+	RealType imag() const;
+	RealType real_relative() const;
+	RealType imag_relative() const;
 
 	explicit operator Complex() const;
-	explicit operator ortogonal() const{
+	explicit operator OrtoType() const{
 		
 		return w();
 
 	}
 
-	ortogonal data;
+	OrtoType data;
 	int perspective;
 
 };
@@ -70,11 +83,11 @@ struct value_traits< ortogonalper< T > >{
 
 };
 
-template< typename Complex >
-ortogonalper< Complex > kproduct( int n , ortogonalper< Complex > u , ortogonalper< Complex > v );
+template< number_ortoper T >
+T kproduct( int n , T u , T v );
 
-template< typename Complex >
-ortogonalper< Complex > kinverse( int n , ortogonalper< Complex > w );
+template< number_ortoper T >
+T kinverse( int n , T w );
 
 template< typename Complex >
 ortogonalper< Complex > make_orto_per( const ortogonal< Complex > & data , int perspective );
@@ -98,76 +111,76 @@ ortogonalper< Complex > operator*( const Complex & z , const ortogonalper< Compl
 template< typename Complex >
 ortogonalper< Complex > operator/( const Complex & z , const ortogonalper< Complex > & other );
 
-template< typename Complex >
-ortogonalper< Complex > inverse( const ortogonalper< Complex > & w );
+template< number_ortoper T >
+T inverse( const T & w );
 
-template< typename Complex >
-ostream & operator<<( ostream & o , const ortogonalper< Complex > & a );
+template< number_ortoper T >
+ostream & operator<<( ostream & o , const T & a );
 
-template< typename Complex >
-ortogonalper< Complex > root( const ortogonalper< Complex > & u , const ortogonalper< Complex > & v );
+template< number_ortoper T >
+T root( const T & u , const T & v );
 
-template< typename Complex >
-ortogonalper< Complex > cos( const ortogonalper< Complex > & w );
+template< number_ortoper T >
+T cos( const T & w );
 
-template< typename Complex >
-ortogonalper< Complex > sin( const ortogonalper< Complex > & w );
+template< number_ortoper T >
+T sin( const T & w );
 
-template< typename Complex >
-ortogonalper< Complex > tan( const ortogonalper< Complex > & w );
+template< number_ortoper T >
+T tan( const T & w );
 
-template< typename Complex >
-ortogonalper< Complex > sec( const ortogonalper< Complex > & w );
+template< number_ortoper T >
+T sec( const T & w );
 
-template< typename Complex >
-ortogonalper< Complex > csc( const ortogonalper< Complex > & w );
+template< number_ortoper T >
+T csc( const T & w );
 
-template< typename Complex >
-ortogonalper< Complex > cot( const ortogonalper< Complex > & w );
+template< number_ortoper T >
+T cot( const T & w );
 
-template< typename Complex >
-ortogonalper< Complex > cosh( const ortogonalper< Complex > & w );
+template< number_ortoper T >
+T cosh( const T & w );
 
-template< typename Complex >
-ortogonalper< Complex > sinh( const ortogonalper< Complex > & w );
+template< number_ortoper T >
+T sinh( const T & w );
 
-template< typename Complex >
-ortogonalper< Complex > tanh( const ortogonalper< Complex > & w );
+template< number_ortoper T >
+T tanh( const T & w );
 
-template< typename Complex >
-ortogonalper< Complex > sech( const ortogonalper< Complex > & w );
+template< number_ortoper T >
+T sech( const T & w );
 
-template< typename Complex >
-ortogonalper< Complex > csch( const ortogonalper< Complex > & w );
+template< number_ortoper T >
+T csch( const T & w );
 
-template< typename Complex >
-ortogonalper< Complex > coth( const ortogonalper< Complex > & w );
+template< number_ortoper T >
+T coth( const T & w );
 
-template< typename Complex >
-ortogonalper< Complex > sqrt( const ortogonalper< Complex > & w );
+template< number_ortoper T >
+T sqrt( const T & w );
 
-template< typename Complex >
-ortogonalper< Complex > cbrt( const ortogonalper< Complex > & w );
+template< number_ortoper T >
+T cbrt( const T & w );
 
-template< typename Complex >
-ortogonalper< Complex > exp( const ortogonalper< Complex > & a );
+template< number_ortoper T >
+T exp( const T & a );
 
-template< typename Complex >
-ortogonalper< Complex > log( const ortogonalper< Complex > & a );
+template< number_ortoper T >
+T log( const T & a );
 
-template< typename Complex >
-ortogonalper< Complex > pow( const ortogonalper< Complex > & a , const ortogonalper< Complex > & b );
+template< number_ortoper T >
+T pow( const T & a , const T & b );
 
-template< typename Complex >
-ortogonalper< Complex > wlambert( const ortogonalper< Complex > & w );
+template< number_ortoper T >
+T wlambert( const T & w );
 
-template< typename Complex >
-ortogonalper< Complex > wave( const ortogonalper< Complex > & w );
+template< number_ortoper T >
+T wave( const T & w );
 
-template< typename Complex >
-real_type< Complex > arg( const ortogonalper< Complex > & a );
+template< number_ortoper T >
+real_type< T > arg( const T & a );
 
-template< typename Complex >
-real_type< Complex > abs( const ortogonalper< Complex > & a );
+template< number_ortoper T >
+real_type< T > abs( const T & a );
 
 #include"ortogonalper.inl"

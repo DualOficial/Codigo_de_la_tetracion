@@ -47,22 +47,22 @@ dual< T > make_dual( const T & x ){
 	
 }
 
-template< typename T >
-dual< T > inverse( const dual< T > & z ){
+template< number_dual T >
+T inverse( const T & z ){
 	
 	if( z.r == T( 0 ) ){
 		
-		return dual< T >( std::numeric_limits< T >::quiet_NaN() , std::numeric_limits< T >::quiet_NaN() );
+		return T( std::numeric_limits< real_type< T > >::quiet_NaN() );
 		
 	}
 	
-	T inverse_r = T( 1 ) / z.r;
+	auto inverse_r = T::value_type( 1 ) / z.r;
 	
-	return dual< T >( inverse_r , -z.i * inverse_r * inverse_r );
+	return T( inverse_r , -z.i * inverse_r * inverse_r );
 }
 
-template< typename T >
-T arg( const dual< T > & z ){
+template< number_dual T >
+T::value_type arg( const T & z ){
 	
 	return z.i / z.r;
 	
@@ -75,131 +75,124 @@ dual< T > polar( const T & real , const T & argument ){
 	
 }
 
-template< typename T >
-dual< T > exp( const dual< T > & z ){
+template< number_dual T >
+T exp( const T & z ){
 	
-	T exp_r = exp( z.r );
+	auto exp_r = exp( z.r );
 	
-	return dual< T >( exp_r , exp_r * z.i );
+	return T( exp_r , exp_r * z.i );
 }
 
-template< typename T >
-real_type< dual< T > > abs( const dual< T > & z ){
+template< number_dual T >
+real_type< T > abs( const T & z ){
 	
 	return abs( intern_value( z ) );
 	
 }
 
-template< typename T >
-dual< T > abs_d( const dual< T > & z ){
+template< number_dual T >
+T abs_d( const T & z ){
 	
-	return dual< T >( abs( z.r ) , sign( z.r ) * z.i );
-	
-}
-
-template< typename T >
-dual< T > log( const dual< T > & z ){
-	
-	return dual< T >( log( z.r ) , arg( z ) );
+	return T( abs( z.r ) , sign( z.r ) * z.i );
 	
 }
 
-template< typename T >
-dual< T > pow( const dual< T > & z , const dual< T > & w ){
+template< number_dual T >
+T log( const T & z ){
+	
+	return T( log( z.r ) , arg( z ) );
+	
+}
+
+template< number_dual T >
+T pow( const T & z , const T & w ){
 	
 	return exp( w * log( z ) );
 	
 }
 
-template< typename T >
-dual< T > cos( const dual< T > & z ){
+template< number_dual T >
+T cos( const T & z ){
 	
-	return dual< T >( cos( z.r ) , -sin( z.r ) * z.i );
-	
-}
-
-template< typename T >
-dual< T > sin( const dual< T > & z ){
-	
-	return dual< T >( sin( z.r ) , cos( z.r ) * z.i );
+	return T( cos( z.r ) , -sin( z.r ) * z.i );
 	
 }
 
-template< typename T >
-dual< T > tan( const dual< T > & z ){
+template< number_dual T >
+T sin( const T & z ){
 	
-	T cos_r = cos( z.r );
+	return T( sin( z.r ) , cos( z.r ) * z.i );
 	
-	return dual< T >( sin( z.r ) / cos_r , z.i / ( cos_r * cos_r ) );
 }
 
-template< typename T >
-dual< T > sec( const dual< T > & z ){
+template< number_dual T >
+T tan( const T & z ){
 	
-	T sec_r = T( 1 ) / cos( z.r );
+	auto cos_r = cos( z.r );
 	
-	return dual< T >( sec_r , sin( z.r ) * sec_r * sec_r * z.i );
+	return T( sin( z.r ) / cos_r , z.i / ( cos_r * cos_r ) );
 }
 
-template< typename T >
-dual< T > csc( const dual< T > & z ){
+template< number_dual T >
+T sec( const T & z ){
 	
-	T csc_r = T( 1 ) / sin( z.r );
+	auto sec_r = T( 1 ) / cos( z.r );
 	
-	return dual< T >( csc_r , -cos( z.r ) * csc_r * csc_r * z.i );
+	return T( sec_r , sin( z.r ) * sec_r * sec_r * z.i );
 }
 
-template< typename T >
-dual< T > cot( const dual< T > & z ){
+template< number_dual T >
+T csc( const T & z ){
 	
-	T sin_r = sin( z.r );
+	auto csc_r = T( 1 ) / sin( z.r );
 	
-	return dual< T >( cos( z.r ) / sin_r , -z.i / ( sin_r * sin_r ) );
+	return T( csc_r , -cos( z.r ) * csc_r * csc_r * z.i );
 }
 
-template< typename T >
-dual< T > sqrt( const dual< T > & z ){
+template< number_dual T >
+T cot( const T & z ){
 	
-	T sqrt_r = sqrt( z.r );
+	auto sin_r = sin( z.r );
 	
-	return dual< T >( sqrt_r , z.i / ( T( 2 ) * sqrt_r ) );
+	return T( cos( z.r ) / sin_r , -z.i / ( sin_r * sin_r ) );
 }
 
-template< typename T >
-dual< T > cbrt( const dual< T > & z ){
+template< number_dual T >
+T sqrt( const T & z ){
 	
-	T cbrt_r = cbrt( z.r );
+	auto sqrt_r = sqrt( z.r );
 	
-	return dual< T >( cbrt_r , z.i / ( T( 3 ) * cbrt_r * cbrt_r ) );
+	return T( sqrt_r , z.i / ( T( 2 ) * sqrt_r ) );
 }
 
-template< typename T >
-dual< T > wlambert( const dual< T > & z ){
+template< number_dual T >
+T cbrt( const T & z ){
+	
+	auto cbrt_r = cbrt( z.r );
+	
+	return T( cbrt_r , z.i / ( T( 3 ) * cbrt_r * cbrt_r ) );
+}
+
+template< number_dual T >
+T wlambert( const T & z ){
 	
 	if( z.r == T( 0 ) ){
 		
-		return dual< T >( T( 0 ) , z.i );
+		return T( T( 0 ) , z.i );
 		
 	}
 	
-	T wlambert_r = wlambert( z.r );
+	auto wlambert_r = wlambert( z.r );
 	
-	return dual< T >( wlambert_r , z.i / ( z.r * ( T( 1 ) + T( 1 ) / wlambert_r ) ) );
+	return T( wlambert_r , z.i / ( z.r * ( T( 1 ) + T( 1 ) / wlambert_r ) ) );
 }
 
-template< typename T >
-dual< T > wave( const dual< T > & z ){
+template< number_dual T >
+T wave( const T & z ){
 	
-	T wave_r = wave( z.r );
+	auto wave_r = wave( z.r );
 	
-	return dual< T >( wave_r , z.i / ( z.r * ( T( 1 ) + log( wave_r ) ) ) );
-}
-
-template< typename T >
-dual< T > asc( const dual< T > & z , const dual< T > & w ){
-	
-	return pow( z , pow( z , w ) );
-	
+	return T( wave_r , z.i / ( z.r * ( T( 1 ) + log( wave_r ) ) ) );
 }
 
 template< typename T >
@@ -355,13 +348,6 @@ template< typename T >
 std::ostream & operator<<( std::ostream & o , const dual< T > & other ){
 	
 	return o<<"( "<<other.r<<" , "<<other.i<<" )";
-	
-}
-
-template< typename T >
-std::istream & operator>>( std::istream & i , dual< T > & other ){
-	
-	return i>>other.r>>other.i;
 	
 }
 

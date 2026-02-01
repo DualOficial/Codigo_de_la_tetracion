@@ -1,7 +1,6 @@
 #pragma once
 
 #include"dual.hpp"
-#include<optional>
 
 template< typename F >
 auto coupling( F && f );
@@ -38,6 +37,9 @@ public:
 	
 	template< typename S >
 	S operator()( S x , const S & y ) const;
+
+	template< typename S >
+	S gen( S x , S y ) const;
 
 	U generator;
 	V generator_inverse;

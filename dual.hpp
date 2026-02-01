@@ -126,72 +126,67 @@ dual< T > make_dual( const T & x , const T & y );
 template< typename T >
 dual< T > make_dual( const T & x );
 
-template< typename T >
-dual< T > inverse( const dual< T > & z );
+template< number_dual T >
+T inverse( const T & z );
 
-template< typename T >
-T arg( const dual< T > & z );
+template< number_dual T >
+T::value_type arg( const T & z );
 
 template< typename T >
 dual< T > polar( const T & real , const T & argument );
 
-template< typename T >
-dual< T > exp( const dual< T > & z );
+template< number_dual T >
+T exp( const T & z );
 
-template< typename T >
-real_type< dual< T > > abs( const dual< T > & z );
+template< number_dual T >
+real_type< T > abs( const T & z );
 
-template< typename T >
-dual< T > abs_d( const dual< T > & z );
+template< number_dual T >
+T abs_d( const T & z );
 
-template< typename T >
-dual< T > log( const dual< T > & z );
+template< number_dual T >
+T log( const T & z );
 
-template< typename T >
-dual< T > pow( const dual< T > & z , const dual< T > & w );
+template< number_dual T >
+T pow( const T & z , const T & w );
 
-template< typename T >
-dual< T > cos( const dual< T > & z );
+template< number_dual T >
+T cos( const T & z );
 
-template< typename T >
-dual< T > sin( const dual< T > & z );
+template< number_dual T >
+T sin( const T & z );
 
-template< typename T >
-dual< T > tan( const dual< T > & z );
+template< number_dual T >
+T tan( const T & z );
 
-template< typename T >
-dual< T > sec( const dual< T > & z );
+template< number_dual T >
+T sec( const T & z );
 
-template< typename T >
-dual< T > csc( const dual< T > & z );
+template< number_dual T >
+T csc( const T & z );
 
-template< typename T >
-dual< T > cot( const dual< T > & z );
+template< number_dual T >
+T cot( const T & z );
 
-template< typename T >
-dual< T > sqrt( const dual< T > & z );
+template< number_dual T >
+T sqrt( const T & z );
 
-template< typename T >
-dual< T > cbrt( const dual< T > & z );
+template< number_dual T >
+T cbrt( const T & z );
 
-template< typename T >
-dual< T > wlambert( const dual< T > & z );
+template< number_dual T >
+T wlambert( const T & z );
 
-template< typename T >
-dual< T > wave( const dual< T > & z );
-
-template< typename T >
-dual< T > asc( const dual< T > & z , const dual< T > & w );
+template< number_dual T >
+T wave( const T & z );
 
 template< typename T >
 T anader( dual< T > ( * f )( dual< T > ) , const T & x );
 
 //extra
 
-template< typename T >
-std::ostream & operator<<( std::ostream & o , const dual< T > & other );
-template< typename T >
-std::istream & operator>>( std::istream & i , dual< T > & other );
+template< number_dual T >
+std::ostream & operator<<( std::ostream & o , const T & other );
 
 typedef dual< float > dualf;
 typedef dual< double > duald;

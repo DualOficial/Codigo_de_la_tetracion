@@ -26,7 +26,7 @@ ortogonalper< Complex >::ortogonalper() : data() , perspective(){
 }
 
 template< typename Complex >
-ortogonalper< Complex >::ortogonalper( ortogonalper< Complex >::ortogonal u , int n ) : data( e_tetration_integer< ortogonal >( u , -n ) ) , perspective( n ){
+ortogonalper< Complex >::ortogonalper( OrtoType u , int n ) : data( e_tetration_integer< ortogonal >( u , -n ) ) , perspective( n ){
 	
 	//nothing
 
@@ -40,7 +40,7 @@ ortogonalper< Complex >::ortogonalper( const Complex & u , int n ) : data( e_tet
 }
 
 template< typename Complex >
-ortogonalper< Complex >::ortogonalper( Real r , int n ) : data( e_tetration_integer< ortogonal >( r , -n ) ) , perspective( n ){
+ortogonalper< Complex >::ortogonalper( RealType r , int n ) : data( e_tetration_integer< ortogonal >( r , -n ) ) , perspective( n ){
 	
 	//nothing
 
@@ -57,7 +57,7 @@ template< typename Complex >
 const ortogonalper< Complex > ortogonalper< Complex >::I = Complex( 0 , 1 );
 
 template< typename Complex >
-const ortogonalper< Complex > ortogonalper< Complex >::NaN = Complex( std::numeric_limits< Real >::quiet_NaN() , std::numeric_limits< Real >::quiet_NaN() );
+const ortogonalper< Complex > ortogonalper< Complex >::NaN = Complex( std::numeric_limits< RealType >::quiet_NaN() , std::numeric_limits< RealType >::quiet_NaN() );
 
 template< typename Complex >
 void ortogonalper< Complex >::set_perspective( int n ){
@@ -116,8 +116,8 @@ int ortogonalper< Complex >::sing_relative() const{
 
 }
 
-template< typename Complex >
-ortogonalper< Complex > kproduct( int n , ortogonalper< Complex > u , ortogonalper< Complex > v ){
+template< number_ortoper T >
+T kproduct( int n , T u , T v ){
 	
 	if( u.perspective == v.perspective ){
 		
@@ -137,36 +137,36 @@ ortogonalper< Complex > kproduct( int n , ortogonalper< Complex > u , ortogonalp
 	return kproduct( n , u , v );
 }
 
-template< typename Complex >
-ortogonalper< Complex > kinverse( int n , ortogonalper< Complex > w ){
+template< number_ortoper T >
+T kinverse( int n , T w ){
 	
 	return make_orto_per( kinverse( n - w.perspective , w.data ) , w.perspective );
 
 }
 
 template< typename Complex >
-ortogonalper< Complex >::Real ortogonalper< Complex >::real() const{
+ortogonalper< Complex >::RealType ortogonalper< Complex >::real() const{
 	
 	return z().real();
 
 }
 
 template< typename Complex >
-ortogonalper< Complex >::Real ortogonalper< Complex >::imag() const{
+ortogonalper< Complex >::RealType ortogonalper< Complex >::imag() const{
 	
 	return z().imag();
 
 }
 
 template< typename Complex >
-ortogonalper< Complex >::Real ortogonalper< Complex >::real_relative() const{
+ortogonalper< Complex >::RealType ortogonalper< Complex >::real_relative() const{
 	
 	return data.real();
 
 }
 
 template< typename Complex >
-ortogonalper< Complex >::Real ortogonalper< Complex >::imag_relative() const{
+ortogonalper< Complex >::RealType ortogonalper< Complex >::imag_relative() const{
 	
 	return data.imag();
 
@@ -195,8 +195,8 @@ ortogonalper< Complex > ortogonalper< Complex >::operator-() const{
 
 }
 
-template< typename Complex >
-ortogonalper< Complex > inverse( const ortogonalper< Complex > & w ){
+template< number_ortoper T >
+T inverse( const T & w ){
 	
 	return kinverse( 1 , w );
 
@@ -289,29 +289,29 @@ ortogonalper< Complex > operator/( const Complex & z , const ortogonalper< Compl
 	
 }
 
-template< typename Complex >
-ostream & operator<<( ostream & o , const ortogonalper< Complex > & a ){
+template< number_ortoper T >
+ostream & operator<<( ostream & o , const T & a ){
 	
 	return o<<a.data<<" , perspective : "<<a.perspective;
 
 }
 
-template< typename Complex >
-ortogonalper< Complex > exp( const ortogonalper< Complex > & a ){
+template< number_ortoper T >
+T exp( const T & a ){
 	
 	return make_orto_per( exp( a.w_relative() ) , a.get_perspective() );
 
 }
 
-template< typename Complex >
-ortogonalper< Complex > log( const ortogonalper< Complex > & a ){
+template< number_ortoper T >
+T log( const T & a ){
 	
 	return make_orto_per( log( a.w_relative() ) , a.get_perspective() );
 
 }
 
-template< typename Complex >
-ortogonalper< Complex > pow( const ortogonalper< Complex > & a , const ortogonalper< Complex > & b ){
+template< number_ortoper T >
+T pow( const T & a , const T & b ){
 	
 	if( a.get_perspective() == 1 && b.get_perspective() == 1 ){
 		
@@ -328,134 +328,134 @@ ortogonalper< Complex > pow( const ortogonalper< Complex > & a , const ortogonal
 	return exp( log( b ) * a );
 }
 
-template< typename Complex >
-long double arg( const ortogonalper< Complex > & a ){
+template< number_ortoper T >
+long double arg( const T & a ){
 	
 	return arg( a.w() );
 
 }
 
-template< typename Complex >
-long double abs( const ortogonalper< Complex > & a ){
+template< number_ortoper T >
+long double abs( const T & a ){
 	
 	return abs( a.w() );
 
 }
 
-template< typename Complex >
-ortogonalper< Complex > cos( const ortogonalper< Complex > & w ){
+template< number_ortoper T >
+T cos( const T & w ){
 	
-	return ( exp( w * ortogonalper< Complex >::I ) + exp( -w * ortogonalper< Complex >::I ) ) / real_type< Complex >( 2 );
-	
-}
-
-template< typename Complex >
-ortogonalper< Complex > sin( const ortogonalper< Complex > & w ){
-	
-	return ( exp( w * ortogonalper< Complex >::I ) - exp( -w * ortogonalper< Complex >::I ) ) / Complex( 0 , 2 );
+	return ( exp( w * T::I ) + exp( -w * T::I ) ) / real_type< T >( 2 );
 	
 }
 
-template< typename Complex >
-ortogonalper< Complex > tan( const ortogonalper< Complex > & w ){
+template< number_ortoper T >
+T sin( const T & w ){
+	
+	return ( exp( w * T::I ) - exp( -w * T::I ) ) / T::ComplexType( 0 , 2 );
+	
+}
+
+template< number_ortoper T >
+T tan( const T & w ){
 	
 	return sin( w ) / cos( w );
 	
 }
 
-template< typename Complex >
-ortogonalper< Complex > sec( const ortogonalper< Complex > & w ){
+template< number_ortoper T >
+T sec( const T & w ){
 	
 	return inverse( cos( w ) );
 	
 }
 
-template< typename Complex >
-ortogonalper< Complex > csc( const ortogonalper< Complex > & w ){
+template< number_ortoper T >
+T csc( const T & w ){
 	
 	return inverse( sin( w ) );
 	
 }
 
-template< typename Complex >
-ortogonalper< Complex > cot( const ortogonalper< Complex > & w ){
+template< number_ortoper T >
+T cot( const T & w ){
 	
 	return cos( w ) / sin( w );
 	
 }
 
-template< typename Complex >
-ortogonalper< Complex > cosh( const ortogonalper< Complex > & w ){
+template< number_ortoper T >
+T cosh( const T & w ){
 	
-	return ( exp( w ) + exp( -w ) ) / real_type< Complex >( 2 );
-	
-}
-
-template< typename Complex >
-ortogonalper< Complex > sinh( const ortogonalper< Complex > & w ){
-	
-	return ( exp( w ) - exp( -w ) ) / real_type< Complex >( 2 );
+	return ( exp( w ) + exp( -w ) ) / real_type< T >( 2 );
 	
 }
 
-template< typename Complex >
-ortogonalper< Complex > tanh( const ortogonalper< Complex > & w ){
+template< number_ortoper T >
+T sinh( const T & w ){
+	
+	return ( exp( w ) - exp( -w ) ) / real_type< T >( 2 );
+	
+}
+
+template< number_ortoper T >
+T tanh( const T & w ){
 	
 	return sinh( w ) / cosh( w );
 	
 }
 
-template< typename Complex >
-ortogonalper< Complex > sech( const ortogonalper< Complex > & w ){
+template< number_ortoper T >
+T sech( const T & w ){
 	
 	return inverse( cosh( w ) );
 	
 }
 
-template< typename Complex >
-ortogonalper< Complex > csch( const ortogonalper< Complex > & w ){
+template< number_ortoper T >
+T csch( const T & w ){
 	
 	return inverse( sinh( w ) );
 	
 }
 
-template< typename Complex >
-ortogonalper< Complex > coth( const ortogonalper< Complex > & w ){
+template< number_ortoper T >
+T coth( const T & w ){
 	
 	return inverse( tanh( w ) );
 	
 }
 
-template< typename Complex >
-ortogonalper< Complex > sqrt( const ortogonalper< Complex > & w ){
+template< number_ortoper T >
+T sqrt( const T & w ){
 	
-	return pow( w , real_type< Complex >( 0.5 ) );
-	
-}
-
-template< typename Complex >
-ortogonalper< Complex > cbrt( const ortogonalper< Complex > & w ){
-	
-	return pow( w , real_type< Complex >( 1 ) / 3 );
+	return pow( w , real_type< T >( 0.5 ) );
 	
 }
 
-template< typename Complex >
-ortogonalper< Complex > root( const ortogonalper< Complex > & u ,const ortogonalper< Complex > & v ){
+template< number_ortoper T >
+T cbrt( const T & w ){
+	
+	return pow( w , real_type< T >( 1 ) / 3 );
+	
+}
+
+template< number_ortoper T >
+T root( const T & u ,const T & v ){
 	
 	return pow( u , inverse( v ) );
 	
 }
 
-template< typename Complex >
-ortogonalper< Complex > wlambert( const ortogonalper< Complex > & a ){
+template< number_ortoper T >
+T wlambert( const T & a ){
 	
-	return ortogonalper< Complex >( wlambert( a.w() ) , a.get_perspective() );
+	return T( wlambert( a.w() ) , a.get_perspective() );
 	
 }
 
-template< typename Complex >
-ortogonalper< Complex > wave( const ortogonalper< Complex > & a ){
+template< number_ortoper T >
+T wave( const T & a ){
 	
 	return exp( wlambert( log( a ) ) );
 	

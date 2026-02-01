@@ -64,14 +64,3 @@ long double atol( const string & text ){
 	
 	return strtold( text.c_str() , & extra );
 }
-
-namespace Colors{
-	
-	const Color Purple = Color( 128 , 0 , 255 );
-	const Color Orange = Color( 255 , 128 , 0 );
-	const Color SpringGreen = Color( 0 , 255 , 128 );
-	const Color Chartreuse = Color( 128 , 255 , 0 );
-	const Color BlueGreen = Color( 0 , 128 , 255 );
-	const Color PinkRed = Color( 255 , 0 , 128 );
-
-}

@@ -7,20 +7,6 @@
 int wlambert_complexity = 30;
 
 template<>
-float log( float a , float b ){
-	
-	return logf( b ) / logf( a );
-
-}
-
-template<>
-long double log( long double a , long double b ){
-	
-	return logl( b ) / logl( a );
-
-}
-
-template<>
 int is_sing( fcomplex z ){
 	
 	if( z == 0.f ) return -1;

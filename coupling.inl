@@ -217,3 +217,35 @@ S Permuted_Function< U , V , T >::operator()( S x , const S & y ) const{
 
 	return x;
 }
+
+template< typename U , typename V , typename T >
+template< typename S >
+S Permuted_Function< U , V , T >::gen( S x , S y ) const{
+	
+	if( derivate1 == T( 1 ) ){
+		
+		unsigned int n = complexity;
+
+		while( n ){
+			
+			x = generator_inverse( x );
+			y = generator_inverse( y );
+			n--;
+
+		}
+		
+		return S( 2 ) / S( acceleration ) * ( S( 1 ) / ( x - S( attract_point ) ) - S( 1 ) / ( y - S( attract_point ) ) );
+	}
+	
+	unsigned int n = complexity;
+
+	while( n ){
+		
+		x = generator_inverse( x );
+		y = generator_inverse( y );
+		n--;
+
+	}
+	
+	return log( S( derivate1 ) , ( y - S( attract_point ) ) / ( x - S( attract_point ) ) );
+}
