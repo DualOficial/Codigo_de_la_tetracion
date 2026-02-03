@@ -1,7 +1,7 @@
 #include"TestFunc.hpp"
 #include<iostream>
 
-void TestFunc( lcomplex ( * f )( long double ) , long double init , long double increment ){
+void TestFunc( function< lcomplex( long double ) > f , long double init , long double increment ){
 	
 	while( true ){
 		
@@ -12,7 +12,7 @@ void TestFunc( lcomplex ( * f )( long double ) , long double init , long double 
 
 }
 
-void TestFunc( long double ( * f )( long double ) , long double init , long double increment ){
+void TestFunc( function< long double( long double ) > f , long double init , long double increment ){
 	
 	while( true ){
 		
@@ -23,7 +23,7 @@ void TestFunc( long double ( * f )( long double ) , long double init , long doub
 
 }
 
-void TestFunc( lcomplex ( * f )( lcomplex ) , long double init , long double increment ){
+void TestFunc( function< lcomplex( lcomplex ) > f , long double init , long double increment ){
 	
 	while( true ){
 		
@@ -34,7 +34,7 @@ void TestFunc( lcomplex ( * f )( lcomplex ) , long double init , long double inc
 
 }
 
-void TestFuncFinite(  long double ( * f )( long double ) , long double init , long double increment , long double max ){
+void TestFuncFinite(  function< long double( long double ) > f , long double init , long double increment , long double max ){
 	
 	while( abs( init ) < max ){
 		
@@ -45,7 +45,7 @@ void TestFuncFinite(  long double ( * f )( long double ) , long double init , lo
 
 }
 
-void TestFuncFinite(  lcomplex ( * f )( lcomplex ) , long double init , long double increment , long double max ){
+void TestFuncFinite( function< lcomplex( lcomplex ) > f , long double init , long double increment , long double max ){
 	
 	while( abs( init ) < max ){
 		
