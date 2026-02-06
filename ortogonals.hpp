@@ -317,9 +317,6 @@ real_type< T > abs( const T & w );
 template< number_ortogonal T >
 T wlambert( const T & w );
 
-template< number_ortogonal T >
-T wave( const T & w );
-
 template< typename T >
 T e_tetration_positive( T z , unsigned int n );
 
@@ -364,23 +361,6 @@ T value_tetration( int k );
 
 template< typename T >
 int is_sing( T z );
-
-template< typename T >
-T zexpz( T z );
-
-template< typename T >
-T zexpz_d( T z );
-
-template< typename T >
-T zexpz_dd( T z );
-
-template< typename T >
-T InitPoint( T z, int k);
-
-extern int wlambert_complexity; //con 30 iteraciones ya es suficiente precisión
-
-template< typename T >
-T wlambert( T z , int k = 0 );
 
 template< number_ortogonal T >
 ostream & operator<<( ostream & o , const T & w );
