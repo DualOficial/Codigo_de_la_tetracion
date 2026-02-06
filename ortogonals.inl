@@ -43,9 +43,9 @@ T value_tetration( int k ){
 	if( k == 1 ) return exp( T( 1 ) );
 	if( k == 2 ) return exp( exp( T( 1 ) ) );
 	if( k == 3 ) return exp( exp( exp( T( 1 ) ) ) );
-	if( k > 3 ) return std::numeric_limits< T >::infinity();
+	if( k > 3 ) return std::numeric_limits< real_type< T > >::infinity();
 	
-	return -1.l;
+	return -T( 1 );
 }
 
 template< typename Complex >
@@ -440,7 +440,7 @@ T log( const T & w ){
 template< number_ortogonal T >
 T pow( const T & u , const T & v ){
 	
-	return exp( v * log( u ) );
+	return exp< T >( v * log< T >( u ) );
 	
 }
 
@@ -1005,7 +1005,7 @@ std::ostream & operator<<( std::ostream & o , const T & w ){
 		}
 		else{
 			
-			o<<Complex( value_tetration< Real >( w.info.sing ) );
+			o<<T::ComplexType( value_tetration< real_type< T > >( w.info.sing ) );
 			
 		}
 		
@@ -1088,7 +1088,7 @@ T InitPoint(T z, int k){
 
 //Creditos por W de Lambert a https://github.com/IstvanMezo/LambertW-function
 
-template< typename T >
+template< no_number_dual T >
 T wlambert( T z , int k ){
 	
 	//For some particular z and k W(z,k) has simple value:
