@@ -2,12 +2,12 @@
 
 #include"definitions.hpp"
 
-extern int perfact_complexity; //no soporta mucha presiciÃ³n
+extern int perfact_complexity; //no soporta mucha presición
 
 template< typename T >
 T perfact_integer( T x , int n );
 
-//permutaciÃ³n factorial
+//permutación factorial
 
 template< typename T >
 T perfact( const T & x , const T & y );
@@ -21,10 +21,10 @@ T product( F f , T a , T b );
 template< typename T , typename F >
 T epsilon( F f , T x , T a , T b );
 
-template< no_complex T , typename F >
+template< no_complex_type T , typename F >
 T sum_integral( F f , const T & a , const T & b );
 
-template< is_complex T , typename F >
+template< complex_type T , typename F >
 T sum_integral( F f , const T & a , const T & b );
 
 template< typename T , typename F >

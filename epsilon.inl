@@ -127,7 +127,7 @@ T epsilon( F f , T x , T a , T b ){
 	return x;
 }
 
-template< no_complex T , typename F >
+template< no_complex_type T , typename F >
 T sum_integral( F f , const T & a , const T & b ){
 	
 	using namespace boost::math::quadrature;
@@ -135,7 +135,7 @@ T sum_integral( F f , const T & a , const T & b ){
 	return gauss_kronrod< T , 61 >::integrate( f , a , b );
 }
 
-template< is_complex T , typename F >
+template< complex_type T , typename F >
 T sum_integral( F f , const T & a , const T & b ){
 	
 	using namespace boost::math::quadrature;
