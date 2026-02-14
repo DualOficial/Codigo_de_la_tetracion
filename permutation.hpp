@@ -2,12 +2,10 @@
 
 #include"ortogonals.hpp"
 #include"ortogonalper.hpp"
-#include"wlambert.hpp"
+#include"complex_functions.hpp"
 
 extern int permutation_complexity;
 extern bool permutation_recursive;
-
-//Funciones Reales o complejos
 
 template< typename T >
 T wave( const T & x );
@@ -17,15 +15,6 @@ T wave( const T & x , const T & base );
 
 template< typename T >
 T asc( const T & x , const T & y );
-
-float wlambert( float z );
-double wlambert( double z );
-long double wlambert( long double z );
-float50 wlambert( float50 z );
-float100 wlambert( float100 z );
-float_single wlambert( float_single z );
-
-//Funciones Ortogonales
 
 template< typename T >
 T riz( const T & a , const T & b );
@@ -71,7 +60,7 @@ T F_derivate( T x );
 
 long double lag_per( long double x );
 
-/*En este comentario use tetración beta, por lo que no es realista:
+/*En este comentario use tetraciÃ³n beta, por lo que no es realista:
 e^e^...1/2 veces aproximadamente 2.08787135335467079851
 e^e^...1/2 veces...^e aproximadamente 8.06772354070021379714
 e^e^...1/2 veces...^2 aproximadamente 3.11005265674281204061
