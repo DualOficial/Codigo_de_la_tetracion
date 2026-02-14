@@ -2,8 +2,10 @@
 
 #include"definitions.hpp"
 
-void TestFunc( function< lcomplex( long double ) > f , long double init , long double increment );
-void TestFunc( function< long double( long double ) > f , long double init , long double increment );
-void TestFunc( function< lcomplex( lcomplex ) > f , long double init , long double increment );
-void TestFuncFinite(  function< long double( long double ) > f , long double init , long double increment , long double max );
-void TestFuncFinite(  function< lcomplex( lcomplex ) > f , long double init , long double increment , long double max );
+template< typename F >
+void TestFunc( F && f , long double init , long double increment );
+
+template< typename F >
+void TestFuncFinite(  F && f , long double init , long double increment , long double max );
+
+#include"TestFunc.inl"
