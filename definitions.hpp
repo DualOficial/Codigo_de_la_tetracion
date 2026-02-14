@@ -25,82 +25,106 @@ typedef boost::multiprecision::cpp_bin_float_100 float100;
 typedef boost::multiprecision::cpp_complex_single complex_single;
 
 template< typename T >
-struct value_traits{
+struct real_traits{
 	
 	using type = T;
 
 };
 
 template<>
-struct value_traits< float >{
+struct real_traits< float >{
 	
-	using real = float;
+	using type = float;
 
 };
 
 template<>
-struct value_traits< double >{
+struct real_traits< double >{
 	
-	using real = double;
+	using type = double;
 
 };
 
 template<>
-struct value_traits< long double >{
+struct real_traits< long double >{
 	
-	using real = long double;
+	using type = long double;
 
 };
 
 template< typename T >
-struct value_traits< std::complex< T > >{
+struct real_traits< std::complex< T > >{
 	
-	using real = T;
+	using type = T;
 
 };
 
 template< typename T , expression_template_option ExpressionTemplates >
-struct value_traits< number< complex_adaptor< T > , ExpressionTemplates > >{
+struct real_traits< number< complex_adaptor< T > , ExpressionTemplates > >{
 	
-	using real = T;
+	using type = T;
 
 };
 
 template< unsigned Digits , backends::digit_base_type DigitBase , class Allocator , class Exponent , Exponent MinExponent , Exponent MaxExponent , expression_template_option ExpressionTemplates >
-struct value_traits< number< cpp_bin_float< Digits , DigitBase , Allocator , Exponent , MinExponent , MaxExponent > , ExpressionTemplates > >{
+struct real_traits< number< cpp_bin_float< Digits , DigitBase , Allocator , Exponent , MinExponent , MaxExponent > , ExpressionTemplates > >{
 	
-	using real = cpp_bin_float< Digits , DigitBase , Allocator , Exponent , MinExponent , MaxExponent >;
+	using type = cpp_bin_float< Digits , DigitBase , Allocator , Exponent , MinExponent , MaxExponent >;
 
 };
 
 template< typename T >
-using real_type = value_traits< T >::real;
+using real_type = real_traits< T >::type;
 
 //init traits
 
+//real numbers
+
 template< typename T >
-inline constexpr bool is_boost_number = false;
+inline constexpr bool boost_real_impl = false;
 
 template< unsigned Digits , backends::digit_base_type DigitBase , class Allocator , class Exponent , Exponent MinExponent , Exponent MaxExponent , expression_template_option ExpressionTemplates >
-inline constexpr bool is_boost_number< number< cpp_bin_float< Digits , DigitBase , Allocator , Exponent , MinExponent , MaxExponent > , ExpressionTemplates > > = true;
+inline constexpr bool boost_real_impl< number< cpp_bin_float< Digits , DigitBase , Allocator , Exponent , MinExponent , MaxExponent > , ExpressionTemplates > > = true;
 
 template< typename T >
-concept is_numeric = std::integral< T > || std::floating_point< T > || is_boost_number< T >;
+concept boost_real = boost_real_impl< T >;
 
 template< typename T >
-inline constexpr bool is_std_complex = false;
+concept basic_real = std::integral< T > || std::floating_point< T >;
 
 template< typename T >
-inline constexpr bool is_std_complex< std::complex< T > > = true;
+concept real_number = boost_real< T > || basic_real< T >;
+
+//complex numbers
 
 template< typename T >
-inline constexpr bool is_boost_complex = false;
+inline constexpr bool basic_complex_impl = false;
+
+template< typename T >
+inline constexpr bool basic_complex_impl< std::complex< T > > = true;
+
+template< typename T >
+concept basic_complex = basic_complex_impl< T >;
+
+template< typename T >
+inline constexpr bool boost_complex_impl = false;
 
 template< typename T , expression_template_option U >
-inline constexpr bool is_boost_complex< number< complex_adaptor< T > , U > > = false;
+inline constexpr bool boost_complex_impl< number< complex_adaptor< T > , U > > = false;
 
 template< typename T >
-concept is_complex = requires( T t ){
+concept boost_complex = boost_complex_impl< T >;
+
+template< typename T >
+concept complex_number = basic_complex< T > || boost_complex< T >;
+
+template< typename T >
+concept math_number = real_number< T > || complex_number< T >;
+
+//types
+
+template< typename T >
+concept complex_type = requires( T t ){
 	
 	{ t.real() } -> std::convertible_to< real_type< T > >;
 	{ t.imag() } -> std::convertible_to< real_type< T > >;
@@ -108,20 +132,161 @@ concept is_complex = requires( T t ){
 };
 
 template< typename T >
-concept no_complex = !is_complex< T >;
+concept no_complex_type = !complex_type< T >;
+
+//ortogonal traits
+
+template< typename Complex >
+class ortogonal;
+
+template< typename Complex >
+inline constexpr bool is_ortogonal = false;
+
+template< typename Complex >
+inline constexpr bool is_ortogonal< ortogonal< Complex > > = true;
+
+template< typename T >
+concept number_ortogonal = is_ortogonal< T >;
+
+template< typename T >
+concept no_ortogonal = !is_ortogonal< T >;
+
+template< typename T >
+struct real_traits< ortogonal< T > >{
+	
+	using type = real_type< T >;
+
+};
+
+//ortogonal per traits
+
+template< typename Complex >
+class ortogonalper;
+
+template< typename T >
+struct real_traits< ortogonalper< T > >{
+	
+	using type = real_type< T >;
+
+};
+
+template< typename Complex >
+inline constexpr bool is_ortogonalper = false;
+
+template< typename Complex >
+inline constexpr bool is_ortogonalper< ortogonalper< Complex > > = true;
+
+template< typename T >
+concept number_ortoper = is_ortogonalper< T >;
+
+template< typename T >
+concept no_ortoper = !is_ortogonalper< T >;
+
+//dual traits
+
+template< typename T >
+class dual_real;
+
+template< typename T >
+class dual_complex;
+
+template< typename T , bool is_complex = complex_type< T > >
+using dual = std::conditional_t< is_complex , dual_complex< T > , dual_real< T > >;
+
+template< typename T >
+inline constexpr bool dual_real_number_impl = false;
+
+template< typename T >
+inline constexpr bool dual_real_number_impl< dual_real< T > > = true;
+
+template< typename T >
+inline constexpr bool dual_complex_number_impl = false;
+
+template< typename T >
+inline constexpr bool dual_complex_number_impl< dual_complex< T > > = true;
+
+template< typename T >
+concept dual_real_number = dual_real_number_impl< T >;
+
+template< typename T >
+concept dual_complex_number = dual_complex_number_impl< T >;
+
+template< typename T >
+concept dual_number = dual_real_number< T > || dual_complex_number< T >;
+
+template< typename T >
+concept no_dual_number = !dual_number< T >;
+
+//dual intern types
+
+template< typename T >
+struct dual_real_intern_type_impl{
+	
+	using type = T;
+
+};
+
+template< typename T >
+struct dual_real_intern_type_impl< dual_real< T > > {
+	
+	using type = std::conditional_t< dual_real_number< typename dual_real< T >::value_type >,
+		typename dual_real_intern_type_impl< typename dual_real< T >::value_type >::type,
+		typename dual_real< T >::value_type >;
+
+};
+
+template< typename T >
+using dual_real_intern_type = typename dual_real_intern_type_impl< T >::type;
+
+template< typename T >
+struct dual_complex_intern_type_impl{
+	
+	using type = T;
+
+};
+
+template< typename T >
+struct dual_complex_intern_type_impl< dual_complex< T > > {
+	
+	using type = std::conditional_t< dual_complex_number< typename dual_complex< T >::value_type >,
+		typename dual_complex_intern_type_impl< typename dual_complex< T >::value_type >::type,
+		typename dual_complex< T >::value_type >;
+
+};
+
+template< typename T >
+using dual_complex_intern_type = typename dual_complex_intern_type_impl< T >::type;
+
+template< typename T >
+using dual_intern_type = conditional< complex_type< T > , dual_complex_intern_type< T > ,
+dual_real_intern_type< T > >;
+
+template< typename T >
+struct real_traits< dual_real< T > >{
+	
+	using type = typename dual_real_intern_type< dual_real< T > >;
+	
+};
+
+template< typename T >
+struct real_traits< dual_complex< T > >{
+	
+	using type = typename real_type< typename dual_complex_intern_type< dual_complex< T > > >;
+	
+};
 
 //end traits
 
 template< typename T >
 real_type< T > Real( const T & z );
 
-template< is_complex T >
+template< complex_type T >
 real_type< T > Real( const T & z );
 
 template< typename T >
 real_type< T > Imag( const T & z );
 
-template< is_complex T >
+template< complex_type T >
 real_type< T > Imag( const T & z );
 
 template< typename T >

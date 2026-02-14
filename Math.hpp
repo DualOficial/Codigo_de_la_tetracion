@@ -1,5 +1,7 @@
 #pragma once
 
+#include"definitions.hpp"
+#include"complex_functions.hpp"
 #include"ortogonals.hpp"
 #include"ortogonalper.hpp"
 #include"TestFunc.hpp"

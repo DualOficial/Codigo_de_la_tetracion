@@ -3,22 +3,7 @@
 #include"ortogonals.hpp"
 
 template< typename Complex >
-class ortogonalper;
-
-template< typename Complex >
 ortogonalper< Complex > make_orto_per( const ortogonal< Complex > & data , int perspective );
-
-template< typename Complex >
-inline constexpr bool is_ortogonalper = false;
-
-template< typename Complex >
-inline constexpr bool is_ortogonalper< ortogonalper< Complex > > = true;
-
-template< typename T >
-concept number_ortoper = is_ortogonalper< T >;
-
-template< typename T >
-concept no_ortoper = !is_ortogonalper< T >;
 
 template< typename Complex >
 class ortogonalper{
@@ -73,13 +58,6 @@ public:
 
 	OrtoType data;
 	int perspective;
-
-};
-
-template< typename T >
-struct value_traits< ortogonalper< T > >{
-	
-	using real = real_type< T >;
 
 };
 

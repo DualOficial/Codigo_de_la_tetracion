@@ -5,29 +5,11 @@
 #include<iostream>
 #include<map>
 
-template< typename Complex >
-class ortogonal;
-
-template< typename Complex >
-class ortogonalper;
-
 template< typename Complex , typename T >
 void make_orto_base( ortogonal< Complex > & w , unsigned int index , const T & t );
 
 template< typename Complex , typename T , typename... Args >
 void make_orto_base( ortogonal< Complex > & w , unsigned int index , const T & t , Args... args );
-
-template< typename Complex >
-inline constexpr bool is_ortogonal = false;
-
-template< typename Complex >
-inline constexpr bool is_ortogonal< ortogonal< Complex > > = true;
-
-template< typename T >
-concept number_ortogonal = is_ortogonal< T >;
-
-template< typename T >
-concept no_ortogonal = !is_ortogonal< T >;
 
 template< typename Complex >
 class ortogonal{
@@ -110,13 +92,6 @@ public:
 	Type type;
 	map< unsigned int , int > branchs;
 	
-};
-
-template< typename T >
-struct value_traits< ortogonal< T > >{
-	
-	using real = real_type< T >;
-
 };
 
 typedef ortogonal< fcomplex > fortogonal;
