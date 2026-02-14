@@ -1,5 +1,3 @@
-//Funciones Tes o Complejas
-
 template< typename T >
 T wave( const T & x ){
 	
@@ -14,8 +12,6 @@ T wave( const T & x , const T & base ){
 
 	return pow( wave( pow( x , base ) ) , T( 1 ) / T( base ) );
 }
-
-//Funciones Ortogonales
 
 template< typename T >
 T riz( const T & a , const T & b ){
@@ -138,7 +134,7 @@ T F( T x ){
 		result *= ( 1.l + log_x / term2 ) / term3;
 		n++;
 		
-	} while( abs( result - prev_result ) > std::numeric_limits< long double >::epsilon() && n < permutation_complexity );
+	} while( abs( result - prev_result ) > std::numeric_limits< real_type< T > >::epsilon() && n < permutation_complexity );
 	
 	return result;
 }
@@ -185,8 +181,8 @@ template< typename T >
 T F_derivate( T x ){
 	
 	T prev_result;
-	T result;
-	T term1 = wave( lortogonal( x ) );
+	T result = T();
+	T term1 = wave( x );
 	T term2 = log( x );
 	T term3 = term2 + T( 1 );
 	unsigned int k = 1;
@@ -200,7 +196,7 @@ T F_derivate( T x ){
 		term3 *= term2 + T( 1 );
 		k++;
 		
-	} while( abs( result - prev_result ) > std::numeric_limits< T >::epsilon() && k < permutation_complexity );
+	} while( abs( result - prev_result ) > std::numeric_limits< real_type< T > >::epsilon() && k < permutation_complexity );
 
 	return result;
 }
