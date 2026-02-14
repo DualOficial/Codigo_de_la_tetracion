@@ -27,9 +27,6 @@
     <ClCompile Include="ApplicationPlotComplex.cpp">
       <Filter>Archivos de recursos</Filter>
     </ClCompile>
-    <ClCompile Include="TestFunc.cpp">
-      <Filter>Archivos de recursos</Filter>
-    </ClCompile>
     <ClCompile Include="Language.cpp">
       <Filter>Archivos de recursos</Filter>
     </ClCompile>
@@ -98,6 +95,9 @@
     <ClInclude Include="epsilon.hpp">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
+    <ClInclude Include="complex_functions.hpp">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="dual.inl">
@@ -131,6 +131,12 @@
       <Filter>Archivos de encabezado</Filter>
     </None>
     <None Include="epsilon.inl">
+      <Filter>Archivos de encabezado</Filter>
+    </None>
+    <None Include="TestFunc.inl">
+      <Filter>Archivos de encabezado</Filter>
+    </None>
+    <None Include="complex_functions.inl">
       <Filter>Archivos de encabezado</Filter>
     </None>
   </ItemGroup>
