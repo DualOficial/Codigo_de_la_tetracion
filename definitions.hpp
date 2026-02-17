@@ -307,18 +307,11 @@ T infinity_proj( T z );
 template< typename T >
 T inverse_proj( T z );
 
-template< typename T >
-bool isnan( const std::complex< T > & z );
+template< complex_number T >
+bool isnan( const T & z );
 
-template< typename T >
-bool isnan( const complex100 & z );
-
-template< typename T >
-bool isinf( const std::complex< T > & z );
-
-bool isinf( const complex_single & z );
-bool isinf( const complex50 & z );
-bool isinf( const complex100 & z );
+template< complex_number T >
+bool isinf( const T & z );
 
 template< typename T >
 T log( T base , T x );

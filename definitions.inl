@@ -68,18 +68,18 @@ T inverse_proj( T z ){
 
 }
 
-template< typename T >
-bool isnan( const std::complex< T > & z ){
+template< complex_number T >
+bool isnan( const T & z ){
 	
-	return z.real() == std::numeric_limits< T >::quiet_NaN() || z.imag() == std::numeric_limits< T >::quiet_NaN();
+	return z.real() == std::numeric_limits< real_type< T > >::quiet_NaN() || z.imag() == std::numeric_limits< real_type< T > >::quiet_NaN();
 
 }
 
-template< typename T >
-bool isinf( const std::complex< T > & z ){
+template< complex_number T >
+bool isinf( const T & z ){
 	
-	return z.real() == std::numeric_limits< T >::infinity() || z.real() == -std::numeric_limits< T >::infinity()
-	|| z.imag() == std::numeric_limits< T >::infinity() || z.imag() == -std::numeric_limits< T >::infinity();
+	return z.real() == std::numeric_limits< real_type< T > >::infinity() || z.real() == -std::numeric_limits< real_type< T > >::infinity()
+	|| z.imag() == std::numeric_limits< real_type< T > >::infinity() || z.imag() == -std::numeric_limits< real_type< T > >::infinity();
 
 }
 
