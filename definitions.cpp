@@ -18,7 +18,7 @@ string to_stringi( int value ){
 	return ss.str();
 }
 
-long double atol( const string & text ){
+long double atold( const string & text ){
 	
 	char * extra;
 	
