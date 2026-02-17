@@ -321,7 +321,7 @@ void adjust_precision();
 
 string to_stringl( long double value );
 string to_stringi( int value );
-long double atol( const string & text );
+long double atold( const string & text );
 
 namespace Colors{
 	
