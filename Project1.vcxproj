@@ -155,6 +155,7 @@
     <ClCompile Include="ortogonals.cpp" />
     <ClCompile Include="other_permutations.cpp" />
     <ClCompile Include="permutation.cpp" />
+    <ClCompile Include="successions.hpp" />
     <ClCompile Include="tetration.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -167,6 +168,7 @@
     <ClInclude Include="Language.hpp" />
     <ClInclude Include="Math.hpp" />
     <ClInclude Include="MathGraphics.hpp" />
+    <ClInclude Include="near.hpp" />
     <ClInclude Include="ortogonalper.hpp" />
     <ClInclude Include="ortogonals.hpp" />
     <ClInclude Include="other_permutations.hpp" />
@@ -182,10 +184,12 @@
     <None Include="dual.inl" />
     <None Include="epsilon.inl" />
     <None Include="kuznetsov.inl" />
+    <None Include="near.inl" />
     <None Include="ortogonalper.inl" />
     <None Include="ortogonals.inl" />
     <None Include="other_permutations.inl" />
     <None Include="permutation.inl" />
+    <None Include="successions.inl" />
     <None Include="TestFunc.inl" />
     <None Include="tetration.inl" />
     <None Include="complex_functions.inl" />
