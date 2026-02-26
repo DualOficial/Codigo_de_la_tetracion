@@ -155,6 +155,7 @@
     <ClCompile Include="ortogonals.cpp" />
     <ClCompile Include="other_permutations.cpp" />
     <ClCompile Include="permutation.cpp" />
+    <ClCompile Include="successions.cpp" />
     <ClCompile Include="successions.hpp" />
     <ClCompile Include="tetration.cpp" />
   </ItemGroup>

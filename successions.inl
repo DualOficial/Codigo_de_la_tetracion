@@ -1,23 +1,104 @@
+#include<map>
+
+template< typename T >
+T stieltjes( unsigned int n ){
+	
+	static vector< T > stieltjes_coefficients = vector< T >();
+
+	if( stieltjes_coefficients.empty() ){
+		
+		stieltjes_coefficients.resize( stieltjes100.size() );
+
+		auto i = stieltjes100.begin();
+
+		for( T & x : stieltjes_coefficients ){
+			
+			x = T( float100( *i ) );
+
+			i++;
+		}
+
+	}
+	
+	return stieltjes_coefficients[ n ];
+}
+
 template< typename T >
 T stirling( unsigned int n , unsigned int k ){
 	
-	if( n == 0 ) return k == 0 ? 1 : 0;
-	if( k == 0 ) return 0;
+	static vector< map< unsigned int , T > > stirling_coefficients = vector< map< unsigned int , T > >();
 
-	return stirling< T >( n - 1 , k - 1 ) + ( n - 1 ) * stirling< T >( n - 1 , k );
+	if( n < stirling_coefficients.size() ){
+		
+		if( k < stirling_coefficients[ n ].size() ){
+			
+			return stirling_coefficients[ n ][ k ];
+
+		}
+
+		if( k > n ) return T();
+
+		T a = stirling< T >( n - 1 , k - 1 ) + ( n - 1 ) * stirling< T >( n - 1 , k );
+		
+		stirling_coefficients[ n ].insert( make_pair( k , a ) );
+
+		return a;
+	}
+
+	if( n == 0 ){
+		
+		stirling_coefficients.push_back( { make_pair( 0 , T( 1 ) ) } );
+
+		return k == 0 ? T( 1 ) : T();
+	}
+
+	T a = stirling< T >( n - 1 , k - 1 ) + ( n - 1 ) * stirling< T >( n - 1 , k );
+	
+	stirling_coefficients.push_back( map< unsigned int , T >() );
+	stirling_coefficients.back().insert( make_pair( k , a ) );
+
+	return a;
 }
 
 template< typename T >
 T stirling2( unsigned int n , unsigned int k ){
 	
-	if( n == 0 ) return k == 0 ? 1 : 0;
-	if( k == 0 ) return 0;
+	static vector< map< unsigned int , T > > stirling2_coefficients = vector< map< unsigned int , T > >();
 
-	return stirling2< T >( n - 1 , k - 1 ) + k * stirling2< T >( n - 1 , k );
+	if( n < stirling2_coefficients.size() ){
+		
+		if( k < stirling2_coefficients[ n ].size() ){
+			
+			return stirling2_coefficients[ n ][ k ];
+
+		}
+
+		if( k > n ) return T();
+
+		T a = stirling2< T >( n - 1 , k - 1 ) + k * stirling2< T >( n - 1 , k );
+		
+		stirling2_coefficients[ n ].insert( make_pair( k , a ) );
+
+		return a;
+	}
+
+	if( n == 0 ){
+		
+		stirling2_coefficients.push_back( { make_pair( 0 , T( 1 ) ) } );
+
+		return k == 0 ? T( 1 ) : T();
+	}
+
+	T a = stirling2< T >( n - 1 , k - 1 ) + ( n - 1 ) * stirling2< T >( n - 1 , k );
+	
+	stirling2_coefficients.push_back( map< unsigned int , T >() );
+	stirling2_coefficients.back().insert( make_pair( k , a ) );
+
+	return a;
 }
 
 template< typename T >
-T stirlinng_sign( unsigned int n , unsigned int k ){
+T stirling_sign( unsigned int n , unsigned int k ){
 	
 	return ( n + k ) % 2 == 0 ? stirling< T >( n , k ) : -stirling< T >( n , k );
 
@@ -26,6 +107,16 @@ T stirlinng_sign( unsigned int n , unsigned int k ){
 template< typename T >
 T bernoulli( unsigned int n ){
 	
+	static vector< T > bernoulli_coefficients = vector< T >();
+	
+	if( n < bernoulli_coefficients.size() ) return bernoulli_coefficients[ n ];
+	if( n % 2 == 1 && n > 1 ){
+		
+		bernoulli_coefficients.push_back( T() );
+
+		return bernoulli_coefficients.back();
+	}
+
 	T sum = 0;
 	
 	for( unsigned int k = 0; k < n; k++ ){
@@ -34,28 +125,34 @@ T bernoulli( unsigned int n ){
 
 	}
 
-	return T( 1 ) - sum / T( n + 1 );
+	bernoulli_coefficients.push_back( T( 1 ) - sum / T( n + 1 ) );
+
+	return bernoulli_coefficients.back();
 }
 
 template< typename T >
 T bell( unsigned int n ){
 	
-	if( n == 0 ) return T( 1 );
+	static vector< T > bell_coefficients = { T( 1 ) };
 	
-	T sum = 0;
+	if( n < bell_coefficients.size() ) return bell_coefficients[ n ];
 
+	T sum = 0;
+	
 	for( unsigned int k = 0; k < n; k++ ){
 		
 		sum += bell< T >( k ) * binomial_coefficient< T >( n - 1 , k );
 
 	}
 
-	return sum;
+	bell_coefficients.push_back( sum );
+
+	return bell_coefficients.back();
 }
 
 template< typename T >
 T bernoulli( unsigned int n , T x ){
-	
+
 	T sum = 0;
 	T term = 1;
 
@@ -85,7 +182,7 @@ T touchard( unsigned int n , T x ){
 	return sum;
 }
 
-//extension x^n = Sn(x), Sn es un polinomio de grado n
+//extensión x^n = Sn(x), Sn es un polinomio de grado n
 
 template< typename T >
 T S( unsigned int n , T x ){

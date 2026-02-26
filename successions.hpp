@@ -2,6 +2,11 @@
 
 #include"definitions.hpp"
 
+extern array< string , 693 > stieltjes100;
+
+template< typename T >
+T stieltjes( unsigned int n );
+
 template< typename T >
 T stirling( unsigned int n , unsigned int k );
 
@@ -9,7 +14,7 @@ template< typename T >
 T stirling2( unsigned int n , unsigned int k );
 
 template< typename T >
-T stirlinng_sign( unsigned int n , unsigned int k );
+T stirling_sign( unsigned int n , unsigned int k );
 
 template< typename T >
 T bernoulli( unsigned int n );
