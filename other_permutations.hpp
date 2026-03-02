@@ -3,10 +3,10 @@
 #include<functional>
 #include"ortogonals.hpp"
 
-//tetraciÃ³n mas y menos
+//tetración mas y menos
 
-extern int plus_tetration_complexity;
-extern int minus_tetration_complexity;
+inline int plus_tetration_complexity = 10000;
+inline int minus_tetration_complexity = 10000;
 
 template< typename T >
 T expm( T x );
@@ -32,9 +32,9 @@ T mtetration( T x , T y );
 template< typename T >
 T ptetration( T x , T y );
 
-//permutaciÃ³n special square
+//permutación special square
 
-extern int hyper_square_complexity;
+inline int hyper_square_complexity = 10000;
 
 template< typename T >
 T special_square( T x );
@@ -48,9 +48,9 @@ T hypersquare_integer( T x , int n );
 template< typename T >
 T hypersquare( T x , T y );
 
-//tetraciÃ³n base e^1/e
+//tetración base e^1/e
 
-extern int natural_tetration_complexity;
+inline int natural_tetration_complexity = 10000;
 
 template< typename T >
 T tetration_integer( T base , T final_exp , int height );
