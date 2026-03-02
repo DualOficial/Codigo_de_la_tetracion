@@ -90,8 +90,11 @@ typedef Formula< complex100 > Formula100;
 template< typename T >
 T alpha_tet( const T & base );
 
-extern int tetration_complexity;
-extern bool tetration_recursive;
+template< typename T >
+T alpha_tet( const T & base , const T & test_value );
+
+inline int tetration_complexity = 20;
+inline bool tetration_recursive = true;
 
 template< typename T >
 T tet( const T & base , const T & final_exp , T height , const T & v );

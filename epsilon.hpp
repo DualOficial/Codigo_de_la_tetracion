@@ -2,7 +2,7 @@
 
 #include"definitions.hpp"
 
-extern int perfact_complexity; //no soporta mucha presición
+inline int perfact_complexity = 1000; //no soporta mucha presición
 
 template< typename T >
 T perfact_integer( T x , int n );
