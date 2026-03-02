@@ -1,6 +1,48 @@
 #include<map>
 
 template< typename T >
+T dpow( T x , T n ){
+	
+	return gamma( x + T( 1 ) ) / gamma< T >( x - n + T( 1 ) );
+	
+}
+
+template< typename T >
+T dpow( T x , unsigned int n ){
+	
+	T a = 1;
+
+	for( unsigned int k = 0; k < n; k++ ){
+		
+		a *= x - k;
+
+	}
+
+	return a;
+}
+
+template< typename T >
+T apow( T x , T n ){
+	
+	return gamma( x + n + T( 1 ) ) / gamma< T >( x + T( 1 ) );
+	
+}
+
+template< typename T >
+T apow( T x , unsigned int n ){
+	
+	T a = 1;
+
+	for( unsigned int k = 0; k < n; k++ ){
+		
+		a *= x + k;
+
+	}
+
+	return a;
+}
+
+template< typename T >
 T stieltjes( unsigned int n ){
 	
 	static vector< T > stieltjes_coefficients = vector< T >();
@@ -37,6 +79,7 @@ T stirling( unsigned int n , unsigned int k ){
 		}
 
 		if( k > n ) return T();
+		if( k == 0 ) return T();
 
 		T a = stirling< T >( n - 1 , k - 1 ) + ( n - 1 ) * stirling< T >( n - 1 , k );
 		
@@ -100,7 +143,7 @@ T stirling2( unsigned int n , unsigned int k ){
 template< typename T >
 T stirling_sign( unsigned int n , unsigned int k ){
 	
-	return ( n + k ) % 2 == 0 ? stirling< T >( n , k ) : -stirling< T >( n , k );
+	return stirling< T >( n , k ) * powm1( n + k );
 
 }
 
@@ -128,6 +171,13 @@ T bernoulli( unsigned int n ){
 	bernoulli_coefficients.push_back( T( 1 ) - sum / T( n + 1 ) );
 
 	return bernoulli_coefficients.back();
+}
+
+template< typename T >
+T bernoulli2( unsigned int n ){
+	
+	return n == 1 ? T( -0.5 ) : bernoulli< T >( n );
+
 }
 
 template< typename T >
@@ -164,6 +214,13 @@ T bernoulli( unsigned int n , T x ){
 	}
 
 	return sum;
+}
+
+template< typename T >
+T bernoulli( T x ){
+	
+	return x == T() ? T( 1 ) : -x * zeta( 1.l - x );
+
 }
 
 template< typename T >
