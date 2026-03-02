@@ -1,8 +1,5 @@
 #include"permutation.hpp"
 
-int permutation_complexity = 10000;
-bool permutation_recursive = true;
-
 //mala calidad
 
 long double lag_per( long double x ){
