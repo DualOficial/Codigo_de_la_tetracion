@@ -149,11 +149,9 @@
     <ClCompile Include="ApplicationPlotComplex.cpp" />
     <ClCompile Include="definitions.cpp" />
     <ClCompile Include="definitions.hpp" />
-    <ClCompile Include="epsilon.cpp" />
     <ClCompile Include="Language.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ortogonals.cpp" />
-    <ClCompile Include="other_permutations.cpp" />
     <ClCompile Include="permutation.cpp" />
     <ClCompile Include="successions.cpp" />
     <ClCompile Include="successions.hpp" />
@@ -174,6 +172,7 @@
     <ClInclude Include="ortogonals.hpp" />
     <ClInclude Include="other_permutations.hpp" />
     <ClInclude Include="permutation.hpp" />
+    <ClInclude Include="stieltjes.hpp" />
     <ClInclude Include="TestFunc.hpp" />
     <ClInclude Include="tetration.hpp" />
     <ClInclude Include="complex_functions.hpp" />
