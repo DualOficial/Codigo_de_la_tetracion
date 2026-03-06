@@ -17,6 +17,8 @@ Facebook: https://www.facebook.com/DualMath
 
 Tiktok: https://www.tiktok.com/@dualmath
 
+Pagina web: https://www.dual-math.com
+
 Creditos:
 
 W de lambert: https://github.com/IstvanMezo/LambertW-function
