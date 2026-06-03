@@ -11,13 +11,15 @@ Mientras tanto, disfrute!
 
 Si quieres saber mas de mi, aqui tienes mis redes:
 
+Pagina web: https://www.dual-math.com
+
 Youtube: https://www.youtube.com/@DualMath
 
 Facebook: https://www.facebook.com/DualMath
 
 Tiktok: https://www.tiktok.com/@dualmath
 
-Pagina web: https://www.dual-math.com
+Instagram: https://www.instagram.com/dual.math
 
 Creditos:
 
